@@ -220,6 +220,13 @@ fn main_aux() {
         .create(dest)
         .expect("Could not create directory");
 
+    // Write the entire probability table.
+    //
+    // As of this writing:
+    // - the format is really, really bad;
+    // - much of the information inside the table will never be used.
+    //
+    // To be improved, iteratively.
     let dest_dictionary = dest.join("dict.entropy");
     progress!(quiet, "Writing probabilities to {:?}", dest_dictionary);
     let file_dictionary = File::create(dest_dictionary)
@@ -234,3 +241,5 @@ fn main_aux() {
     bincode::serialize_into(file_strings, &files_containing_string)
         .expect("Could not serialize strings dictionary");
 }
+
+

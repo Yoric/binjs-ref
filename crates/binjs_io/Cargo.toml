@@ -15,7 +15,7 @@ bincode = "*"
 binjs_shared = { path = "../binjs_shared", version = "*" }
 brotli = "*"
 clap = "^2.32"
-derive_more = "*"
+derive_more = "0.13.0"
 flate2 = "^1.0"
 itertools = "*"
 lzw = "*"
