@@ -11,7 +11,7 @@ use binjs::source::{ Shift, SourceParser };
 use binjs::generic::FromJSON;
 use binjs::specialized::es6::ast::Walker;
 use binjs::io::{ Path as IOPath, TokenSerializer };
-use binjs::io::entropy::model::{ Dictionary, DictionaryBuilder, KindedStringMap, FilesContaining, Instances };
+use binjs::io::entropy::dictionary::{ Dictionary, DictionaryBuilder, KindedStringMap, FilesContaining, Instances };
 
 use std::fs::*;
 use std::thread;
@@ -167,6 +167,14 @@ fn main_aux() {
                     .map(|_| ())
                     .map_err(|e| format!("Invalid number {}", e)))
                 .help("Maximal path length to store in the dictionary."),
+            Arg::with_name("width")
+                .long("width")
+                .takes_value(true)
+                .default_value("32")
+                .validator(|s| s.parse::<u32>()
+                    .map(|_| ())
+                    .map_err(|e| format!("Invalid number {}", e)))
+                .help("String window width."),
         ])
         .get_matches();
 
@@ -188,13 +196,17 @@ fn main_aux() {
     let depth = str::parse(matches.value_of("depth").unwrap())
         .expect("Invalid number");
 
-    progress!(quiet, "Generating dictionary with lazification {lazification}, depth {depth}",
+    let width = str::parse(matches.value_of("width").unwrap())
+        .expect("Invalid number");
+
+    progress!(quiet, "Generating dictionary with lazification {lazification}, depth {depth}, width {width}",
         lazification = lazification,
-        depth = depth);
+        depth = depth,
+        width = width);
 
     // Setup.
     let parser = Shift::new();
-    let mut dictionary = Dictionary::new(depth);
+    let mut dictionary = Dictionary::new(depth, width);
     let mut files_containing_string = KindedStringMap::default();
     let mut number_of_files = 0;
 

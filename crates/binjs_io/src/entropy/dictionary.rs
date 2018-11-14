@@ -1,4 +1,4 @@
-use entropy::predict::PathPredict;
+use entropy::predict::{ PathPredict, WindowPredict };
 use entropy::probabilities::{ InstancesToProbabilities, SymbolIndex, SymbolInfo };
 
 use io::TokenWriter;
@@ -59,8 +59,14 @@ pub struct Dictionary<T> {
     /// All property keys, predicted by path.
     pub property_key_by_path: PathPredict<Option<PropertyKey>, T>,
 
+    /// All property keys, predicted by window.
+    pub property_key_by_window: WindowPredict<Option<PropertyKey>, T>,
+
     /// All identifier names, predicted by path.
     pub identifier_name_by_path: PathPredict<Option<IdentifierName>, T>,
+
+    /// All identifier names, predicted by window.
+    pub identifier_name_by_window: WindowPredict<Option<IdentifierName>, T>,
 
     /// All interface names, predicted by path.
     pub interface_name_by_path: PathPredict<InterfaceName, T>,
@@ -68,18 +74,18 @@ pub struct Dictionary<T> {
     /// All string literals, predicted by path.
     pub string_literal_by_path: PathPredict<Option<SharedString>, T>,
 
+    /// All string literals, predicted by window.
+    pub string_literal_by_window: WindowPredict<Option<SharedString>, T>,
+
     /// All list lengths, predicted by path.
     pub list_length_by_path: PathPredict<Option<u32>, T>,
 
     // Missing:
     // - offsets (cannot be predicted?)
-    // - property keys predicted by window?
-    // - identifier names predicted by window?
-    // - literal strings by window?
     // - directives?
 }
 impl<T> Dictionary<T> {
-    pub fn new(depth: usize) -> Self {
+    pub fn new(depth: usize, width: usize) -> Self {
         Dictionary {
             depth,
             bool_by_path: PathPredict::new(),
@@ -87,8 +93,11 @@ impl<T> Dictionary<T> {
             unsigned_long_by_path: PathPredict::new(),
             string_enum_by_path: PathPredict::new(),
             property_key_by_path: PathPredict::new(),
+            property_key_by_window: WindowPredict::new(width),
             identifier_name_by_path: PathPredict::new(),
+            identifier_name_by_window: WindowPredict::new(width),
             string_literal_by_path: PathPredict::new(),
+            string_literal_by_window: WindowPredict::new(width),
             list_length_by_path: PathPredict::new(),
             interface_name_by_path: PathPredict::new(),
         }
@@ -107,6 +116,9 @@ impl<T> Dictionary<T> {
             ref string_literal_by_path,
             ref list_length_by_path,
             ref interface_name_by_path,
+            property_key_by_window: _,
+            string_literal_by_window: _,
+            identifier_name_by_window: _,
             depth: _,
         } = *self;
 
@@ -135,9 +147,12 @@ impl InstancesToProbabilities for Dictionary<Instances> {
             unsigned_long_by_path: self.unsigned_long_by_path.instances_to_probabilities("unsigned_long_by_path"),
             string_enum_by_path: self.string_enum_by_path.instances_to_probabilities("string_enum_by_path"),
             property_key_by_path: self.property_key_by_path.instances_to_probabilities("property_key_by_path"),
+            property_key_by_window: self.property_key_by_window.instances_to_probabilities("property_key_by_window"),
             identifier_name_by_path: self.identifier_name_by_path.instances_to_probabilities("identifier_name_by_path"),
+            identifier_name_by_window: self.identifier_name_by_window.instances_to_probabilities("identifier_name_by_window"),
             interface_name_by_path: self.interface_name_by_path.instances_to_probabilities("interface_name_by_path"),
             string_literal_by_path: self.string_literal_by_path.instances_to_probabilities("string_literal_by_path"),
+            string_literal_by_window: self.string_literal_by_window.instances_to_probabilities("string_literal_by_window"),
             list_length_by_path: self.list_length_by_path.instances_to_probabilities("list_length_by_path"),
         }
     }

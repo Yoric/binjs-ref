@@ -54,14 +54,14 @@
 //! ----- Initially, start with everything equi-likely. We'll add a predefined
 //! and/or custom dictionary later.
 
-pub mod model;
+pub mod dictionary;
 pub mod read;
 pub mod write;
 
 mod predict;
 mod probabilities;
 
-use self::model::{ Dictionary, FilesContaining, KindedStringMap };
+use self::dictionary::{ Dictionary, FilesContaining, KindedStringMap };
 use self::predict::Instances;
 use self::probabilities::SymbolInfo;
 
