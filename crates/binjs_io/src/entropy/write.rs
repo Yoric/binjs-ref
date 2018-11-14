@@ -127,6 +127,10 @@ impl TokenWriter for Encoder {
 
     // --- Composite stuff
 
+    fn enter_tagged_tuple_at(&mut self, tag: &InterfaceName, _children: &[&FieldName], path: &Path) -> Result<(), TokenWriterError> {
+        symbol!(self, interface_name_by_path, "interface_name_by_path", path, tag)
+    }
+
     fn enter_list_at(&mut self, len: usize, path: &Path) -> Result<(), TokenWriterError> {
         symbol!(self, list_length_by_path, "list_length_by_path",  path,  Some(len as u32))
     }
