@@ -38,42 +38,42 @@ mod context_information {
     #[derive(Clone, Debug, Deserialize, Serialize)]
     pub struct ContextInformation<NodeValue, Statistics> where NodeValue: Eq + Hash {
         /// NodeValue => Statistics mapping, always valid
-        by_value: HashMap<NodeValue, Statistics>,
+        stats_by_node_value: HashMap<NodeValue, Statistics>,
 
         /// SymbolIndex => NodeValue mapping.
         ///
         /// This vector is populated only when `Statistics = SymbolInfo`. When that is the case,
-        /// `by_index` is effectively the reverse mapping from `by_value` (using the
+        /// `value_by_symbol_index` is effectively the reverse mapping from `stats_by_node_value` (using the
         /// index embedded in `SymbolInfo`).
-        by_index: Vec<NodeValue>,
+        value_by_symbol_index: Vec<NodeValue>,
     }
     impl<NodeValue, Statistics> ContextInformation<NodeValue, Statistics> where NodeValue: Eq + Hash {
         pub fn new() -> Self {
             ContextInformation {
-                by_value: HashMap::new(),
-                by_index: Vec::new(),
+                stats_by_node_value: HashMap::new(),
+                value_by_symbol_index: Vec::new(),
             }
         }
 
         /// Return the number of entries.
         pub fn len(&self) -> usize {
-            self.by_value.len()
+            self.stats_by_node_value.len()
         }
     }
 
     // Methods that make sense only when we have finished computing frequency information.
     impl<NodeValue> ContextInformation<NodeValue, SymbolInfo> where NodeValue: Eq + Hash {
-        pub fn by_value(&self) -> &HashMap<NodeValue, SymbolInfo> {
-            &self.by_value
+        pub fn stats_by_node_value(&self) -> &HashMap<NodeValue, SymbolInfo> {
+            &self.stats_by_node_value
         }
 
-        pub fn by_value_mut(&mut self) -> &mut HashMap<NodeValue, SymbolInfo> {
-            &mut self.by_value
+        pub fn stats_by_node_value_mut(&mut self) -> &mut HashMap<NodeValue, SymbolInfo> {
+            &mut self.stats_by_node_value
         }
 
-        pub fn by_index(&self, index: SymbolIndex) -> Option<&NodeValue> {
+        pub fn value_by_symbol_index(&self, index: SymbolIndex) -> Option<&NodeValue> {
             let index: usize = index.into();
-            self.by_index.get(index)
+            self.value_by_symbol_index.get(index)
         }
     }
 
@@ -82,7 +82,7 @@ mod context_information {
     impl<NodeValue> ContextInformation<NodeValue, Instances> where NodeValue: Eq + Hash {
         /// Register a value as being used in this context.
         pub fn add(&mut self, node_value: NodeValue) {
-            self.by_value.entry(node_value)
+            self.stats_by_node_value.entry(node_value)
             .and_modify(|instances| *instances += 1.into())
             .or_insert(1.into());
         }
@@ -92,7 +92,7 @@ mod context_information {
         type AsProbabilities = ContextInformation<NodeValue, SymbolInfo>;
         fn instances_to_probabilities(self, _description: &str) -> ContextInformation<NodeValue, SymbolInfo> {
             let instances: Vec<_> = self
-                .by_value
+                .stats_by_node_value
                 .values()
                 .map(|x| {
                     let x: usize = x.clone().into();
@@ -102,24 +102,24 @@ mod context_information {
 
             let distribution = std::rc::Rc::new(std::cell::RefCell::new(range_encoding::CumulativeDistributionFrequency::new(instances).
                 unwrap()));
-            // FIXME: This will fail if `by_value` is empty.
+            // FIXME: This will fail if `stats_by_node_value` is empty.
             // FIXME: We should have a fallback distribution in case everything is empty.
 
-            let (by_value, by_index): (HashMap<_, _>, Vec<_>) = self.by_value
+            let (stats_by_node_value, value_by_symbol_index): (HashMap<_, _>, Vec<_>) = self.stats_by_node_value
                 .into_iter()
                 .enumerate()
                 .map(|(index, (value, _))| {
-                    let for_by_value = (value.clone(), SymbolInfo {
+                    let for_stats_by_node_value = (value.clone(), SymbolInfo {
                         index: index.into(),
                         distribution: distribution.clone(),
                     });
-                    let for_by_index = value;
-                    (for_by_value, for_by_index)
+                    let for_value_by_symbol_index = value;
+                    (for_stats_by_node_value, for_value_by_symbol_index)
                 })
                 .unzip();
             ContextInformation {
-                by_value,
-                by_index
+                stats_by_node_value,
+                value_by_symbol_index
             }
         }
     }
@@ -136,7 +136,7 @@ use self::context_information::ContextInformation;
 ///     from an existing dictionary.
 /// 2. Convert the `ContextPredict<Context, NodeValue, Instances>` into a `ContextPredict<Context, NodeValue, SymbolInfo>`
 ///     by calling `ContextPredict::instances_to_probabilities`.
-/// 3. Use method `ContextPredict::<_, _, SymbolInfo>::by_node_value` and `by_node_value_mut` to get the statistics
+/// 3. Use method `ContextPredict::<_, _, SymbolInfo>::stats_by_node_value` and `stats_by_node_value_mut` to get the statistics
 ///     information in a specific context for a specific node value (used for compression). This information contains
 ///     an index designed to be written to a compressed stream.
 /// 4. Use method `ContextPredict::<_, _, SymbolInfo>::frequencies_at` to get the statistics information in a
@@ -179,9 +179,9 @@ impl<Context, NodeValue, Statistics> ContextPredict<Context, NodeValue, Statisti
 impl<Context, NodeValue> ContextPredict<Context, NodeValue, Instances> where Context: Eq + Hash + Clone, NodeValue: Eq + Hash + Clone {
     /// Register a value as being used in this context.
     pub fn add(&mut self, context: Context, value: NodeValue) {
-        let by_value = self.by_context.entry(context)
+        let stats_by_node_value = self.by_context.entry(context)
             .or_insert_with(|| ContextInformation::new());
-        by_value.add(value)
+        stats_by_node_value.add(value)
     }
 }
 
@@ -191,32 +191,32 @@ impl<Context, NodeValue> ContextPredict<Context, NodeValue, SymbolInfo> where Co
     /// This method is only implemented when `Statistics=SymbolInfo` as the index is initialized
     /// by `instances_to_probabilities`. The index corresponds to the one defined in
     /// the `SymbolInfo`.
-    pub fn by_index<C2: ?Sized>(&mut self, context: &C2, index: SymbolIndex) -> Option<&NodeValue>
+    pub fn value_by_symbol_index<C2: ?Sized>(&mut self, context: &C2, index: SymbolIndex) -> Option<&NodeValue>
         where
             Context: std::borrow::Borrow<C2>,
             C2: Hash + Eq
     {
         self.by_context.get(context)?
-            .by_index(index)
+            .value_by_symbol_index(index)
     }
 
-    pub fn by_value<C2: ?Sized>(&self, context: &C2, value: &NodeValue) -> Option<&SymbolInfo>
+    pub fn stats_by_node_value<C2: ?Sized>(&self, context: &C2, value: &NodeValue) -> Option<&SymbolInfo>
         where
             Context: std::borrow::Borrow<C2>,
             C2: Hash + Eq
     {
         self.by_context.get(context)?
-            .by_value()
+            .stats_by_node_value()
             .get(value)
     }
 
-    pub fn by_value_mut<C2: ?Sized>(&mut self, context: &C2, value: &NodeValue) -> Option<&mut SymbolInfo>
+    pub fn stats_by_node_value_mut<C2: ?Sized>(&mut self, context: &C2, value: &NodeValue) -> Option<&mut SymbolInfo>
         where
             Context: std::borrow::Borrow<C2>,
             C2: Hash + Eq
     {
         self.by_context.get_mut(context)?
-            .by_value_mut()
+            .stats_by_node_value_mut()
             .get_mut(value)
     }
 }
@@ -243,7 +243,7 @@ impl<Context, NodeValue> InstancesToProbabilities for ContextPredict<Context, No
 ///     from an existing dictionary.
 /// 2. Convert the `PathPredict<NodeValue, Instances>` into a `PathPredict<NodeValue, SymbolInfo>`
 ///     by calling `PathPredict::<_, Instances>::instances_to_probabilities`.
-/// 3. Use method `PathPredict::<_, SymbolInfo>::by_node_value` and `by_node_value_mut` to get the statistics
+/// 3. Use method `PathPredict::<_, SymbolInfo>::stats_by_node_value` and `stats_by_node_value_mut` to get the statistics
 ///     information in a specific path for a specific node value (used for compression). This information contains
 ///     an index designed to be written to a compressed stream.
 /// 4. Use method `PathPredict::<_, SymbolInfo>::frequencies_at` to get the statistics information in a
@@ -303,17 +303,17 @@ impl<NodeValue> PathPredict<NodeValue, SymbolInfo> where NodeValue: Eq + Hash + 
     ///
     /// This method is only implemented when `Statistics=SymbolInfo` as the index is initialized
     /// by `instances_to_probabilities`.
-    pub fn by_index(&mut self, tail: &[IOPathItem], index: SymbolIndex) -> Option<&NodeValue> {
-        self.context_predict.by_index(tail, index)
+    pub fn value_by_symbol_index(&mut self, tail: &[IOPathItem], index: SymbolIndex) -> Option<&NodeValue> {
+        self.context_predict.value_by_symbol_index(tail, index)
     }
 
 
-    pub fn by_value(&mut self, tail: &[IOPathItem], value: &NodeValue) -> Option<&SymbolInfo> {
-        self.context_predict.by_value(tail, value)
+    pub fn stats_by_node_value(&mut self, tail: &[IOPathItem], value: &NodeValue) -> Option<&SymbolInfo> {
+        self.context_predict.stats_by_node_value(tail, value)
     }
 
-    pub fn by_value_mut(&mut self, tail: &[IOPathItem], value: &NodeValue) -> Option<&mut SymbolInfo> {
-        self.context_predict.by_value_mut(tail, value)
+    pub fn stats_by_node_value_mut(&mut self, tail: &[IOPathItem], value: &NodeValue) -> Option<&mut SymbolInfo> {
+        self.context_predict.stats_by_node_value_mut(tail, value)
     }
 
 
@@ -329,7 +329,7 @@ impl<NodeValue> PathPredict<NodeValue, SymbolInfo> where NodeValue: Eq + Hash + 
                 return None;
             };
         info
-            .by_value_mut()
+            .stats_by_node_value_mut()
             .values_mut()
             .next()
             .map(|any| &any.distribution)

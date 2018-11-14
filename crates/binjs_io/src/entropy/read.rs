@@ -39,7 +39,7 @@ impl<R: Read> Decoder<R> {
 /// Used instead of a method as we need to generality wrt the field name.
 ///
 /// Usage:
-/// `symbol!(self, name_of_the_probability)table, "Description, used for debugging", path_in_the_ast)`
+/// `symbol!(self, name_of_the_probability_table, "Description, used for debugging", path_in_the_ast)`
 macro_rules! symbol {
     ( $me: ident, $table:ident, $description: expr, $path:expr ) => {
         {
@@ -66,7 +66,7 @@ macro_rules! symbol {
             // 4. Deduce the value we have just read.
             let value = $me.options.probability_tables
                 .$table
-                .by_index(path, SymbolIndex::new(index as usize))
+                .value_by_symbol_index(path, SymbolIndex::new(index as usize))
                 .ok_or_else(|| TokenReaderError::NotInDictionary(format!("{} [{}]", stringify!($ident), index)))?;
             Ok(value.clone())
         }
