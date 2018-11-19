@@ -56,13 +56,13 @@ macro_rules! symbol {
                 let mut borrow = frequencies
                     .borrow_mut();
 
-                // 3. Let bit-level I/O determine the symbol index stored.
+                // 2. Let bit-level I/O determine the symbol index stored.
                 let index = $me.reader.symbol(borrow.deref_mut())
                     .map_err(TokenReaderError::ReadError)?;
                 index
             };
 
-            // 4. Deduce the value we have just read.
+            // 3. Deduce the value we have just read.
             let value = $me.options.probability_tables
                 .$table
                 .value_by_symbol_index(path, SymbolIndex::new(index as usize))
@@ -72,6 +72,38 @@ macro_rules! symbol {
     }
 }
 
+
+macro_rules! window {
+    ( $me: ident, $table:ident, $description: expr ) => {
+        {
+            use std::ops::DerefMut;
+
+            let index = {
+                // 1. Get the frequency information for this path.
+                let frequencies = $me.options.probability_tables
+                    .$table
+                    .frequencies()
+                    .ok_or_else(|| TokenReaderError::NotInDictionary(format!("{}", $description)))?;
+                let mut borrow = frequencies
+                    .borrow_mut();
+
+                // 2. Let bit-level I/O determine the symbol index stored.
+                let index = $me.reader.symbol(borrow.deref_mut())
+                    .map_err(TokenReaderError::ReadError)?;
+                index
+            };
+
+            // 3. Deduce the value we have just read.
+            let value = $me.options.probability_tables
+                .$table
+                .value_by_symbol_index(SymbolIndex::new(index as usize))
+                .ok_or_else(|| TokenReaderError::NotInDictionary(format!("{} [{}]", stringify!($ident), index)))?;
+            Ok(value.clone())
+        }
+    }
+}
+
+
 impl<R: Read> TokenReader for Decoder<R> {
     type ListGuard = TrivialGuard;
     type TaggedGuard = TrivialGuard;
@@ -79,20 +111,20 @@ impl<R: Read> TokenReader for Decoder<R> {
 
     // ---- String types
 
-    fn string_at(&mut self, path: &Path) -> Result<Option<SharedString>, TokenReaderError> {
-        symbol!(self, string_literal_by_path, "string_literal_by_path", path)
-    }
-
     fn string_enum_at(&mut self, path: &Path) -> Result<SharedString, TokenReaderError> {
         symbol!(self, string_enum_by_path, "string_enum_by_path", path)
     }
 
-    fn identifier_name_at(&mut self, path: &Path) -> Result<Option<IdentifierName>, TokenReaderError> {
-        symbol!(self, identifier_name_by_path, "identifier_name_by_path", path)
+    fn string_at(&mut self, _path: &Path) -> Result<Option<SharedString>, TokenReaderError> {
+        window!(self, string_literal_by_window, "string_literal_by_window")
     }
 
-    fn property_key_at(&mut self, path: &Path) -> Result<Option<PropertyKey>, TokenReaderError> {
-        symbol!(self, property_key_by_path, "property_key_by_path", path)
+    fn identifier_name_at(&mut self, _path: &Path) -> Result<Option<IdentifierName>, TokenReaderError> {
+        window!(self, identifier_name_by_window, "identifier_name_by_window")
+    }
+
+    fn property_key_at(&mut self, _path: &Path) -> Result<Option<PropertyKey>, TokenReaderError> {
+        window!(self, property_key_by_window, "property_key_by_window")
     }
 
     // ---- Primitive types

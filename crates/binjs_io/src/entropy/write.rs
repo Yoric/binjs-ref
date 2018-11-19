@@ -14,8 +14,10 @@ use super::predict::Instances;
 
 use binjs_shared::{ F64, FieldName, IdentifierName, InterfaceName, PropertyKey, SharedString };
 
+use std::io::Write;
 use std::ops::DerefMut;
 
+use brotli;
 use itertools::Itertools;
 use range_encoding::opus;
 
@@ -37,8 +39,78 @@ pub struct ContentInfo<T> {
     pub string_literals: T,
     pub list_lengths: T,
 }
+
+impl ContentInfo<brotli::CompressorWriter<Vec<u8>>> {
+    pub fn brotli() -> Self {
+        const BROTLI_BUFFER_SIZE: usize = 32768;
+        const BROTLI_QUALITY: u32 = 11;
+        const BROTLI_LG_WINDOW_SIZE: u32 = 20;
+        ContentInfo {
+            bools: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            floats: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            unsigned_longs: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            string_enums: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            property_keys: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            identifier_names: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            interface_names: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            string_literals: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+            list_lengths: brotli::CompressorWriter::new(Vec::with_capacity(BROTLI_BUFFER_SIZE), BROTLI_BUFFER_SIZE, BROTLI_QUALITY, BROTLI_LG_WINDOW_SIZE),
+        }
+    }
+}
+impl ContentInfo<brotli::CompressorWriter<Vec<u8>>> {
+    pub fn into_statistics(mut self) -> ContentInfo<Bytes> {
+        ContentInfo {
+            bools: {
+                self.bools.flush()
+                    .unwrap();
+                self.bools.get_ref().len().into()
+            },
+            floats: {
+                self.floats.flush()
+                    .unwrap();
+                self.floats.get_ref().len().into()
+            },
+            unsigned_longs: {
+                self.unsigned_longs.flush()
+                    .unwrap();
+                self.unsigned_longs.get_ref().len().into()
+            },
+            string_enums: {
+                self.string_enums.flush()
+                    .unwrap();
+                self.string_enums.get_ref().len().into()
+            },
+            property_keys: {
+                self.property_keys.flush()
+                    .unwrap();
+                self.property_keys.get_ref().len().into()
+            },
+            identifier_names: {
+                self.identifier_names.flush()
+                    .unwrap();
+                self.identifier_names.get_ref().len().into()
+            },
+            interface_names: {
+                self.interface_names.flush()
+                    .unwrap();
+                self.interface_names.get_ref().len().into()
+            },
+            string_literals: {
+                self.string_literals.flush()
+                    .unwrap();
+                self.string_literals.get_ref().len().into()
+            },
+            list_lengths: {
+                self.list_lengths.flush()
+                    .unwrap();
+                self.list_lengths.get_ref().len().into()
+            }
+        }
+    }
+}
 impl ContentInfo<opus::Writer<LengthWriter>> {
-    pub fn new() -> Self {
+    pub fn length_writer() -> Self {
         ContentInfo {
             bools: opus::Writer::new(LengthWriter::new()),
             floats: opus::Writer::new(LengthWriter::new()),
@@ -162,7 +234,9 @@ pub struct Encoder {
     // --- Statistics.
 
     /// Measure the number of bytes written.
-    content_lengths: ContentInfo<opus::Writer<LengthWriter>>,
+    content_opus_lengths: ContentInfo<opus::Writer<LengthWriter>>,
+
+    content_brotli: ContentInfo<brotli::CompressorWriter<Vec<u8>>>,
 
     /// Measure the number of entries written.
     content_instances: ContentInfo<Instances>,
@@ -174,7 +248,8 @@ impl Encoder {
         Encoder {
             writer: opus::Writer::new(Vec::with_capacity(INITIAL_BUFFER_SIZE_BYTES)),
             options,
-            content_lengths: ContentInfo::new(),
+            content_opus_lengths: ContentInfo::length_writer(),
+            content_brotli:  ContentInfo::brotli(),
             content_instances: ContentInfo::default(),
         }
     }
@@ -222,7 +297,7 @@ macro_rules! symbol {
                 .map_err(TokenWriterError::WriteError)?;
 
             // 3. Also, update statistics
-            $me.content_lengths
+            $me.content_opus_lengths
                 .$info
                 .symbol(symbol.index.into(), borrow.deref_mut())
                 .map_err(TokenWriterError::WriteError)?;
@@ -254,10 +329,70 @@ macro_rules! window {
                     .map_err(TokenWriterError::WriteError)?;
 
                 // 3. Also, update statistics
-                $me.content_lengths
+                $me.content_opus_lengths
                     .$info
                     .symbol(symbol.index.into(), borrow.deref_mut())
                     .map_err(TokenWriterError::WriteError)?;
+                $me.content_instances
+                    .$info += Into::<Instances>::into(1);
+                Ok(())
+        }
+    }
+}
+
+macro_rules! brotli {
+    ( $me: ident, $table:ident, $brotli:ident, $info:ident, $description: expr, $value: expr ) => {
+        {
+            use bytes::varnum::WriteVarNum;
+            let index = $me.options
+                .probability_tables
+                .$table
+                .get_dictionary_index(&$value)
+                .ok_or_else(|| {
+                    debug!(target: "entropy", "Couldn't find value {:?} ({})",
+                        $value, $description);
+                    TokenWriterError::NotInDictionary(format!("{}: {:?}", $description, $value))
+                })?;
+
+                // 2. Ignore distribution, just write the index to Brotli.
+                let as_usize: usize = index.into();
+                let as_u32: u32 = as_usize as u32;
+                $me.content_brotli
+                    .$brotli
+                    .write_varnum(as_u32)
+                    .map_err(TokenWriterError::WriteError)?;
+
+                // 3. Also, update statistics
+                $me.content_instances
+                    .$info += Into::<Instances>::into(1);
+                Ok(())
+        }
+    }
+}
+
+macro_rules! brotli_window {
+    ( $me: ident, $table:ident, $brotli:ident, $info:ident, $description: expr, $value: expr ) => {
+        {
+            use bytes::varnum::WriteVarNum;
+            let symbol = $me.options
+                .probability_tables
+                .$table
+                .stats_by_node_value_mut(&$value)
+                .ok_or_else(|| {
+                    debug!(target: "entropy", "Couldn't find value {:?} ({})",
+                        $value, $description);
+                    TokenWriterError::NotInDictionary(format!("{}: {:?}", $description, $value))
+                })?;
+
+                // 2. Ignore distribution, just write the index to Brotli.
+                let as_usize: usize = symbol.index.into();
+                let as_u32: u32 = as_usize as u32;
+                $me.content_brotli
+                    .$brotli
+                    .write_varnum(as_u32)
+                    .map_err(TokenWriterError::WriteError)?;
+
+                // 3. Also, update statistics
                 $me.content_instances
                     .$info += Into::<Instances>::into(1);
                 Ok(())
@@ -271,12 +406,23 @@ impl TokenWriter for Encoder {
     fn done(self) -> Result<Self::Data, TokenWriterError> {
         let data = self.writer.done()
             .map_err(TokenWriterError::WriteError)?;
+
+        // Update byte lengths
         *self.options
             .content_lengths
             .borrow_mut()
             +=
-        self.content_lengths
+        self.content_opus_lengths
             .into_statistics();
+
+        *self.options
+            .content_lengths
+            .borrow_mut()
+            +=
+        self.content_brotli
+            .into_statistics();
+
+        // Update number of instances
         *self.options
             .content_instances
             .borrow_mut()
@@ -299,20 +445,23 @@ impl TokenWriter for Encoder {
         symbol!(self, unsigned_long_by_path, unsigned_longs, "unsigned_long_by_path",  path,  value)
     }
 
-    fn string_at(&mut self, value: Option<&SharedString>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, string_literal_by_path, string_literals, "string_literal_by_path",  path,  value.cloned())
-    }
-
     fn string_enum_at(&mut self, value: &SharedString, path: &Path) -> Result<(), TokenWriterError> {
         symbol!(self, string_enum_by_path, string_enums, "string_enum_by_path",  path,  value)
     }
 
-    fn identifier_name_at(&mut self, value: Option<&IdentifierName>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, identifier_name_by_path, identifier_names, "identifier_name_by_path",  path,  value.cloned())
+    fn string_at(&mut self, value: Option<&SharedString>, _path: &Path) -> Result<(), TokenWriterError> {
+        //window!(self, string_literal_by_window, string_literals, "string_literal_by_window",  value.cloned())
+        brotli!(self, string_literal_by_window, string_literals, string_literals, "string_literal_by_window", value.cloned())
+    }
+
+    fn identifier_name_at(&mut self, value: Option<&IdentifierName>, _path: &Path) -> Result<(), TokenWriterError> {
+        //window!(self, identifier_name_by_window, identifier_names, "identifier_name_by_window", value.cloned())
+        brotli!(self, identifier_name_by_window, identifier_names, identifier_names, "identifier_name_by_window", value.cloned())
     }
 
     fn property_key_at(&mut self, value: Option<&PropertyKey>, _path: &Path) -> Result<(), TokenWriterError> {
-        window!(self, property_key_by_window, property_keys, "property_key_by_window",  value.cloned())
+        //window!(self, property_key_by_window, property_keys, "property_key_by_window",  value.cloned())
+        brotli!(self, property_key_by_window, property_keys, property_keys, "property_key_by_window", value.cloned())
     }
 
 

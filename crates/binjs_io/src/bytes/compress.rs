@@ -14,7 +14,7 @@ use std::collections::HashSet;
 use std::io::{ Cursor, Read, Write };
 
 const BROTLI_BUFFER_SIZE : usize = 4096;
-const BROTLI_QUALITY: u32 = 8;
+const BROTLI_QUALITY: u32 = 11;
 const BROTLI_LG_WINDOW_SIZE: u32 = 20;
 const LZW_MIN_CODE_SIZE: u8 = 8;
 
