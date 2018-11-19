@@ -233,6 +233,38 @@ macro_rules! symbol {
     }
 }
 
+macro_rules! window {
+    ( $me: ident, $table:ident, $info:ident, $description: expr, $value: expr ) => {
+        {
+            let symbol = $me.options
+                .probability_tables
+                .$table
+                .stats_by_node_value_mut(&$value)
+                .ok_or_else(|| {
+                    debug!(target: "entropy", "Couldn't find value {:?} ({})",
+                        $value, $description);
+                    TokenWriterError::NotInDictionary(format!("{}: {:?}", $description, $value))
+                })?;
+
+                // 2. This gives us an index (`symbol.index`) and a probability distribution
+                // (`symbol.distribution`). Use them to write the probability at bit-level.
+                let mut borrow = symbol.distribution
+                    .borrow_mut();
+                $me.writer.symbol(symbol.index.into(), borrow.deref_mut())
+                    .map_err(TokenWriterError::WriteError)?;
+
+                // 3. Also, update statistics
+                $me.content_lengths
+                    .$info
+                    .symbol(symbol.index.into(), borrow.deref_mut())
+                    .map_err(TokenWriterError::WriteError)?;
+                $me.content_instances
+                    .$info += Into::<Instances>::into(1);
+                Ok(())
+        }
+    }
+}
+
 impl TokenWriter for Encoder {
     type Data = Vec<u8>;
 
@@ -279,8 +311,8 @@ impl TokenWriter for Encoder {
         symbol!(self, identifier_name_by_path, identifier_names, "identifier_name_by_path",  path,  value.cloned())
     }
 
-    fn property_key_at(&mut self, value: Option<&PropertyKey>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, property_key_by_path, property_keys, "property_key_by_path",  path,  value.cloned())
+    fn property_key_at(&mut self, value: Option<&PropertyKey>, _path: &Path) -> Result<(), TokenWriterError> {
+        window!(self, property_key_by_window, property_keys, "property_key_by_window",  value.cloned())
     }
 
 

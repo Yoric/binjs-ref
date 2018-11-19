@@ -548,6 +548,7 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
                 }
             };
 
+        debug!(target: "predict", "WindowPredict: {:?} has just been inserted and will be encoded as {:?}", value, prediction);
         self.info
             .stats_by_node_value_mut()
             .get_mut(&prediction)
