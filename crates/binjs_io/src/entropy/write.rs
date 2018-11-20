@@ -9,35 +9,18 @@
 
 use ::TokenWriterError;
 use ::io::{ Path, TokenWriter };
+use ::io::content::ContentInfo;
 use bytes::lengthwriter::{ Bytes, LengthWriter };
 use super::predict::Instances;
 
 use binjs_shared::{ F64, FieldName, IdentifierName, InterfaceName, PropertyKey, SharedString };
 
-use std::io::Write;
 use std::ops::DerefMut;
 
 use itertools::Itertools;
 use range_encoding::opus;
 
 const INITIAL_BUFFER_SIZE_BYTES : usize = 32768;
-
-/// A container for information associated with a type of data we write to the stream
-/// as part of the content (i.e. not the header).
-///
-/// Typically used to collect/display the number of bytes written in each category.
-#[derive(Debug, Default, Add, Clone, AddAssign)]
-pub struct ContentInfo<T> {
-    pub bools: T,
-    pub floats: T,
-    pub unsigned_longs: T,
-    pub string_enums: T,
-    pub property_keys: T,
-    pub identifier_names: T,
-    pub interface_names: T,
-    pub string_literals: T,
-    pub list_lengths: T,
-}
 
 impl std::fmt::Display for ContentInfo<(Bytes, Instances)> {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
@@ -130,8 +113,8 @@ impl Encoder {
         Encoder {
             writer: opus::Writer::new(Vec::with_capacity(INITIAL_BUFFER_SIZE_BYTES)),
             options,
-            content_opus_lengths: ContentInfo::length_writer(),
-            content_instances: ContentInfo::default(),
+            content_opus_lengths: ContentInfo::with(|_| opus::Writer::new(LengthWriter::new())),
+            content_instances: ContentInfo::with(|_| 0.into()),
         }
     }
 }
@@ -234,9 +217,9 @@ impl TokenWriter for Encoder {
             .borrow_mut()
             +=
         self.content_opus_lengths
-            .into_statistics();
-
-        // Update number of instances
+            .into_with(|field, _| field.done()
+                .unwrap()
+                .len());
         *self.options
             .content_instances
             .borrow_mut()

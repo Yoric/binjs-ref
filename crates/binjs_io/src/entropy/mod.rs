@@ -64,9 +64,9 @@ pub mod probabilities;
 use self::dictionary::Dictionary;
 use self::predict::Instances;
 use self::probabilities::SymbolInfo;
-use self::write::ContentInfo;
 
 use ::bytes::lengthwriter::Bytes;
+use ::io::content::ContentInfo;
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -92,8 +92,8 @@ impl Options {
     pub fn new(probability_tables:Dictionary<SymbolInfo>) -> Self {
         Options {
             probability_tables,
-            content_lengths: Rc::new(RefCell::new(write::ContentInfo::default())),
-            content_instances: Rc::new(RefCell::new(write::ContentInfo::default())),
+            content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
+            content_instances: Rc::new(RefCell::new(ContentInfo::default())),
         }
     }
 
@@ -153,8 +153,8 @@ impl ::FormatProvider for FormatProvider {
         Ok(::Format::Entropy {
             options: Options {
                 probability_tables: probability_tables.instances_to_probabilities("probability_tables"),
-                content_lengths: Rc::new(RefCell::new(write::ContentInfo::default())),
-                content_instances: Rc::new(RefCell::new(write::ContentInfo::default())),
+                content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
+                content_instances: Rc::new(RefCell::new(ContentInfo::default())),
             }
         })
     }

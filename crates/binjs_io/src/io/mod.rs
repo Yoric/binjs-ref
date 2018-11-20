@@ -13,6 +13,8 @@ use ::{ TokenReaderError, TokenWriterError };
 
 use std::rc::Rc;
 
+pub mod content;
+
 mod deprecated;
 
 pub use self::deprecated::{ TokenWriterWithTree, TokenWriterTreeAdapter };
