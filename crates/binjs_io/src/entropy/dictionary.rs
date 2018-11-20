@@ -42,6 +42,18 @@ macro_rules! symbol {
     }
 }
 
+macro_rules! window {
+    ( $me: ident, $table:ident, $value: expr ) => {
+        {
+            $me.dictionary
+                .$table
+                .add($value);
+
+                Ok(())
+        }
+    }
+}
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Dictionary<T> {
     /// All booleans appearing in the AST, predicted by path.
@@ -362,18 +374,21 @@ impl<'a> TokenWriter for DictionaryBuilder<'a> {
 
     fn string_at(&mut self, value: Option<&SharedString>, path: &IOPath) -> Result<(), TokenWriterError> {
         symbol!(self, string_literal_by_path, "string_literal_by_path", path, value.cloned())?;
+        window!(self, string_literal_by_window, value.cloned())?;
         Self::add_instance_to_strings(value.cloned(), &mut self.instances_of_strings_in_current_file.string_literal_instances);
         Ok(())
     }
 
     fn property_key_at(&mut self, value: Option<&PropertyKey>, path: &IOPath) -> Result<(), TokenWriterError> {
         symbol!(self, property_key_by_path, "property_key_by_path", path, value.cloned())?;
+        window!(self, property_key_by_window, value.cloned())?;
         Self::add_instance_to_strings(value.cloned(), &mut self.instances_of_strings_in_current_file.property_key_instances);
         Ok(())
     }
 
     fn identifier_name_at(&mut self, value: Option<&IdentifierName>, path: &IOPath) -> Result<(), TokenWriterError> {
         symbol!(self, identifier_name_by_path, "identifier_name_by_path", path, value.cloned())?;
+        window!(self, identifier_name_by_window, value.cloned())?;
         Self::add_instance_to_strings(value.cloned(), &mut self.instances_of_strings_in_current_file.identifier_name_instances);
         Ok(())
     }

@@ -14,6 +14,7 @@ use super::predict::Instances;
 
 use binjs_shared::{ F64, FieldName, IdentifierName, InterfaceName, PropertyKey, SharedString };
 
+use std::io::Write;
 use std::ops::DerefMut;
 
 use itertools::Itertools;
@@ -37,52 +38,7 @@ pub struct ContentInfo<T> {
     pub string_literals: T,
     pub list_lengths: T,
 }
-impl ContentInfo<opus::Writer<LengthWriter>> {
-    pub fn new() -> Self {
-        ContentInfo {
-            bools: opus::Writer::new(LengthWriter::new()),
-            floats: opus::Writer::new(LengthWriter::new()),
-            unsigned_longs: opus::Writer::new(LengthWriter::new()),
-            string_enums: opus::Writer::new(LengthWriter::new()),
-            property_keys: opus::Writer::new(LengthWriter::new()),
-            identifier_names: opus::Writer::new(LengthWriter::new()),
-            interface_names: opus::Writer::new(LengthWriter::new()),
-            string_literals: opus::Writer::new(LengthWriter::new()),
-            list_lengths: opus::Writer::new(LengthWriter::new()),
-        }
-    }
-    pub fn into_statistics(self) -> ContentInfo<Bytes> {
-        ContentInfo {
-            bools: self.bools.done()
-				.unwrap()
-				.len(),
-            floats: self.floats.done()
-				.unwrap()
-				.len(),
-            unsigned_longs: self.unsigned_longs.done()
-				.unwrap()
-				.len(),
-            string_enums: self.string_enums.done()
-				.unwrap()
-				.len(),
-            property_keys: self.property_keys.done()
-				.unwrap()
-				.len(),
-            identifier_names: self.identifier_names.done()
-				.unwrap()
-				.len(),
-            interface_names: self.interface_names.done()
-				.unwrap()
-				.len(),
-            string_literals: self.string_literals.done()
-				.unwrap()
-				.len(),
-            list_lengths: self.list_lengths.done()
-				.unwrap()
-				.len(),
-        }
-    }
-}
+
 impl std::fmt::Display for ContentInfo<(Bytes, Instances)> {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
         let bools_bytes = Into::<usize>::into(self.bools.0);
@@ -162,7 +118,7 @@ pub struct Encoder {
     // --- Statistics.
 
     /// Measure the number of bytes written.
-    content_lengths: ContentInfo<opus::Writer<LengthWriter>>,
+    content_opus_lengths: ContentInfo<opus::Writer<LengthWriter>>,
 
     /// Measure the number of entries written.
     content_instances: ContentInfo<Instances>,
@@ -174,7 +130,7 @@ impl Encoder {
         Encoder {
             writer: opus::Writer::new(Vec::with_capacity(INITIAL_BUFFER_SIZE_BYTES)),
             options,
-            content_lengths: ContentInfo::new(),
+            content_opus_lengths: ContentInfo::length_writer(),
             content_instances: ContentInfo::default(),
         }
     }
@@ -222,7 +178,7 @@ macro_rules! symbol {
                 .map_err(TokenWriterError::WriteError)?;
 
             // 3. Also, update statistics
-            $me.content_lengths
+            $me.content_opus_lengths
                 .$info
                 .symbol(symbol.index.into(), borrow.deref_mut())
                 .map_err(TokenWriterError::WriteError)?;
@@ -233,18 +189,54 @@ macro_rules! symbol {
     }
 }
 
+macro_rules! window {
+    ( $me: ident, $table:ident, $info:ident, $description: expr, $value: expr ) => {
+        {
+            let symbol = $me.options
+                .probability_tables
+                .$table
+                .stats_by_node_value_mut(&$value)
+                .ok_or_else(|| {
+                    debug!(target: "entropy", "Couldn't find value {:?} ({})",
+                        $value, $description);
+                    TokenWriterError::NotInDictionary(format!("{}: {:?}", $description, $value))
+                })?;
+
+                // 2. This gives us an index (`symbol.index`) and a probability distribution
+                // (`symbol.distribution`). Use them to write the probability at bit-level.
+                let mut borrow = symbol.distribution
+                    .borrow_mut();
+                $me.writer.symbol(symbol.index.into(), borrow.deref_mut())
+                    .map_err(TokenWriterError::WriteError)?;
+
+                // 3. Also, update statistics
+                $me.content_opus_lengths
+                    .$info
+                    .symbol(symbol.index.into(), borrow.deref_mut())
+                    .map_err(TokenWriterError::WriteError)?;
+                $me.content_instances
+                    .$info += Into::<Instances>::into(1);
+                Ok(())
+        }
+    }
+}
+
 impl TokenWriter for Encoder {
     type Data = Vec<u8>;
 
     fn done(self) -> Result<Self::Data, TokenWriterError> {
         let data = self.writer.done()
             .map_err(TokenWriterError::WriteError)?;
+
+        // Update byte lengths
         *self.options
             .content_lengths
             .borrow_mut()
             +=
-        self.content_lengths
+        self.content_opus_lengths
             .into_statistics();
+
+        // Update number of instances
         *self.options
             .content_instances
             .borrow_mut()
@@ -253,10 +245,24 @@ impl TokenWriter for Encoder {
         Ok(data)
     }
 
-    // --- Primitive values
+    // --- Built-in values
+
+    fn string_enum_at(&mut self, value: &SharedString, path: &Path) -> Result<(), TokenWriterError> {
+        symbol!(self, string_enum_by_path, string_enums, "string_enum_by_path",  path,  value)
+    }
+
+    fn enter_tagged_tuple_at(&mut self, tag: &InterfaceName, _children: &[&FieldName], path: &Path) -> Result<(), TokenWriterError> {
+        symbol!(self, interface_name_by_path, interface_names, "interface_name_by_path",  path,  tag)
+    }
 
     fn bool_at(&mut self, value: Option<bool>, path: &Path) -> Result<(), TokenWriterError> {
         symbol!(self, bool_by_path, bools, "bool_by_path",  path,  value)
+    }
+
+    // --- Extensible values
+
+    fn enter_list_at(&mut self, len: usize, path: &Path) -> Result<(), TokenWriterError> {
+        symbol!(self, list_length_by_path, list_lengths, "list_length_by_path",  path,  Some(len as u32))
     }
 
     fn float_at(&mut self, value: Option<f64>, path: &Path) -> Result<(), TokenWriterError> {
@@ -267,31 +273,16 @@ impl TokenWriter for Encoder {
         symbol!(self, unsigned_long_by_path, unsigned_longs, "unsigned_long_by_path",  path,  value)
     }
 
-    fn string_at(&mut self, value: Option<&SharedString>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, string_literal_by_path, string_literals, "string_literal_by_path",  path,  value.cloned())
+    fn string_at(&mut self, value: Option<&SharedString>, _path: &Path) -> Result<(), TokenWriterError> {
+        window!(self, string_literal_by_window, string_literals, "string_literal_by_window",  value.cloned())
     }
 
-    fn string_enum_at(&mut self, value: &SharedString, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, string_enum_by_path, string_enums, "string_enum_by_path",  path,  value)
+    fn identifier_name_at(&mut self, value: Option<&IdentifierName>, _path: &Path) -> Result<(), TokenWriterError> {
+        window!(self, identifier_name_by_window, identifier_names, "identifier_name_by_window", value.cloned())
     }
 
-    fn identifier_name_at(&mut self, value: Option<&IdentifierName>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, identifier_name_by_path, identifier_names, "identifier_name_by_path",  path,  value.cloned())
-    }
-
-    fn property_key_at(&mut self, value: Option<&PropertyKey>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, property_key_by_path, property_keys, "property_key_by_path",  path,  value.cloned())
-    }
-
-
-    // --- Composite stuff
-
-    fn enter_tagged_tuple_at(&mut self, tag: &InterfaceName, _children: &[&FieldName], path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, interface_name_by_path, interface_names, "interface_name_by_path",  path,  tag)
-    }
-
-    fn enter_list_at(&mut self, len: usize, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, list_length_by_path, list_lengths, "list_length_by_path",  path,  Some(len as u32))
+    fn property_key_at(&mut self, value: Option<&PropertyKey>, _path: &Path) -> Result<(), TokenWriterError> {
+        window!(self, property_key_by_window, property_keys, "property_key_by_window",  value.cloned())
     }
 
     fn offset_at(&mut self, _path: &Path) -> Result<(), TokenWriterError> {
