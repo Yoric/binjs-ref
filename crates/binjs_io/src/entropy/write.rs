@@ -9,9 +9,8 @@
 
 use ::TokenWriterError;
 use ::io::{ Path, TokenWriter };
-use ::io::content::ContentInfo;
+use ::io::content::{ ContentInfo, HitsAndMisses, Instances };
 use bytes::lengthwriter::{ Bytes, LengthWriter };
-use super::predict::Instances;
 
 use binjs_shared::{ F64, FieldName, IdentifierName, InterfaceName, PropertyKey, SharedString };
 
@@ -101,10 +100,11 @@ pub struct Encoder {
     // --- Statistics.
 
     /// Measure the number of bytes written.
-    content_opus_lengths: ContentInfo<opus::Writer<LengthWriter>>,
+    content_opus_lengths: ContentInfo<HitsAndMisses<opus::Writer<LengthWriter>>>,
+
 
     /// Measure the number of entries written.
-    content_instances: ContentInfo<Instances>,
+    content_instances: ContentInfo<HitsAndMisses<Instances>>,
 }
 
 impl Encoder {
@@ -113,20 +113,20 @@ impl Encoder {
         Encoder {
             writer: opus::Writer::new(Vec::with_capacity(INITIAL_BUFFER_SIZE_BYTES)),
             options,
-            content_opus_lengths: ContentInfo::with(|_| opus::Writer::new(LengthWriter::new())),
-            content_instances: ContentInfo::with(|_| 0.into()),
+            content_opus_lengths: ContentInfo::with(|_| HitsAndMisses::with(|| opus::Writer::new(LengthWriter::new()))),
+            content_instances: ContentInfo::with(|_| HitsAndMisses::with(|| 0.into())),
         }
     }
 }
 
 
-/// Emit a single symbol.
+/// Emit a single symbol, using path prediction.
 ///
 /// Used instead of a method as we need to generality wrt the field name.
 ///
 /// Usage:
-/// `symbol!(self, name_of_the_probability_table, name_of_the_ContentInfo_field, "Description, used for debugging",  path_in_the_ast,  value_to_encode)`
-macro_rules! symbol {
+/// `path_symbol!(self, name_of_the_probability_table, name_of_the_ContentInfo_field, "Description, used for debugging",  path_in_the_ast,  value_to_encode)`
+macro_rules! path_symbol {
     ( $me: ident, $table:ident, $info:ident, $description: expr, $path:expr, $value: expr ) => {
         {
             use std::borrow::Borrow;
@@ -163,19 +163,28 @@ macro_rules! symbol {
             // 3. Also, update statistics
             $me.content_opus_lengths
                 .$info
+                .all
                 .symbol(symbol.index.into(), borrow.deref_mut())
                 .map_err(TokenWriterError::WriteError)?;
             $me.content_instances
-                .$info += Into::<Instances>::into(1);
+                .$info
+                .all += Into::<Instances>::into(1);
             Ok(())
         }
     }
 }
 
-macro_rules! window {
+/// Emit a single symbol, using window prediction.
+///
+/// Used instead of a method as we need to generality wrt the field name.
+///
+/// Usage:
+/// `window_symbol!(self, name_of_the_probability_table, name_of_the_ContentInfo_field, "Description, used for debugging", value_to_encode)`
+macro_rules! window_symbol {
     ( $me: ident, $table:ident, $info:ident, $description: expr, $value: expr ) => {
         {
-            let symbol = $me.options
+            // 1. Locate the `SymbolInfo` information for this value.
+            let (info, symbol) = $me.options
                 .probability_tables
                 .$table
                 .stats_by_node_value_mut(&$value)
@@ -185,21 +194,47 @@ macro_rules! window {
                     TokenWriterError::NotInDictionary(format!("{}: {:?}", $description, $value))
                 })?;
 
-                // 2. This gives us an index (`symbol.index`) and a probability distribution
-                // (`symbol.distribution`). Use them to write the probability at bit-level.
-                let mut borrow = symbol.distribution
-                    .borrow_mut();
-                $me.writer.symbol(symbol.index.into(), borrow.deref_mut())
-                    .map_err(TokenWriterError::WriteError)?;
+            // 2. This gives us an index (`symbol.index`) and a probability distribution
+            // (`symbol.distribution`). Use them to write the probability at bit-level.
+            let mut borrow = symbol.distribution
+                .borrow_mut();
+            $me.writer.symbol(symbol.index.into(), borrow.deref_mut())
+                .map_err(TokenWriterError::WriteError)?;
 
-                // 3. Also, update statistics
-                $me.content_opus_lengths
-                    .$info
-                    .symbol(symbol.index.into(), borrow.deref_mut())
-                    .map_err(TokenWriterError::WriteError)?;
-                $me.content_instances
-                    .$info += Into::<Instances>::into(1);
-                Ok(())
+            // 3. Update general statistics
+            $me.content_opus_lengths
+                .$info
+                .all
+                .symbol(symbol.index.into(), borrow.deref_mut())
+                .map_err(TokenWriterError::WriteError)?;
+            $me.content_instances
+                .$info
+                .all += Into::<Instances>::into(1);
+
+            // 4. Update hit/miss statistics
+            match info {
+                super::predict::WindowPrediction::DictionaryIndex(_) => {
+                    $me.content_opus_lengths
+                        .$info
+                        .misses
+                        .symbol(symbol.index.into(), borrow.deref_mut())
+                        .map_err(TokenWriterError::WriteError)?;
+                    $me.content_instances
+                        .$info
+                        .misses += Into::<Instances>::into(1);
+                }
+                super::predict::WindowPrediction::BackReference(_) => {
+                    $me.content_opus_lengths
+                        .$info
+                        .hits
+                        .symbol(symbol.index.into(), borrow.deref_mut())
+                        .map_err(TokenWriterError::WriteError)?;
+                    $me.content_instances
+                        .$info
+                        .hits += Into::<Instances>::into(1);
+                }
+            }
+            Ok(())
         }
     }
 }
@@ -217,55 +252,59 @@ impl TokenWriter for Encoder {
             .borrow_mut()
             +=
         self.content_opus_lengths
-            .into_with(|field, _| field.done()
-                .unwrap()
-                .len());
+            .into_with(|field, _| field.into_with(|stream|
+                stream.done()
+                    .unwrap()
+                    .len()));
+
+        // Update number of instances
         *self.options
             .content_instances
             .borrow_mut()
             +=
         self.content_instances;
+
         Ok(data)
     }
 
     // --- Built-in values
 
     fn string_enum_at(&mut self, value: &SharedString, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, string_enum_by_path, string_enums, "string_enum_by_path",  path,  value)
+        path_symbol!(self, string_enum_by_path, string_enums, "string_enum_by_path",  path,  value)
     }
 
     fn enter_tagged_tuple_at(&mut self, tag: &InterfaceName, _children: &[&FieldName], path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, interface_name_by_path, interface_names, "interface_name_by_path",  path,  tag)
+        path_symbol!(self, interface_name_by_path, interface_names, "interface_name_by_path",  path,  tag)
     }
 
     fn bool_at(&mut self, value: Option<bool>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, bool_by_path, bools, "bool_by_path",  path,  value)
+        path_symbol!(self, bool_by_path, bools, "bool_by_path",  path,  value)
     }
 
     // --- Extensible values
 
     fn enter_list_at(&mut self, len: usize, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, list_length_by_path, list_lengths, "list_length_by_path",  path,  Some(len as u32))
+        path_symbol!(self, list_length_by_path, list_lengths, "list_length_by_path",  path,  Some(len as u32))
     }
 
     fn float_at(&mut self, value: Option<f64>, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, float_by_path, floats, "float_by_path",  path,  value.map(F64::from))
+        path_symbol!(self, float_by_path, floats, "float_by_path",  path,  value.map(F64::from))
     }
 
     fn unsigned_long_at(&mut self, value: u32, path: &Path) -> Result<(), TokenWriterError> {
-        symbol!(self, unsigned_long_by_path, unsigned_longs, "unsigned_long_by_path",  path,  value)
+        path_symbol!(self, unsigned_long_by_path, unsigned_longs, "unsigned_long_by_path",  path,  value)
     }
 
     fn string_at(&mut self, value: Option<&SharedString>, _path: &Path) -> Result<(), TokenWriterError> {
-        window!(self, string_literal_by_window, string_literals, "string_literal_by_window",  value.cloned())
+        window_symbol!(self, string_literal_by_window, string_literals, "string_literal_by_window",  value.cloned())
     }
 
     fn identifier_name_at(&mut self, value: Option<&IdentifierName>, _path: &Path) -> Result<(), TokenWriterError> {
-        window!(self, identifier_name_by_window, identifier_names, "identifier_name_by_window", value.cloned())
+        window_symbol!(self, identifier_name_by_window, identifier_names, "identifier_name_by_window", value.cloned())
     }
 
     fn property_key_at(&mut self, value: Option<&PropertyKey>, _path: &Path) -> Result<(), TokenWriterError> {
-        window!(self, property_key_by_window, property_keys, "property_key_by_window",  value.cloned())
+        window_symbol!(self, property_key_by_window, property_keys, "property_key_by_window",  value.cloned())
     }
 
     fn offset_at(&mut self, _path: &Path) -> Result<(), TokenWriterError> {
