@@ -143,12 +143,12 @@ impl ::FormatProvider for FormatProvider {
 
         let matches = matches.unwrap();
 
-        let probability_tables_path = matches.value_of("external-dictionary-probabilities")
+        let probability_tables_path = matches.value_of("dictionary")
             .unwrap(); // Guaranteed by `clap`.
         let probability_tables_source = std::fs::File::open(&probability_tables_path)
-            .expect("Could not open external-dictionary-probabilities");
+            .expect("Could not open dictionary");
         let probability_tables : Dictionary<Instances> = bincode::deserialize_from(probability_tables_source)
-            .expect("Could not decode external-dictionary-probabilities");
+            .expect("Could not decode dictionary");
 
         Ok(::Format::Entropy {
             options: Options {
