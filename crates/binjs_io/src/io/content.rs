@@ -205,13 +205,15 @@ impl Display for HitsAndMisses<BytesAndInstances> {
         write!(fmt, "{all}",
             all = self.all)?;
         if self.hits.instances > Instances(0) {
-            write!(fmt, "\n\t{percent:.2}% Hits: {data}",
+            write!(fmt, "
+        {percent:.2}% Hits: {data}",
                 percent = 100. * (Into::<usize>::into(self.hits.instances) as f64)
                     / (Into::<usize>::into(self.hits.instances) as f64 + Into::<usize>::into(self.misses.instances) as f64),
                 data = self.hits)?;
         }
         if self.misses.instances > Instances(0) {
-            write!(fmt, "\n\t{percent:.2}% Misses: {data}",
+            write!(fmt,"
+        {percent:.2}% Misses: {data}",
                 percent = 100. * (Into::<usize>::into(self.misses.instances) as f64)
                     / (Into::<usize>::into(self.hits.instances) as f64 + Into::<usize>::into(self.misses.instances) as f64),
                 data = self.misses)?;

@@ -73,6 +73,12 @@ mod context_information {
         }
     }
 
+    impl<NodeValue> ContextInformation<NodeValue, Instances> where NodeValue: Eq + Hash {
+        pub fn instances_by_node_value(&self) -> &HashMap<NodeValue, Instances> {
+            &self.stats_by_node_value
+        }
+    }
+
     // Methods that make sense only when we have finished computing frequency information.
     impl<NodeValue> ContextInformation<NodeValue, SymbolInfo> where NodeValue: Eq + Hash {
         pub fn stats_by_node_value(&self) -> &HashMap<NodeValue, SymbolInfo> {
@@ -102,17 +108,16 @@ mod context_information {
     impl<NodeValue> ::entropy::probabilities::InstancesToProbabilities for ContextInformation<NodeValue, Instances> where NodeValue: Clone + Eq + Hash + Ord {
         type AsProbabilities = ContextInformation<NodeValue, SymbolInfo>;
         fn instances_to_probabilities(self, _description: &str) -> ContextInformation<NodeValue, SymbolInfo> {
-            let instances: Vec<_> = self
-                .stats_by_node_value
-                .values()
-                .map(|x| Into::<usize>::into(x.clone()) as u32)
+            let stats_by_node_value = self.stats_by_node_value.into_iter()
+                .sorted_by(|(value_1, _), (value_2, _)| Ord::cmp(value_1, value_2)); // We need to ensure that the order remains stable across process restarts.
+
+            let instances = stats_by_node_value.iter()
+                .map(|(_, instances)| Into::<usize>::into(instances.clone()) as u32)
                 .collect();
 
             let distribution = std::rc::Rc::new(std::cell::RefCell::new(range_encoding::CumulativeDistributionFrequency::new(instances)));
 
-            let (stats_by_node_value, value_by_symbol_index): (HashMap<_, _>, Vec<_>) = self.stats_by_node_value
-                .into_iter()
-                .sorted_by(|(value_1, _), (value_2, _)| Ord::cmp(value_1, value_2)) // We need to ensure that the order remains stable across process restarts.
+            let (stats_by_node_value, value_by_symbol_index): (HashMap<_, _>, Vec<_>) = stats_by_node_value
                 .into_iter()
                 .enumerate()
                 .map(|(index, (value, _))| {
@@ -454,6 +459,8 @@ impl<NodeValue, Statistics> WindowPredict<NodeValue, Statistics> where NodeValue
     /// If the value is already in the window, it is moved to the latest-seen position,
     /// otherwise, it is added directly in latest-seen position. If the resulting window
     /// is too large, it is truncated.
+    ///
+    /// Return the previous position of the value in the window, if any.
     fn window_insert_value(&mut self, value: &NodeValue) -> Option<BackReference> {
         // It's possible that the value was present in the window.
         if let Some(index) = self.latest_values
@@ -511,6 +518,7 @@ impl<NodeValue> WindowPredict<NodeValue, Instances> where NodeValue: Clone + Eq 
                 WindowPrediction::DictionaryIndex(dictionary_index)
             }
         };
+        debug!(target: "predict_window", "Increasing probability of {:?}", symbol);
         self.info.add(symbol);
     }
 }
@@ -581,12 +589,42 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
 impl<NodeValue> InstancesToProbabilities for WindowPredict<NodeValue, Instances> where NodeValue: Clone + Eq + Hash + Ord {
     type AsProbabilities = WindowPredict<NodeValue, SymbolInfo>;
     fn instances_to_probabilities(self, _description: &str) -> WindowPredict<NodeValue, SymbolInfo> {
+        for i in 0..self.width {
+            debug!(target: "predict_window", "{} Instances of backref {}: {}",
+                _description,
+                i,
+                match self.info.instances_by_node_value().get(&WindowPrediction::BackReference(BackReference::new(i))) {
+                    None => 0,
+                    Some(instances) => Into::<usize>::into(*instances),
+                }
+            );
+        }
+        let info = self.info.instances_to_probabilities("WindowPredict::info");
+
+        for i in 0..self.width {
+            debug!(target: "predict_window", "{} Stats of backref {}: {}",
+                _description,
+                i,
+                match info.stats_by_node_value().get(&WindowPrediction::BackReference(BackReference::new(i))) {
+                    None => "0".to_string(),
+                    Some(symbol) => {
+                        let mut borrow = symbol.distribution.borrow_mut();
+                        let width = { borrow.width() };
+                        let data = borrow.at_index(symbol.index.into()).unwrap();
+                        format!("{}/{} = {:.2}%",
+                            data.width(),
+                            width,
+                            100. * (data.width() as f64) / (width as f64))
+                    }
+                }
+            );
+        }
         WindowPredict {
             width: self.width,
             value_by_dictionary_index: self.value_by_dictionary_index,
             dictionary_index_by_value: self.dictionary_index_by_value,
             latest_values: Vec::with_capacity(self.width),
-            info: self.info.instances_to_probabilities("WindowPredict::info"),
+            info,
         }
     }
 }
