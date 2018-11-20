@@ -1,3 +1,13 @@
+//! Statistics about the content of a file.
+
+use bytes::lengthwriter::Bytes;
+
+use std::fmt::Display;
+
+/// A newtype for `usize` used to count the number of instances of some item.
+#[derive(Default, Serialize, Deserialize, From, Into, AddAssign, Clone, Copy, PartialOrd, Ord, PartialEq, Eq)]
+pub struct Instances(usize);
+
 
 /// A container for information associated with a type of data we write to the stream
 /// as part of the content (i.e. not the header).
@@ -30,6 +40,21 @@ impl<T> ContentInfo<T> {
 			interface_names: f("interface_names"),
 			string_literals: f("string_literals"),
 			list_lengths: f("list_lengths"),
+        }
+    }
+
+    pub fn zip<U>(self, other: ContentInfo<U>) -> ContentInfo<(T, U)>
+    {
+        ContentInfo {
+            bools: (self.bools, other.bools),
+            floats: (self.floats, other.floats),
+			unsigned_longs: (self.unsigned_longs, other.unsigned_longs),
+			string_enums: (self.string_enums, other.string_enums),
+			property_keys: (self.property_keys, other.property_keys),
+			identifier_names: (self.identifier_names, other.identifier_names),
+			interface_names: (self.interface_names, other.interface_names),
+			string_literals: (self.string_literals, other.string_literals),
+			list_lengths: (self.list_lengths, other.list_lengths),
         }
     }
 
@@ -116,5 +141,97 @@ impl<T> std::iter::FromIterator<(T, &'static str)> for ContentInfo<Option<T>> {
             assert!(prev.is_none(), "We have two definitions for field {}", name);
         }
         container
+    }
+}
+impl Display for ContentInfo<HitsAndMisses<BytesAndInstances>> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        write!(fmt,
+"
+Built-in:
+    bools: {bools}
+    string enums: {string_enums}
+    interface names: {interface_names}
+Extensible:
+    floats: {floats}
+    unsigned longs: {unsigned_longs}
+    list lengths: {list_lengths}
+    property keys: {property_keys}
+    identifier names: {identifier_names}
+    string literals: {string_literals}
+",
+            bools = self.bools,
+            floats = self.floats,
+            unsigned_longs = self.unsigned_longs,
+            string_enums = self.string_enums,
+            property_keys = self.property_keys,
+            identifier_names = self.identifier_names,
+            interface_names = self.interface_names,
+            string_literals = self.string_literals,
+            list_lengths = self.list_lengths,
+        )
+    }
+}
+
+
+#[derive(Default, Clone, AddAssign)]
+pub struct HitsAndMisses<T> {
+    pub hits: T,
+    pub misses: T,
+    pub all: T,
+}
+impl<T> HitsAndMisses<T> {
+    pub fn with<F>(f: F) -> Self
+        where F: Fn() -> T
+    {
+        HitsAndMisses {
+            hits: f(),
+            misses: f(),
+            all: f(),
+        }
+    }
+
+    pub fn into_with<F, U>(self, f: F) -> HitsAndMisses<U>
+        where F: Fn(T) -> U
+    {
+        HitsAndMisses {
+            hits: f(self.hits),
+            misses: f(self.misses),
+            all: f(self.all),
+        }
+    }
+}
+impl Display for HitsAndMisses<BytesAndInstances> {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        write!(fmt, "{all}",
+            all = self.all)?;
+        if self.hits.instances > Instances(0) {
+            write!(fmt, "\n\t{percent:.2}% Hits: {data}",
+                percent = 100. * (Into::<usize>::into(self.hits.instances) as f64)
+                    / (Into::<usize>::into(self.hits.instances) as f64 + Into::<usize>::into(self.misses.instances) as f64),
+                data = self.hits)?;
+        }
+        if self.misses.instances > Instances(0) {
+            write!(fmt, "\n\t{percent:.2}% Misses: {data}",
+                percent = 100. * (Into::<usize>::into(self.misses.instances) as f64)
+                    / (Into::<usize>::into(self.hits.instances) as f64 + Into::<usize>::into(self.misses.instances) as f64),
+                data = self.misses)?;
+        }
+        Ok(())
+    }
+}
+
+
+#[derive(Default, Clone, AddAssign)]
+pub struct BytesAndInstances {
+    pub bytes: Bytes,
+    pub instances: Instances,
+}
+impl Display for BytesAndInstances {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> Result<(), std::fmt::Error> {
+        write!(fmt, "{bytes} bytes, {instances} symbols ({ratio:.2} bits/symbol)",
+            bytes = Into::<usize>::into(self.bytes),
+            instances = Into::<usize>::into(self.instances),
+            ratio = (8. * Into::<usize>::into(self.bytes) as f64) / (Into::<usize>::into(self.instances) as f64)
+        )
     }
 }
