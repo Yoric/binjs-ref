@@ -18,6 +18,7 @@ use std::io::Write;
 use std::ops::DerefMut;
 
 use brotli;
+use byteorder::{ BigEndian, WriteBytesExt };
 use itertools::Itertools;
 use range_encoding::opus;
 
@@ -359,7 +360,7 @@ macro_rules! brotli {
                 let as_u32: u32 = as_usize as u32;
                 $me.content_brotli
                     .$brotli
-                    .write_varnum(as_u32)
+                    .write_u32::<BigEndian>(as_u32)
                     .map_err(TokenWriterError::WriteError)?;
 
                 // 3. Also, update statistics

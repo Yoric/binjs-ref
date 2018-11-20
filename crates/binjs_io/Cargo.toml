@@ -7,6 +7,7 @@ authors = ["David Teller <D.O.Teller@gmail.com>"]
 bincode = "*"
 binjs_shared = { path = "../binjs_shared", version = "*" }
 brotli = "^3.0"
+byteorder = "^1.2"
 clap = "^2.32"
 derive_more = "0.13.0"
 flate2 = "^1.0"

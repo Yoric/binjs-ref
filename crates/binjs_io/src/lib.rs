@@ -5,6 +5,7 @@ extern crate bincode; // Used to store dictionaries. This is a temporary format.
 extern crate binjs_shared;
 
 extern crate brotli;
+extern crate byteorder;
 extern crate clap;
 #[macro_use]
 extern crate derive_more;
