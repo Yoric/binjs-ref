@@ -1,4 +1,5 @@
 use entropy::probabilities::{ InstancesToProbabilities, SymbolIndex, SymbolInfo };
+use io::content::Instances;
 
 use binjs_shared::{ FieldName, InterfaceName };
 
@@ -14,19 +15,15 @@ use range_encoding;
 pub type IOPath = binjs_shared::ast::Path<InterfaceName, (/* child index */ usize, /* field name */ FieldName)>;
 pub type IOPathItem = binjs_shared::ast::PathItem<InterfaceName, (/* child index */ usize, /* field name */ FieldName)>;
 
-/// A newtype for `usize` used to count the number of instances of some item.
-#[derive(Default, Serialize, Deserialize, From, Into, AddAssign, Clone, Copy)]
-pub struct Instances(usize);
-
 /// A newtype for `usize` used to represent an index in a dictionary of values.
 #[derive(Add, Constructor, Eq, PartialEq, Ord, PartialOrd, Clone, Copy, From, Into, Debug, Hash, Serialize, Deserialize)]
-struct DictionaryIndex(usize);
+pub struct DictionaryIndex(usize);
 
 /// A newtype for `usize` used to represent a reference to a value already encountered.
 ///
 /// By convention, `0` is the latest value, `1` the value before, etc.
 #[derive(Constructor, Eq, PartialEq, Ord, PartialOrd, Clone, Copy, Hash, Into, Debug, Serialize, Deserialize)]
-struct BackReference(usize);
+pub struct BackReference(usize);
 
 
 mod context_information {
@@ -375,7 +372,7 @@ impl<NodeValue> PathPredict<NodeValue, SymbolInfo> where NodeValue: Eq + Hash + 
 
 /// An index for a value in `WindowPredict`.
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Serialize, Deserialize, PartialOrd, Ord)]
-enum WindowPrediction {
+pub enum WindowPrediction {
     /// A recently encountered value.
     ///
     /// `0` is the index of the latest value, `width - 1` is the index of the oldest
@@ -527,6 +524,10 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
             .map(|any| &any.distribution)
     }
 
+    pub fn decode_symbol_index(&self, index: SymbolIndex) -> Option<&WindowPrediction> {
+        self.info.value_by_symbol_index(index)
+    }
+
     // FIXME: We should find a way to enforce a specific mapping between `index` and `WindowPredict`,
     // to make it easy to decode.
     pub fn value_by_symbol_index(&mut self, index: SymbolIndex) -> Option<NodeValue> {
@@ -553,7 +554,7 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
         }
     }
 
-    pub fn stats_by_node_value_mut(&mut self, value: &NodeValue) -> Option<&mut SymbolInfo> {
+    pub fn stats_by_node_value_mut(&mut self, value: &NodeValue) -> Option<(WindowPrediction, &mut SymbolInfo)> {
         // At this stage, the value may appear in both the dictionary
         // and the window. We'll favor the window if possible.
         debug!(target: "predict", "WindowPredict: Fetching {:?}", value);
@@ -573,6 +574,7 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
         self.info
             .stats_by_node_value_mut()
             .get_mut(&prediction)
+            .map(|symbol| (prediction, symbol))
     }
 }
 

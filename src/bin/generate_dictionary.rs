@@ -11,7 +11,8 @@ use binjs::source::{ Shift, SourceParser };
 use binjs::generic::FromJSON;
 use binjs::specialized::es6::ast::Walker;
 use binjs::io::{ Path as IOPath, TokenSerializer };
-use binjs::io::entropy::dictionary::{ Dictionary, DictionaryBuilder, KindedStringMap, FilesContaining, Instances };
+use binjs::io::content::Instances;
+use binjs::io::entropy::dictionary::{ Dictionary, DictionaryBuilder, KindedStringMap, FilesContaining };
 
 use std::fs::*;
 use std::thread;

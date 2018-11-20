@@ -1,6 +1,7 @@
 use entropy::predict::{ PathPredict, WindowPredict };
 use entropy::probabilities::{ InstancesToProbabilities, SymbolIndex, SymbolInfo };
 
+use io::content::Instances;
 use io::TokenWriter;
 use ::TokenWriterError;
 
@@ -10,8 +11,6 @@ use std;
 use std::collections::HashMap;
 
 pub type IOPath = binjs_shared::ast::Path<InterfaceName, (/* child index */ usize, /* field name */ FieldName)>;
-
-pub use entropy::predict::Instances;
 
 /// A newtype for `usize` used to count the number of some item in a given file.
 #[derive(Default, Serialize, Deserialize, From, Into, AddAssign, Clone, Copy, Debug, PartialOrd, Ord, PartialEq, Eq)]

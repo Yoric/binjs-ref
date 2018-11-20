@@ -58,15 +58,14 @@ pub mod dictionary;
 pub mod read;
 pub mod write;
 
-mod predict;
+pub mod predict;
 pub mod probabilities;
 
 use self::dictionary::Dictionary;
-use self::predict::Instances;
 use self::probabilities::SymbolInfo;
 
 use ::bytes::lengthwriter::Bytes;
-use ::io::content::ContentInfo;
+use ::io::content::{ ContentInfo, BytesAndInstances, HitsAndMisses, Instances };
 
 use std::cell::RefCell;
 use std::rc::Rc;
@@ -81,12 +80,12 @@ pub struct Options {
     /// Statistics obtained while writing: number of bytes written.
     /// If several files are written with the same options, we accumulate
     /// statistics.
-    content_lengths: Rc<RefCell<ContentInfo<Bytes>>>,
+    content_lengths: Rc<RefCell<ContentInfo<HitsAndMisses<Bytes>>>>,
 
     /// Statistics obtained while writing: number of instances of each
     /// kind written. If several files are written with the same options,
     /// we accumulate statistics.
-    content_instances: Rc<RefCell<ContentInfo<Instances>>>,
+    content_instances: Rc<RefCell<ContentInfo<HitsAndMisses<Instances>>>>,
 }
 impl Options {
     pub fn new(probability_tables:Dictionary<SymbolInfo>) -> Self {
@@ -97,21 +96,20 @@ impl Options {
         }
     }
 
-    /// Return the statistics as (number of instances, number of bytes).
-    pub fn statistics_for_write(&self) -> ContentInfo<(Bytes, Instances)> {
-        let borrow_lengths = self.content_lengths.borrow();
-        let borrow_instances = self.content_instances.borrow();
-        ContentInfo {
-            bools: (borrow_lengths.bools, borrow_instances.bools),
-            floats: (borrow_lengths.floats, borrow_instances.floats),
-            unsigned_longs: (borrow_lengths.unsigned_longs, borrow_instances.unsigned_longs),
-            string_enums: (borrow_lengths.string_enums, borrow_instances.string_enums),
-            property_keys: (borrow_lengths.property_keys, borrow_instances.property_keys),
-            identifier_names: (borrow_lengths.identifier_names, borrow_instances.identifier_names),
-            interface_names: (borrow_lengths.interface_names, borrow_instances.interface_names),
-            string_literals: (borrow_lengths.string_literals, borrow_instances.string_literals),
-            list_lengths: (borrow_lengths.list_lengths, borrow_instances.list_lengths),
-        }
+    /// Return the statistics
+    pub fn statistics_for_write(&self) -> ContentInfo<HitsAndMisses<BytesAndInstances>> {
+        let borrow_lengths = self.content_lengths.borrow()
+            .clone();
+        let borrow_instances = self.content_instances.borrow()
+            .clone();
+        borrow_lengths.zip(borrow_instances)
+            .into_with(|(bytes, instances), _| {
+                HitsAndMisses {
+                    hits: BytesAndInstances { bytes: bytes.hits, instances: instances.hits },
+                    misses: BytesAndInstances { bytes: bytes.misses, instances: instances.misses },
+                    all: BytesAndInstances { bytes: bytes.all, instances: instances.all },
+                }
+            })
     }
 }
 
@@ -151,11 +149,7 @@ impl ::FormatProvider for FormatProvider {
             .expect("Could not decode dictionary");
 
         Ok(::Format::Entropy {
-            options: Options {
-                probability_tables: probability_tables.instances_to_probabilities("probability_tables"),
-                content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
-                content_instances: Rc::new(RefCell::new(ContentInfo::default())),
-            }
+            options: Options::new(probability_tables.instances_to_probabilities("probability_tables"))
         })
     }
 }
