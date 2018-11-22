@@ -1,0 +1,1 @@
+../../../spec/es6.webidl

@@ -168,17 +168,23 @@ use json::JsonValue as JSON;
             }
         }
         fn print_ast_string_enums(buffer: &mut String, source: &HashMap<NodeName, Rc<StringEnum>>) {
-            let mut names : Vec<_> = source.keys()
-                .collect();
-            names.sort();
-            for name in names.drain(..) {
+            let names = source.keys()
+                .sorted();
+            for name in names {
                 let string_enum = source.get(&name).unwrap();
-                let name = name.to_class_cases();
-                let definition = format!("#[derive(PartialEq, Debug, Clone)]\npub enum {name} {{\n{values}\n    }}\n",
+                let rust_name = name.to_class_cases();
+                let definition = format!("
+/// Implementation of string enum {name}
+#[derive(PartialEq, Debug, Clone)]\npub enum {rust_name} {{\n{values}\n    }}\n",
                     name = name,
+                    rust_name = rust_name,
                     values = string_enum.strings()
                         .iter()
-                        .map(|s| format!("     {}", ToCases::to_cpp_enum_case(s)))
+                        .map(|s| format!(
+"/// Implementation of variant \"{spec_variant_name}\"
+     {rust_variant_name}",
+                            spec_variant_name = s,
+                            rust_variant_name = ToCases::to_cpp_enum_case(s)))
                         .format(",\n"));
                 let default = format!("
 type ViewMut{name}<'a> = ViewMutNothing<{name}>;
@@ -376,10 +382,17 @@ impl<'a> Walker<'a> for {name} where Self: 'a {{
                 if let TypeSpec::TypeSum(_) = *typedef.spec() {
                     let types = typesums.get(&node_name).unwrap(); // Just built above.
 
-                    let definition = format!("#[derive(PartialEq, Debug, Clone)]
+                    let definition = format!("
+/// Implementation of interface sum {node_name}
+#[derive(PartialEq, Debug, Clone)]
 pub enum {name} {{\n{contents}\n}}\n
+
+/// A mechanism to view value as an instance of interface sum {node_name}
+///
+/// Used to perform shallow cast between larger sums and smaller sums.
 pub enum ViewMut{name}<'a> {{\n{ref_mut_contents}\n}}\n",
                         name = name,
+                        node_name = node_name,
                         contents = types
                             .iter()
                             .map(|case| format!("    {name}(Box<{name}>)",
@@ -573,9 +586,9 @@ impl ToJSON for {name} {{
                                 );
 
                     let to_writer = format!("
-impl<'a, W> Serialization<W, &'a Option<{name}>> for Serializer<W> where W: TokenWriter {{
-    fn serialize(&mut self, value: &'a Option<{name}>, path: &mut IOPath) -> Result<(), TokenWriterError> {{
-        debug!(target: \"serialize_es6\", \"Serializing optional sum {name}\");
+impl<'a, W> Serialization<W, &'a Option<{rust_name}>> for Serializer<W> where W: TokenWriter {{
+    fn serialize(&mut self, value: &'a Option<{rust_name}>, path: &mut IOPath) -> Result<(), TokenWriterError> {{
+        debug!(target: \"serialize_es6\", \"Serializing optional sum {rust_name}\");
         match *value {{
             None => {{
                 let interface_name = InterfaceName::from_str(\"{null}\");
@@ -583,13 +596,13 @@ impl<'a, W> Serialization<W, &'a Option<{name}>> for Serializer<W> where W: Toke
                 self.writer.exit_tagged_tuple_at(&interface_name, &[], path)?;
                 Ok(())
             }}
-            Some(ref sum) => (self as &mut Serialization<W, &'a {name}>).serialize(sum, path)
+            Some(ref sum) => (self as &mut Serialization<W, &'a {rust_name}>).serialize(sum, path)
         }}
     }}
 }}
-impl<'a, W> Serialization<W, &'a {name}> for Serializer<W> where W: TokenWriter {{
-    fn serialize(&mut self, value: &'a {name}, path: &mut IOPath) -> Result<(), TokenWriterError> {{
-        debug!(target: \"serialize_es6\", \"Serializing sum {name}\");
+impl<'a, W> Serialization<W, &'a {rust_name}> for Serializer<W> where W: TokenWriter {{
+    fn serialize(&mut self, value: &'a {rust_name}, path: &mut IOPath) -> Result<(), TokenWriterError> {{
+        debug!(target: \"serialize_es6\", \"Serializing sum {rust_name}\");
         match *value {{
 {variants}
         }}
@@ -597,7 +610,7 @@ impl<'a, W> Serialization<W, &'a {name}> for Serializer<W> where W: TokenWriter 
 }}
 ",
                         null = null_name,
-                        name = name,
+                        rust_name = name.to_class_cases(),
                         variants = types
                             .iter()
                             .map(|case| {
@@ -758,7 +771,11 @@ impl<'a, 'b> From<&'a mut ViewMut{super_name}<'a>> for Result<ViewMut{name}<'b>,
             // FromJSON/ToJSON are already implemented in `binjs::utils`
             for name in primitives.drain(..) {
                 let typedef = source.get(name).unwrap();
-                let source = format!("pub type {name} = {contents};
+                let source = format!(
+"/// Alias to primitive type.
+pub type {name} = {contents};
+
+/// Shallow casting mechanism for {name}.
 pub struct ViewMut{name}<'a>(&'a mut {name});
 impl<'a> From<&'a mut {name}> for ViewMut{name}<'a> {{
     fn from(value: &'a mut {name}) -> Self {{
@@ -807,7 +824,11 @@ pub type ViewMut{name}<'a> = ViewMutListOfStatement<'a>;
                             continue;
                         }
 
-                        let source = format!("{empty_check}pub type {name} = Vec<{contents}>;
+                        let source = format!("
+/// Implementation of list type {name}.
+{empty_check}pub type {name} = Vec<{contents}>;
+
+/// Shallow casting mechanism.
 pub struct ViewMut{name}<'a>(&'a mut {name});
 impl<'a> From<&'a mut {name}> for ViewMut{name}<'a> {{
     fn from(value: &'a mut {name}) -> Self {{
@@ -868,7 +889,11 @@ impl<'a, W> Serialization<W, &'a {name}> for Serializer<W> where W: TokenWriter 
             for name in options.drain(..) {
                 let typedef = source.get(name).unwrap();
                 if let TypeSpec::NamedType(ref contents) = *typedef.spec() {
-                    let source = format!("pub type {name} = Option<{contents}>;\n
+                    let source = format!(
+"/// Alias to optional type type.
+pub type {name} = Option<{contents}>;\n
+
+/// Shallow casting mechanism.
 pub struct ViewMut{name}<'a>(&'a mut {name});
 impl<'a> From<&'a mut {name}> for ViewMut{name}<'a> {{
     fn from(value: &'a mut {name}) -> Self {{
@@ -907,6 +932,7 @@ impl<'a> Walker<'a> for ViewMut{name}<'a> {{
                 .sorted();
             for name in &names {
                 let interface = source.get(name).unwrap();
+                let rust_name = name.to_class_cases();
                 let field_specs : Vec<_> = interface.contents().fields()
                     .iter()
                     .map(|field| {
@@ -933,25 +959,30 @@ impl<'a> Walker<'a> for ViewMut{name}<'a> {{
                         (a.clone(), b)
                     })
                     .collect();
-                let name = name.to_class_cases();
-                let definition = format!("#[derive(Default, PartialEq, Debug, Clone)]
-pub struct {name} {{
+                let definition = format!("
+/// Implementation of interface {spec_name}.
+#[derive(Default, PartialEq, Debug, Clone)]
+pub struct {rust_name} {{
 {fields}
 }}
 
 ",
                     fields = field_specs.iter()
                         .map(|(field_name, spec)| {
-                            format!("    pub {name}: {contents}",
-                                name = field_name.to_rust_identifier_case(),
+                            format!(
+"    /// Implementation of field {spec_name}
+    pub {rust_name}: {contents}",
+                                rust_name = field_name.to_rust_identifier_case(),
+                                spec_name = field_name.to_str(),
                                 contents = spec)
                         })
                         .format(",\n"),
-                    name = name);
+                    rust_name = rust_name,
+                    spec_name = name);
 
                 let from_reader = format!("
 impl<R> Deserializer<R> where R: TokenReader {{
-    fn deserialize_tuple_{lowercase_name}(&mut self, path: &mut IOPath) -> Result<{name}, TokenReaderError> where R: TokenReader {{
+    fn deserialize_tuple_{lowercase_name}(&mut self, path: &mut IOPath) -> Result<{rust_name}, TokenReaderError> where R: TokenReader {{
         let (interface_name, _, guard) = self.reader.tagged_tuple_at(path)?;
         let result =
             if let \"{name}\" = interface_name.as_str() {{
@@ -975,44 +1006,44 @@ impl<R> Deserializer<R> where R: TokenReader {{
     }}
 }}
 
-impl<R> InnerDeserialization<R, {name}> for Deserializer<R> where R: TokenReader {{
-    fn deserialize_inner(&mut self, path: &mut IOPath) -> Result<{name}, TokenReaderError> where R: TokenReader {{
+impl<R> InnerDeserialization<R, {rust_name}> for Deserializer<R> where R: TokenReader {{
+    fn deserialize_inner(&mut self, path: &mut IOPath) -> Result<{rust_name}, TokenReaderError> where R: TokenReader {{
         let _ = path; // Deactivate warnings if there are no fields.
         print_file_structure!(self.reader, \"{name} {{{{\");
 {fields_def}
         print_file_structure!(self.reader, \"}}}}\");
-        Ok({name} {{
+        Ok({rust_name} {{
 {fields_use}
         }})
     }}
 }}
 
-impl<R> Deserialization<R, {name}> for Deserializer<R> where R: TokenReader {{
-    fn deserialize(&mut self, path: &mut IOPath) -> Result<{name}, TokenReaderError> {{
-        debug!(target: \"deserialize_es6\", \"Deserializing tagged tuple {name}\");
+impl<R> Deserialization<R, {rust_name}> for Deserializer<R> where R: TokenReader {{
+    fn deserialize(&mut self, path: &mut IOPath) -> Result<{rust_name}, TokenReaderError> {{
+        debug!(target: \"deserialize_es6\", \"Deserializing tagged tuple {rust_name}\");
         self.deserialize_tuple_{lowercase_name}(path)
     }}
 }}
-impl<R> Deserialization<R, Option<{name}>> for Deserializer<R> where R: TokenReader {{
-    fn deserialize(&mut self, path: &mut IOPath) -> Result<Option<{name}>, TokenReaderError> {{
-        debug!(target: \"deserialize_es6\", \"Deserializing optional tuple {name}\");
+impl<R> Deserialization<R, Option<{rust_name}>> for Deserializer<R> where R: TokenReader {{
+    fn deserialize(&mut self, path: &mut IOPath) -> Result<Option<{rust_name}>, TokenReaderError> {{
+        debug!(target: \"deserialize_es6\", \"Deserializing optional tuple {rust_name}\");
         let (kind, _, guard) = self.reader.tagged_tuple_at(path)?;
         let result = match kind.as_str() {{
-            \"{name}\" => {{
+            \"{rust_name}\" => {{
                 let path_interface = kind.clone();
-                debug!(target: \"deserialize_es6\", \"Deserializing optional tuple {name}: present\");
+                debug!(target: \"deserialize_es6\", \"Deserializing optional tuple {rust_name}: present\");
                 path.enter_interface(path_interface.clone());
                 let result = self.deserialize_inner(path).map(Some);
                 path.exit_interface(path_interface);
                 result
             }}
             \"{null}\" => {{
-                debug!(target: \"deserialize_es6\", \"Deserializing optional tuple {name}: absent\");
+                debug!(target: \"deserialize_es6\", \"Deserializing optional tuple {rust_name}: absent\");
                 print_file_structure!(self.reader, \"{name} : None\");
                 Ok(None)
             }},
             _ => {{
-                error!(target: \"deserialize_es6\", \"Deserializing optional tuple {name}, found invalid {{}}\", kind.as_str());
+                error!(target: \"deserialize_es6\", \"Deserializing optional tuple {rust_name}, found invalid {{}}\", kind.as_str());
                 Err(From::from(TokenReaderError::BadEnumVariant))
             }}
         }};
@@ -1026,6 +1057,7 @@ impl<R> Deserialization<R, Option<{name}>> for Deserializer<R> where R: TokenRea
 ",
                     name = name,
                     null = null_name,
+                    rust_name = rust_name,
                     lowercase_name = name.to_rust_identifier_case()
                         .trim_right_matches('_'),
                     fields_def = interface.contents()
@@ -1056,8 +1088,8 @@ impl<R> Deserialization<R, Option<{name}>> for Deserializer<R> where R: TokenRea
                         .fields()
                         .len();
                     let to_writer = format!("
-impl<'a, W> Serialization<W, &'a Option<{name}>> for Serializer<W> where W: TokenWriter {{
-    fn serialize(&mut self, value: &'a Option<{name}>, path: &mut IOPath) -> Result<(), TokenWriterError> {{
+impl<'a, W> Serialization<W, &'a Option<{rust_name}>> for Serializer<W> where W: TokenWriter {{
+    fn serialize(&mut self, value: &'a Option<{rust_name}>, path: &mut IOPath) -> Result<(), TokenWriterError> {{
         debug!(target: \"serialize_es6\", \"Serializing optional tagged tuple {name}\");
         match *value {{
             None => {{
@@ -1066,12 +1098,12 @@ impl<'a, W> Serialization<W, &'a Option<{name}>> for Serializer<W> where W: Toke
                 self.writer.exit_tagged_tuple_at(&interface_name, &[], path)?;
                 Ok(())
             }}
-            Some(ref sum) => (self as &mut Serialization<W, &'a {name}>).serialize(sum, path)
+            Some(ref sum) => (self as &mut Serialization<W, &'a {rust_name}>).serialize(sum, path)
         }}
     }}
 }}
-impl<'a, W> Serialization<W, &'a {name}> for Serializer<W> where W: TokenWriter {{
-    fn serialize(&mut self, {value}: &'a {name}, path: &mut IOPath) -> Result<(), TokenWriterError> {{
+impl<'a, W> Serialization<W, &'a {rust_name}> for Serializer<W> where W: TokenWriter {{
+    fn serialize(&mut self, {value}: &'a {rust_name}, path: &mut IOPath) -> Result<(), TokenWriterError> {{
         debug!(target: \"serialize_es6\", \"Serializing tagged tuple {name}\");
         let interface_name = InterfaceName::from_str(\"{name}\"); // String is shared
         let field_names = [{field_names}];
@@ -1093,6 +1125,7 @@ impl<'a, W> Serialization<W, &'a {name}> for Serializer<W> where W: TokenWriter 
                         value = if len > 0 { "value" } else { "_" },
                         null = null_name,
                         name = name,
+                        rust_name = rust_name,
                         field_names = interface.contents()
                             .fields()
                             .iter()
@@ -1120,7 +1153,7 @@ impl<'a, W> Serialization<W, &'a {name}> for Serializer<W> where W: TokenWriter 
                     );
 
                 let from_json = format!("
-impl FromJSON for {name} {{
+impl FromJSON for {rust_name} {{
     fn import(value: &JSON) -> Result<Self, FromJSONError> {{
         match value[\"type\"].as_str() {{
             Some(\"{kind}\") => {{ /* Good */ }},
@@ -1129,13 +1162,13 @@ impl FromJSON for {name} {{
                 got: value.dump()
             }})
         }}
-        Ok({name} {{
+        Ok({rust_name} {{
 {fields}
         }})
     }}
 }}\n\n",
                     kind = name,
-                    name = name,
+                    rust_name = rust_name,
                     fields = interface.contents()
                         .fields()
                         .iter()
@@ -1146,7 +1179,7 @@ impl FromJSON for {name} {{
                     );
 
                 let to_json = format!("
-impl ToJSON for {name} {{
+impl ToJSON for {rust_name} {{
     fn export(&self) -> JSON {{
         object!{{
             \"type\" => json::from(\"{kind}\"),
@@ -1155,7 +1188,7 @@ impl ToJSON for {name} {{
     }}
 }}\n\n",
                     kind = name,
-                    name = name,
+                    rust_name = rust_name,
                     fields = interface.contents()
                         .fields()
                         .iter()
@@ -1166,29 +1199,30 @@ impl ToJSON for {name} {{
                     );
 
                 let walk = format!("
-pub struct ViewMut{name}<'a>(&'a mut {name});
-impl<'a> From<&'a mut {name}> for ViewMut{name}<'a> {{
-    fn from(value: &'a mut {name}) -> Self {{
-        ViewMut{name}(value)
+/// Shallow casting mechanism.
+pub struct ViewMut{rust_name}<'a>(&'a mut {rust_name});
+impl<'a> From<&'a mut {rust_name}> for ViewMut{rust_name}<'a> {{
+    fn from(value: &'a mut {rust_name}) -> Self {{
+        ViewMut{rust_name}(value)
     }}
 }}
-impl<'a> Walker<'a> for {name} {{
-    type Output = {name};
-    fn walk<V, E, G: Default>(&'a mut self, path: &mut WalkPath, visitor: &mut V) -> Result<Option<{name}>, E> where V: Visitor<E, G> {{
-        let mut walker : ViewMut{name} = self.into();
+impl<'a> Walker<'a> for {rust_name} {{
+    type Output = {rust_name};
+    fn walk<V, E, G: Default>(&'a mut self, path: &mut WalkPath, visitor: &mut V) -> Result<Option<{rust_name}>, E> where V: Visitor<E, G> {{
+        let mut walker : ViewMut{rust_name} = self.into();
         walker.walk(path, visitor)
     }}
 }}
-impl<'a> Walker<'a> for ViewMut{name}<'a> where Self: 'a {{
-    type Output = {name};
+impl<'a> Walker<'a> for ViewMut{rust_name}<'a> where Self: 'a {{
+    type Output = {rust_name};
     fn walk<V, E, G: Default>(&'a mut self, path: &mut WalkPath, visitor: &mut V) -> Result<Option<Self::Output>, E> where V: Visitor<E, G> {{
-        path.enter_interface(ASTNode::{name});
+        path.enter_interface(ASTNode::{rust_name});
         match visitor.enter_{snake}(path, self.0)? {{
             VisitMe::DoneHere => Ok(None),
             VisitMe::HoldThis(_guard) => {{
 {fields}
                 let result = visitor.exit_{snake}(path, self.0)?;
-                path.exit_interface(ASTNode::{name});
+                path.exit_interface(ASTNode::{rust_name});
                 Ok(result)
                 // guard is now dropped
             }}
@@ -1196,7 +1230,7 @@ impl<'a> Walker<'a> for ViewMut{name}<'a> where Self: 'a {{
     }}
 }}
 ",
-                    name = name,
+                    rust_name = rust_name,
                     snake = name.to_rust_identifier_case(),
                     fields = field_specs
                         .iter()
@@ -1228,11 +1262,17 @@ impl<'a> Walker<'a> for ViewMut{name}<'a> where Self: 'a {{
                 buffer.push_str("\n\n\n");
             }
 
-            let interfaces_enum = format!("#[derive(Clone, Copy, Debug, PartialEq, Eq)]\npub enum ASTNode {{
+            let interfaces_enum = format!("
+/// All the interfaces.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]\npub enum ASTNode {{
 {interfaces}
 }}\n\n\n",
                 interfaces = names.iter()
-                    .map(|name| format!("    {}", name.to_class_cases()))
+                    .map(|name| format!(
+"    /// {name}
+    {rust_name}",
+                        name = name,
+                        rust_name = name.to_class_cases()))
                     .format(",\n")
             );
 
@@ -1241,8 +1281,9 @@ impl<'a> Walker<'a> for ViewMut{name}<'a> where Self: 'a {{
 
         fn print_visitor(buffer: &mut String, interfaces: &HashMap<NodeName, Rc<Interface>>, typedefs: &HashMap<NodeName, Rc<Type>>) {
             let path = "
-/// A Path, used when walking the tree with the strongly-typed `Walker` API.
+/// A PathItem, used when walking the tree with the strongly-typed `Walker` API.
 pub type WalkPathItem = binjs_shared::ast::PathItem<ASTNode, ASTField>;
+/// A Path, used when walking the tree with the strongly-typed `Walker` API.
 pub type WalkPath = binjs_shared::ast::Path<ASTNode, ASTField>;
 
 /// A Path, used when walking the tree with more weakly-typed APIs, e.g. TokenReader/TokenWriter.
@@ -1428,7 +1469,9 @@ impl<'a> From<&'a mut PropertyKey> for ViewMutNothing<PropertyKey> {{
 
         struct_buffer.push_str("\n\n\n    // Field names (by lexicographical order)\n");
         impl_buffer.push_str("\n\n\n            // Field names (by lexicographical order)\n");
-        ast_buffer.push_str("\n\n\n// Field names (by lexicographical order)\n#[derive(Clone, Copy, PartialEq, Eq, Debug)]\npub enum ASTField {\n");
+        ast_buffer.push_str("\n\n\n// Field names (by lexicographical order)
+/// All the fields.
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]\npub enum ASTField {\n");
         let mut fields = HashSet::new();
         for interface in self.spec.interfaces_by_name().values() {
             for field in interface.contents().fields() {

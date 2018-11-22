@@ -10,7 +10,7 @@ use std::env;
 use std::fs::*;
 use std::io::*;
 
-const PATH_GRAMMAR_ES6 : &'static str = "../../spec/es6.webidl";
+const PATH_GRAMMAR_ES6 : &'static str = "spec/es6.webidl";
 
 fn main() {
     println!("cargo:rerun-if-changed={}", PATH_GRAMMAR_ES6);
