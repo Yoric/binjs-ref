@@ -6,17 +6,26 @@ extern crate binjs_shared;
 extern crate binjs_es6;
 extern crate ratel;
 
-use binjs_shared::SharedString;
+use binjs_shared::{ IdentifierName, SharedString };
 
 use std::collections::HashSet;
 
-pub enum Error {}
+pub enum Error {
+    InvalidForInit,
+}
 
 pub trait FromRatel<T> {
     fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<T, Error>;
 }
 
 // ---- From ratel
+
+// ---- Combinators
+impl<T, U> FromRatel<T> for Box<U> where U: FromRatel<T> {
+    fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<T, Error> {
+        Ok(self.as_ref().transcode(all_strings)?)
+    }
+}
 
 impl<T, U> FromRatel<Vec<T>> for Vec<U> where U: FromRatel<T> {
     fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<Vec<T>, Error> {
@@ -52,11 +61,30 @@ impl FromRatel<SharedString> for ratel::owned_slice::OwnedSlice {
     }
 }
 
-impl FromRatel<binjs_es6::ast::Script> for ratel::grammar::Program {
-    fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<binjs_es6::ast::Script, Error> {
+impl FromRatel<IdentifierName> for ratel::owned_slice::OwnedSlice {
+    /// Avoid needless string duplication.
+    fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<IdentifierName, Error> {
+        let as_shared_string : SharedString = self.transcode(all_strings)?;
+        let as_identifier_name = IdentifierName(as_shared_string);
+        Ok(as_identifier_name)
+    }
+}
+
+impl FromRatel<binjs_es6::ast::BindingIdentifier> for ratel::owned_slice::OwnedSlice {
+    /// Avoid needless string duplication.
+    fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<binjs_es6::ast::BindingIdentifier, Error> {
+        let name : IdentifierName = self.transcode(all_strings)?;
+        Ok(binjs_es6::ast::BindingIdentifier {
+            name
+        })
+    }
+}
+
+impl FromRatel<(Vec<binjs_es6::ast::Directive>, Vec<binjs_es6::ast::Statement>)> for Vec<ratel::grammar::Statement> {
+    fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<(Vec<binjs_es6::ast::Directive>, Vec<binjs_es6::ast::Statement>), Error> {
         let mut directives = vec![];
-        let mut statements = Vec::with_capacity(self.body.len());
-        'per_statement: for statement in &self.body {
+        let mut statements = Vec::with_capacity(self.len());
+        'per_statement: for statement in self {
             if statements.len() == 0 {
                 // This may still be a directive.
                 if let ratel::grammar::Statement::Expression {
@@ -64,8 +92,9 @@ impl FromRatel<binjs_es6::ast::Script> for ratel::grammar::Program {
                         ratel::grammar::Value::String(ref string)
                     )
                  } = *statement {
+                     let raw_value = string.transcode(all_strings)?;
                      directives.push(binjs_es6::ast::Directive {
-                         raw_value: SharedString::from_string(string.to_string())
+                         raw_value
                      });
                      continue 'per_statement;
                 }
@@ -75,6 +104,13 @@ impl FromRatel<binjs_es6::ast::Script> for ratel::grammar::Program {
             statements.push(statement);
         }
 
+        Ok((directives, statements))
+    }
+}
+
+impl FromRatel<binjs_es6::ast::Script> for ratel::grammar::Program {
+    fn transcode(&self, all_strings: &mut HashSet<SharedString>) -> Result<binjs_es6::ast::Script, Error> {
+        let (directives, statements) = self.body.transcode(all_strings)?;
         Ok(binjs_es6::ast::Script {
             directives,
             statements,
@@ -107,12 +143,86 @@ impl FromRatel<binjs_es6::ast::Statement> for ratel::grammar::Statement {
                     ..binjs_es6::ast::Block::default()
                 })))
             },
+            ratel::grammar::Statement::Break { ref label } => {
+                let label = label.transcode(all_strings)?;
+                Ok(binjs_es6::ast::Statement::BreakStatement(
+                    Box::new(binjs_es6::ast::BreakStatement {
+                        label
+                    })
+                ))
+            }
             ratel::grammar::Statement::Empty => Ok(binjs_es6::ast::Statement::EmptyStatement(
                 Box::new(binjs_es6::ast::EmptyStatement {})
             )),
             ratel::grammar::Statement::Expression { ref value } => {
                 let expression = value.transcode(all_strings)?;
                 Ok(binjs_es6::ast::Statement::ExpressionStatement(Box::new(expression)))
+            },
+            ratel::grammar::Statement::Function { ref name, ref params, ref body } => {
+                let name = name.transcode(all_strings)?;
+                let length = params.len() as u32;
+                let (directives, body) = body.transcode(all_strings)?;
+                let params = params.transcode(all_strings)?;
+                let contents = binjs_es6::ast::FunctionOrMethodContents {
+                    params,
+                    body,
+                    ..Default::default()
+                };
+                Ok(binjs_es6::ast::Statement::EagerFunctionDeclaration(Box::new(
+                    binjs_es6::ast::EagerFunctionDeclaration {
+                        name,
+                        length,
+                        directives,
+                        contents,
+                        ..Default::default()
+                    }
+                )))
+            },
+            ratel::grammar::Statement::If { ref test, ref consequent, ref alternate } => {
+                let test = test.transcode(all_strings)?;
+                let consequent = consequent.transcode(all_strings)?;
+                let alternate = alternate.transcode(all_strings)?;
+                Ok(binjs_es6::ast::Statement::IfStatement(Box::new(
+                    binjs_es6::ast::IfStatement {
+                        test,
+                        consequent,
+                        alternate
+                    }
+                )))
+            },
+            ratel::grammar::Statement::For { ref init, ref test, ref update, ref body } => {
+                let init = match *init {
+                    None => None,
+                    Some(ref content) =>
+                        match content.as_ref() {
+                            &ratel::grammar::Statement::Expression { ref value } => {
+                                let expression : binjs_es6::ast::Expression = value.transcode(all_strings)?;
+                                Some(expression.into())
+                            }
+                            &ratel::grammar::Statement::VariableDeclaration { ref kind, ref declarators } => {
+                                let kind = kind.transcode(all_strings)?;
+                                let declarators = declarators.transcode(all_strings)?;
+                                Some(binjs_es6::ast::VariableDeclarationOrExpression::VariableDeclaration(
+                                    Box::new(binjs_es6::ast::VariableDeclaration {
+                                        kind,
+                                        declarators,
+                                    }.into())
+                                ))
+                            }
+                            _ => return Err(Error::InvalidForInit)
+                        }
+                };
+                let test = test.transcode(all_strings)?;
+                let update = update.transcode(all_strings)?;
+                let body = body.transcode(all_strings)?;
+                Ok(binjs_es6::ast::Statement::ForStatement(Box::new(
+                    binjs_es6::ast::ForStatement {
+                        init,
+                        test,
+                        update,
+                        body
+                    }
+                )))
             },
             ratel::grammar::Statement::Labeled { ref label, ref body } => {
                 let label = FromRatel::<SharedString>::transcode(label, all_strings)?;
@@ -142,16 +252,24 @@ impl FromRatel<binjs_es6::ast::Statement> for ratel::grammar::Statement {
                     })
                 ))
             }
-            ratel::grammar::Statement::Break { ref label } => {
-                let label = label.transcode(all_strings)?;
-                Ok(binjs_es6::ast::Statement::BreakStatement(
-                    Box::new(binjs_es6::ast::BreakStatement {
-                        label
-                    })
-                ))
-            }
+            ratel::grammar::Statement::While { ref test, ref body } => {
+                let test = test.transcode(all_strings)?;
+                let body = body.transcode(all_strings)?;
+                Ok(binjs_es6::ast::Statement::WhileStatement(Box::new(
+                    binjs_es6::ast::WhileStatement {
+                        test,
+                        body,
+                    }
+                )))
+            },
             _ => unimplemented!()
         }
+    }
+}
+
+impl FromRatel<binjs_es6::ast::FormalParameters> for Vec<ratel::grammar::Parameter> {
+    fn transcode(&self, _all_strings: &mut HashSet<SharedString>) -> Result<binjs_es6::ast::FormalParameters, Error> {
+        unimplemented!()
     }
 }
 
