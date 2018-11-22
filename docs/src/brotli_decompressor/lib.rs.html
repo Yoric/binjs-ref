@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-decompressor-1.2.1/src/lib.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>lib.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-decompressor-2.1.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -370,7 +313,149 @@
 <span id="313">313</span>
 <span id="314">314</span>
 <span id="315">315</span>
-</pre><pre class="rust ">
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
+<span id="409">409</span>
+<span id="410">410</span>
+<span id="411">411</span>
+<span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">no_std</span>]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">unused_parens</span>)]</span>
@@ -378,22 +463,27 @@
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_upper_case_globals</span>)]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib-ffi-binding&quot;</span>,<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>), <span class="ident">feature</span>(<span class="ident">lang_items</span>)))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib-ffi-binding&quot;</span>,<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>), <span class="ident">feature</span>(<span class="ident">panic_handler</span>)))]</span>
+
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="comment">// &lt;-- for debugging, remove xprintln from bit_reader and replace with println</span>
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">std</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="self">self</span>, <span class="ident">Error</span>, <span class="ident">ErrorKind</span>, <span class="ident">Read</span>, <span class="ident">Write</span>};
-
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">alloc_stdlib</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">alloc_no_stdlib</span> <span class="kw">as</span> <span class="ident">alloc</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">alloc</span>::{<span class="ident">AllocatedStackMemory</span>, <span class="ident">Allocator</span>, <span class="ident">SliceWrapper</span>, <span class="ident">SliceWrapperMut</span>, <span class="ident">StackAllocator</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">alloc</span>::{<span class="ident">AllocatedStackMemory</span>, <span class="ident">Allocator</span>, <span class="ident">SliceWrapper</span>, <span class="ident">SliceWrapperMut</span>, <span class="ident">StackAllocator</span>, <span class="ident">bzero</span>};
+<span class="kw">use</span> <span class="ident">core</span>::<span class="ident">ops</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">alloc</span>::<span class="ident">HeapAlloc</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;unsafe&quot;</span>,<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>)))]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">alloc</span>::<span class="ident">HeapAllocUninitialized</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">alloc_stdlib</span>::<span class="ident">StandardAlloc</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;unsafe&quot;</span>,<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">alloc_stdlib</span>::<span class="ident">HeapAllocUninitialized</span>;
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">mod</span> <span class="ident">memory</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">dictionary</span>;
@@ -412,19 +502,19 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">writer</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">huffman</span>::{<span class="ident">HuffmanCode</span>, <span class="ident">HuffmanTreeGroup</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">state</span>::<span class="ident">BrotliState</span>;
-
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ffi</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">reader</span>::{<span class="ident">DecompressorCustomIo</span>};
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">reader</span>::{<span class="ident">Decompressor</span>};
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">writer</span>::{<span class="ident">DecompressorWriterCustomIo</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">writer</span>::{<span class="ident">DecompressorWriter</span>};
 
 <span class="comment">// use io_wrappers::write_all;</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">io_wrappers</span>::{<span class="ident">CustomRead</span>, <span class="ident">CustomWrite</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">io_wrappers</span>::{<span class="ident">IntoIoReader</span>, <span class="ident">IoReaderWrapper</span>, <span class="ident">IntoIoWriter</span>, <span class="ident">IoWriterWrapper</span>};
 
 <span class="comment">// interface</span>
@@ -437,12 +527,12 @@
 <span class="comment">//                               mut total_out: &amp;mut usize,</span>
 <span class="comment">//                               mut s: &amp;mut BrotliState&lt;AllocU8, AllocU32, AllocHC&gt;);</span>
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">decode</span>::{<span class="ident">BrotliDecompressStream</span>, <span class="ident">BrotliResult</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">decode</span>::{<span class="ident">BrotliDecompressStream</span>, <span class="ident">BrotliResult</span>, <span class="ident">BrotliDecoderHasMoreOutput</span>};
 
 
 
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;unsafe&quot;</span>, <span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>)))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">any</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;unsafe&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>))))]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliDecompress</span><span class="op">&lt;</span><span class="ident">InputType</span>, <span class="ident">OutputType</span><span class="op">&gt;</span>(<span class="ident">r</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">InputType</span>,
                                                <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OutputType</span>)
                                                <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>
@@ -455,14 +545,13 @@
                               <span class="ident">w</span>,
                               <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">input_buffer</span>[..],
                               <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output_buffer</span>[..],
-                              <span class="ident">HeapAlloc</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> { <span class="ident">default_value</span>: <span class="number">0</span> },
-                              <span class="ident">HeapAlloc</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> { <span class="ident">default_value</span>: <span class="number">0</span> },
-                              <span class="ident">HeapAlloc</span>::<span class="op">&lt;</span><span class="ident">HuffmanCode</span><span class="op">&gt;</span> {
-                                <span class="ident">default_value</span>: <span class="ident">HuffmanCode</span>::<span class="ident">default</span>(),
-                              })
+                              <span class="ident">StandardAlloc</span>::<span class="ident">default</span>(),
+                              <span class="ident">StandardAlloc</span>::<span class="ident">default</span>(),
+                              <span class="ident">StandardAlloc</span>::<span class="ident">default</span>(),
+  )
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliDecompressCustomDict</span><span class="op">&lt;</span><span class="ident">InputType</span>, <span class="ident">OutputType</span><span class="op">&gt;</span>(<span class="ident">r</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">InputType</span>,
                                                          <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OutputType</span>,
                                                          <span class="ident">input_buffer</span>:<span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
@@ -499,7 +588,7 @@
   }
 }
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;unsafe&quot;</span>,<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>)))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;unsafe&quot;</span>,<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliDecompress</span><span class="op">&lt;</span><span class="ident">InputType</span>, <span class="ident">OutputType</span><span class="op">&gt;</span>(<span class="ident">r</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">InputType</span>,
                                                <span class="ident">w</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">OutputType</span>)
                                                <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span>
@@ -518,7 +607,7 @@
 }
 
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliDecompressCustomAlloc</span><span class="op">&lt;</span><span class="ident">InputType</span>,
                                    <span class="ident">OutputType</span>,
                                    <span class="ident">AllocU8</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
@@ -622,7 +711,7 @@
         <span class="ident">output_offset</span> <span class="op">=</span> <span class="number">0</span>;
       }
       <span class="ident">BrotliResult</span>::<span class="ident">ResultSuccess</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
-      <span class="ident">BrotliResult</span>::<span class="ident">ResultFailure</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;FAILURE&quot;</span>),
+      <span class="ident">BrotliResult</span>::<span class="ident">ResultFailure</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">unexpected_eof_error_constant</span>),
     }
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">written</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="ident">result</span> <span class="op">=</span> <span class="ident">BrotliDecompressStream</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_in</span>,
@@ -655,7 +744,7 @@
 }
 
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;no-stdlib&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_from_to</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">io</span>::<span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">r</span>: <span class="ident">R</span>, <span class="kw-2">mut</span> <span class="ident">w</span>: <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buffer</span>: [<span class="ident">u8</span>; <span class="number">65536</span>] <span class="op">=</span> [<span class="number">0</span>; <span class="number">65536</span>];
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">out_size</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
@@ -686,69 +775,143 @@
   }
   <span class="prelude-val">Ok</span>(<span class="ident">out_size</span>)
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
 
-    <section class="footer"></section>
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BrotliDecoderReturnInfo</span> {
+    <span class="kw">pub</span> <span class="ident">decoded_size</span>: <span class="ident">usize</span>,
+    <span class="kw">pub</span> <span class="ident">error_string</span>: [<span class="ident">u8</span>;<span class="number">256</span>],
+    <span class="kw">pub</span> <span class="ident">error_code</span>: <span class="ident">state</span>::<span class="ident">BrotliDecoderErrorCode</span>,
+    <span class="kw">pub</span> <span class="ident">result</span>: <span class="ident">BrotliResult</span>,
+}
+<span class="kw">impl</span> <span class="ident">BrotliDecoderReturnInfo</span> {
+    <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">AllocU8</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+           <span class="ident">AllocU32</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+           <span class="ident">AllocHC</span>: <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">HuffmanCode</span><span class="op">&gt;&gt;</span>(
+        <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliState</span><span class="op">&lt;</span><span class="ident">AllocU8</span>, <span class="ident">AllocU32</span>, <span class="ident">AllocHC</span><span class="op">&gt;</span>,
+        <span class="ident">result</span>: <span class="ident">BrotliResult</span>,
+        <span class="ident">output_size</span>: <span class="ident">usize</span>,
+    ) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span> <span class="op">=</span> <span class="ident">BrotliDecoderReturnInfo</span>{
+            <span class="ident">result</span>: <span class="ident">result</span>,
+            <span class="ident">decoded_size</span>: <span class="ident">output_size</span>,
+            <span class="ident">error_code</span>: <span class="ident">decode</span>::<span class="ident">BrotliDecoderGetErrorCode</span>(<span class="kw-2">&amp;</span><span class="ident">state</span>),  
+            <span class="ident">error_string</span>: <span class="kw">if</span> <span class="kw">let</span> <span class="kw-2">&amp;</span><span class="prelude-val">Err</span>(<span class="ident">msg</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">state</span>.<span class="ident">mtf_or_error_string</span> {
+                <span class="ident">msg</span>
+            } <span class="kw">else</span> {
+                [<span class="number">0u8</span>;<span class="number">256</span>]
+            },
+        };
+        <span class="kw">if</span> <span class="ident">ret</span>.<span class="ident">error_string</span>[<span class="number">0</span>] <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">let</span> <span class="ident">error_string</span> <span class="op">=</span> <span class="ident">state</span>::<span class="ident">BrotliDecoderErrorStr</span>(<span class="ident">ret</span>.<span class="ident">error_code</span>);
+            <span class="kw">let</span> <span class="ident">to_copy</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">cmp</span>::<span class="ident">min</span>(<span class="ident">error_string</span>.<span class="ident">len</span>(), <span class="ident">ret</span>.<span class="ident">error_string</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>);
+            <span class="kw">for</span> (<span class="ident">dst</span>, <span class="ident">src</span>) <span class="kw">in</span> <span class="ident">ret</span>.<span class="ident">error_string</span>[..<span class="ident">to_copy</span>].<span class="ident">iter_mut</span>().<span class="ident">zip</span>(<span class="ident">error_string</span>[..<span class="ident">to_copy</span>].<span class="ident">bytes</span>()) {
+                <span class="kw-2">*</span><span class="ident">dst</span> <span class="op">=</span> <span class="ident">src</span>;
+            }
+        }
+        <span class="ident">ret</span>
+    }
+}
 
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
+<span class="macro">declare_stack_allocator_struct</span><span class="macro">!</span>(<span class="ident">MemPool</span>, <span class="number">512</span>, <span class="ident">stack</span>);
 
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">brotli_decode_prealloc</span>(
+  <span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+  <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span>[<span class="ident">u8</span>],
+  <span class="ident">scratch_u8</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>],
+  <span class="ident">scratch_u32</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u32</span>],
+  <span class="ident">scratch_hc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">HuffmanCode</span>],
+) <span class="op">-&gt;</span> <span class="ident">BrotliDecoderReturnInfo</span> {
+  <span class="kw">let</span> <span class="ident">stack_u8_allocator</span> <span class="op">=</span> <span class="ident">MemPool</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>::<span class="ident">new_allocator</span>(<span class="ident">scratch_u8</span>, <span class="ident">bzero</span>);
+  <span class="kw">let</span> <span class="ident">stack_u32_allocator</span> <span class="op">=</span> <span class="ident">MemPool</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>::<span class="ident">new_allocator</span>(<span class="ident">scratch_u32</span>, <span class="ident">bzero</span>);
+  <span class="kw">let</span> <span class="ident">stack_hc_allocator</span> <span class="op">=</span> <span class="ident">MemPool</span>::<span class="op">&lt;</span><span class="ident">HuffmanCode</span><span class="op">&gt;</span>::<span class="ident">new_allocator</span>(<span class="ident">scratch_hc</span>, <span class="ident">bzero</span>);
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_out</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">len</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_in</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">len</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">input_offset</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output_offset</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">written</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">brotli_state</span> <span class="op">=</span>
+    <span class="ident">BrotliState</span>::<span class="ident">new</span>(<span class="ident">stack_u8_allocator</span>, <span class="ident">stack_u32_allocator</span>, <span class="ident">stack_hc_allocator</span>);
+  <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ::<span class="ident">BrotliDecompressStream</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_in</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">input_offset</span>,
+                                      <span class="kw-2">&amp;</span><span class="ident">input</span>[..],
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_out</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output_offset</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">written</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">brotli_state</span>);
+  <span class="kw">let</span> <span class="ident">return_info</span> <span class="op">=</span> <span class="ident">BrotliDecoderReturnInfo</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">brotli_state</span>, <span class="ident">result</span>.<span class="ident">into</span>(), <span class="ident">output_offset</span>);
+  <span class="ident">brotli_state</span>.<span class="ident">BrotliStateCleanup</span>();
+  <span class="ident">return_info</span>    
+}
 
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>))]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">brotli_decode</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    <span class="ident">output_and_scratch</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span>[<span class="ident">u8</span>],
+) <span class="op">-&gt;</span> <span class="ident">BrotliDecoderReturnInfo</span> {
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stack_u32_buffer</span> <span class="op">=</span> [<span class="number">0u32</span>; <span class="number">12</span> <span class="op">*</span> <span class="number">1024</span> <span class="op">*</span> <span class="number">6</span>];
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stack_hc_buffer</span> <span class="op">=</span> [<span class="ident">HuffmanCode</span>::<span class="ident">default</span>(); <span class="number">128</span> <span class="op">*</span> (<span class="ident">decode</span>::<span class="ident">kNumInsertAndCopyCodes</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">+</span> <span class="ident">decode</span>::<span class="ident">kNumLiteralCodes</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">+</span> <span class="number">6</span> <span class="op">*</span> <span class="ident">decode</span>::<span class="ident">kNumBlockLengthCodes</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="ident">huffman</span>::<span class="ident">BROTLI_HUFFMAN_MAX_TABLE_SIZE</span> <span class="kw">as</span> <span class="ident">usize</span>];
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">guessed_output_size</span> <span class="op">=</span> <span class="ident">core</span>::<span class="ident">cmp</span>::<span class="ident">min</span>(
+    <span class="ident">core</span>::<span class="ident">cmp</span>::<span class="ident">max</span>(<span class="ident">input</span>.<span class="ident">len</span>(), <span class="comment">// shouldn&#39;t shrink too much</span>
+                   <span class="ident">output_and_scratch</span>.<span class="ident">len</span>() <span class="op">/</span> <span class="number">3</span>),
+      <span class="ident">output_and_scratch</span>.<span class="ident">len</span>());
+  <span class="kw">if</span> <span class="ident">input</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">2</span> {
+      <span class="kw">let</span> <span class="ident">scratch_len</span> <span class="op">=</span> <span class="ident">output_and_scratch</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="ident">guessed_output_size</span>;
+      <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">lgwin</span>) <span class="op">=</span> <span class="ident">decode</span>::<span class="ident">lg_window_size</span>(<span class="ident">input</span>[<span class="number">0</span>], <span class="ident">input</span>[<span class="number">1</span>]) {
+          <span class="kw">let</span> <span class="ident">extra_window_size</span> <span class="op">=</span> <span class="number">65536</span> <span class="op">+</span> (<span class="ident">decode</span>::<span class="ident">kNumLiteralCodes</span> <span class="op">+</span> <span class="ident">decode</span>::<span class="ident">kNumInsertAndCopyCodes</span>) <span class="kw">as</span> <span class="ident">usize</span> <span class="op">*</span> <span class="number">256</span> <span class="op">+</span> (<span class="number">1usize</span> <span class="op">&lt;&lt;</span> <span class="ident">lgwin</span>.<span class="number">0</span>) <span class="op">*</span> <span class="number">5</span> <span class="op">/</span> <span class="number">4</span>;
+          <span class="kw">if</span> <span class="ident">extra_window_size</span> <span class="op">&lt;</span> <span class="ident">scratch_len</span> {
+              <span class="ident">guessed_output_size</span> <span class="op">+=</span> (<span class="ident">scratch_len</span> <span class="op">-</span> <span class="ident">extra_window_size</span>) <span class="op">*</span> <span class="number">3</span><span class="op">/</span><span class="number">4</span>;
+          }
+      }
+  }
+  <span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">output</span>, <span class="kw-2">mut</span> <span class="ident">scratch_space</span>) <span class="op">=</span> <span class="ident">output_and_scratch</span>.<span class="ident">split_at_mut</span>(<span class="ident">guessed_output_size</span>);
+  <span class="kw">let</span> <span class="ident">stack_u8_allocator</span> <span class="op">=</span> <span class="ident">MemPool</span>::<span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>::<span class="ident">new_allocator</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">scratch_space</span>, <span class="ident">bzero</span>);
+  <span class="kw">let</span> <span class="ident">stack_u32_allocator</span> <span class="op">=</span> <span class="ident">MemPool</span>::<span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>::<span class="ident">new_allocator</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stack_u32_buffer</span>, <span class="ident">bzero</span>);
+  <span class="kw">let</span> <span class="ident">stack_hc_allocator</span> <span class="op">=</span> <span class="ident">MemPool</span>::<span class="op">&lt;</span><span class="ident">HuffmanCode</span><span class="op">&gt;</span>::<span class="ident">new_allocator</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">stack_hc_buffer</span>, <span class="ident">bzero</span>);
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_out</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">len</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_in</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">len</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">input_offset</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output_offset</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">written</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">brotli_state</span> <span class="op">=</span>
+    <span class="ident">BrotliState</span>::<span class="ident">new</span>(<span class="ident">stack_u8_allocator</span>, <span class="ident">stack_u32_allocator</span>, <span class="ident">stack_hc_allocator</span>);
+  <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ::<span class="ident">BrotliDecompressStream</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_in</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">input_offset</span>,
+                                      <span class="kw-2">&amp;</span><span class="ident">input</span>[..],
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_out</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output_offset</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">written</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">brotli_state</span>);
+  <span class="kw">let</span> <span class="ident">return_info</span> <span class="op">=</span> <span class="ident">BrotliDecoderReturnInfo</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">brotli_state</span>, <span class="ident">result</span>.<span class="ident">into</span>(), <span class="ident">output_offset</span>);
+  <span class="ident">brotli_state</span>.<span class="ident">BrotliStateCleanup</span>();
+  <span class="ident">return_info</span>    
+}
 
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "brotli_decompressor";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">brotli_decode</span>(
+    <span class="ident">input</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
+    <span class="kw-2">mut</span> <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span>[<span class="ident">u8</span>],
+) <span class="op">-&gt;</span> <span class="ident">BrotliDecoderReturnInfo</span> {
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_out</span> <span class="op">=</span> <span class="ident">output</span>.<span class="ident">len</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_in</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">input</span>.<span class="ident">len</span>();
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">input_offset</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">output_offset</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">written</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
+  <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">brotli_state</span> <span class="op">=</span>
+    <span class="ident">BrotliState</span>::<span class="ident">new</span>(<span class="ident">StandardAlloc</span>::<span class="ident">default</span>(), <span class="ident">StandardAlloc</span>::<span class="ident">default</span>(), <span class="ident">StandardAlloc</span>::<span class="ident">default</span>());
+  <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> ::<span class="ident">BrotliDecompressStream</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_in</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">input_offset</span>,
+                                      <span class="kw-2">&amp;</span><span class="ident">input</span>[..],
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">available_out</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output_offset</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">output</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">written</span>,
+                                      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">brotli_state</span>);
+  <span class="kw">let</span> <span class="ident">return_info</span> <span class="op">=</span> <span class="ident">BrotliDecoderReturnInfo</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">brotli_state</span>, <span class="ident">result</span>.<span class="ident">into</span>(), <span class="ident">output_offset</span>);
+  <span class="ident">brotli_state</span>.<span class="ident">BrotliStateCleanup</span>();
+  <span class="ident">return_info</span>
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "brotli_decompressor";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

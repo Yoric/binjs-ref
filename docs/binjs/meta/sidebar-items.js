@@ -1,1 +1,1 @@
-initSidebarItems({});
+initSidebarItems({"mod":[["export","Generic tools for generating implementations of the Syntax."],["import","Import a specification of the Syntax."],["spec","Manipulating the specifications of the language. Definition of a spec for a version (or subset) of JavaScript."],["util","Misc. utilities. Miscellaneous utilities."]]});

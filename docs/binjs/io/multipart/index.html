@@ -1,0 +1,191 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `multipart` mod in crate `binjs`."><meta name="keywords" content="rust, rustlang, rust-lang, multipart"><title>binjs::io::multipart - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Module multipart</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../../index.html'>binjs</a>::<wbr><a href='../index.html'>io</a></p><script>window.sidebarCurrent = {name: 'multipart', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../../src/binjs_io/lib.rs.html#90' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../../index.html'>binjs</a>::<wbr><a href='../index.html'>io</a>::<wbr><a class="mod" href=''>multipart</a></span></h1><div class='docblock'><p>An optimization of TokenReader/TokenWriter,
+designed to minimize the size of the file.
+A multipart format, in which each part can be compressed independently.</p>
+<h1 id="overview" class="section-header"><a href="#overview">Overview</a></h1>
+<p>The file is divided in sections. Each section is prefixed by its bytelength, so as to permit
+skipping a section and/or reading sections concurrently. Each section may be compressed
+independently, possibly with different compression formats, with the expectation that this
+will let compressors take best advantage of the distinct structures of each section.</p>
+<p>(future versions may allow file-wide compression, too)</p>
+<p>The sections are:</p>
+<ol>
+<li>the grammar table;</li>
+<li>the strings table (which contains both strings and identifiers);</li>
+<li>the representation of the tree.</li>
+</ol>
+<p>The grammar table lists the AST nodes used in the file. Its primary role is to serve as a lightweight
+versioning mechanism - for instance, older versions of JS may define a node <code>Function</code> with three fields
+(<code>body</code>, <code>arguments</code> and optional <code>name</code>), while more recent versions of JS may define the same node
+with <em>five</em> fields (<code>body</code>, <code>arguments</code>, <code>async</code>, <code>generator</code> and optional <code>name</code>). A BinAST file
+may contain <em>either</em> variants of <code>Function</code>, depending on when it was created. The grammar table lets recent
+parsers determine that some fields are omitted and should be replaced by their default value. In fact, a
+BinAST file could even contain <em>both</em> variants of <code>Function</code>, for compression purposes. Also, when a
+parser encounters a grammar table with nodes that either have an unknown name or contain unknown
+fields, it may decide to reject the file immediately (it doesn't have to, mind you).</p>
+<p>The strings table lists all strings (including identifiers) in the file. Its primary role is to speed
+up parsing by making sure that each string only needs to be parsed/checked/atomized once during parsing.
+Its secondary role is compression.</p>
+<p>In the current version, the tree is a sequence of tokens. All these tokens are ambiguous and a stream may
+only be tokenized by a client that knows both the grammar and the grammar table. Specific tokens (lists)
+contain their byte length, so as to allow skipping them for purposes of lazy parsing and/or concurrent
+parsing.</p>
+<h1 id="format" class="section-header"><a href="#format">Format</a></h1>
+<p>The entire file is formatted as:</p>
+<ul>
+<li>the characters <code>&quot;BINJS&quot;</code>;</li>
+<li>a container version number (<code>varnum</code>, currently <code>0</code>);</li>
+<li>the compressed grammar table (see below);</li>
+<li>the compressed strings table (see below);</li>
+<li>the compressed tree (see below).</li>
+</ul>
+<h2 id="grammar-table" class="section-header"><a href="#grammar-table">Grammar table</a></h2>
+<p>The grammar table serves to map tagged tuple indices to actual constructions in the JS grammar.</p>
+<ul>
+<li>the characters <code>&quot;[GRAMMAR]&quot;</code>;</li>
+<li>a <code>prefix</code> identifying the compression format used for the grammar (one of &quot;identity;&quot;, &quot;br;&quot;, &quot;gzip;&quot;, &quot;compress;&quot;, &quot;deflate;&quot;).</li>
+<li>the number of compressed bytes (<code>varnum</code>);</li>
+<li>compressed in the format identified by <code>prefix</code>:
+<ul>
+<li>the number of entries (<code>varnum</code>);</li>
+<li>for each entry,
+<ul>
+<li>byte length of entry (<code>varnum</code>);</li>
+<li>one of
+<ul>
+<li>the invalid strings [255, 0] (representing the null interface, only valid if byte length is 2);</li>
+<li>a utf-8 encoded string (utf-8 encoded, <code>bytelen</code> bytes, no terminator).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="strings-table" class="section-header"><a href="#strings-table">Strings table</a></h2>
+<p>The grammar table serves to map tagged tuple indices to strings.</p>
+<ul>
+<li>the characters <code>&quot;[STRINGS]&quot;</code>;</li>
+<li>a <code>prefix</code> identifying the compression format used for the grammar (one of &quot;identity;&quot;, &quot;br;&quot;, &quot;gzip;&quot;, &quot;compress;&quot;, &quot;deflate;&quot;).</li>
+<li>the number of compressed bytes (<code>varnum</code>);</li>
+<li>compressed in the format identified by <code>prefix</code>;
+<ul>
+<li>the number of entries (<code>varnum</code>);</li>
+<li>for each entry,
+<ul>
+<li>byte length of string (<code>varnum</code>);</li>
+<li>one of
+<ul>
+<li>the invalid strings [255, 0] (representing the null string, only valid if byte length is 2);</li>
+<li>a utf-8 encoded string (utf-8 encoded, <code>bytelen</code> bytes, no terminator).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="the-tree" class="section-header"><a href="#the-tree">The tree</a></h2>
+<p>This contains the actual tree for a specific grammar. The file does not contain all the information
+to determine the nature of next token. Rather, this must be led by the grammar.</p>
+<ul>
+<li>the characters <code>&quot;[TREE]&quot;</code>;</li>
+<li>a <code>prefix</code> identifying the compression format used for the grammar (one of &quot;identity;&quot;, &quot;br;&quot;, &quot;gzip;&quot;, &quot;compress;&quot;, &quot;deflate;&quot;).</li>
+<li>the number of compressed bytes (<code>varnum</code>);</li>
+<li>compressed in the format identified by <code>prefix</code>:
+<ul>
+<li>one tree token.</li>
+</ul>
+</li>
+</ul>
+<h3 id="tree-token" class="section-header"><a href="#tree-token">Tree token</a></h3>
+<p>A tree token is defined as one of</p>
+<ul>
+<li>a number of bytes (aka Offset), represented as:
+<ul>
+<li>a <code>varnum</code>;</li>
+</ul>
+</li>
+<li>a null float, represented as:
+<ul>
+<li>a low-endian IEEE764 64-bit floating point value signalling NaN (8 bytes),</li>
+</ul>
+</li>
+<li>a non-null float, represented as:
+<ul>
+<li>a low-endian IEEE764 64-bit floating point value non-signalling NaN (8 bytes),</li>
+</ul>
+</li>
+<li>a null boolean, represented as:
+<ul>
+<li>a single byte with value <code>2</code> (one byte);</li>
+</ul>
+</li>
+<li>a non-null boolean, represented as:
+<ul>
+<li>a single byte with value <code>0</code> (false) or <code>1</code> (true) (one byte);</li>
+</ul>
+</li>
+<li>a string, representing as
+<ul>
+<li>an entry in the table of strings (<code>varnum</code>);</li>
+</ul>
+</li>
+<li>a list, represented as
+<ul>
+<li>number of items (<code>varnum</code>);</li>
+<li>for each item
+<ul>
+<li>the token;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>a tagged tuple, represented as
+<ul>
+<li>an entry in the grammar table (<code>varnum</code>);</li>
+<li>for each field
+<ul>
+<li>the token</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FormatProvider.html"
+                                  title='struct binjs::io::multipart::FormatProvider'>FormatProvider</a></td>
+                           <td class='docblock-short'>
+                                <p>Command-line management.</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Statistics.html"
+                                  title='struct binjs::io::multipart::Statistics'>Statistics</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Targets.html"
+                                  title='struct binjs::io::multipart::Targets'>Targets</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TreeTokenReader.html"
+                                  title='struct binjs::io::multipart::TreeTokenReader'>TreeTokenReader</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.TreeTokenWriter.html"
+                                  title='struct binjs::io::multipart::TreeTokenWriter'>TreeTokenWriter</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "binjs";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

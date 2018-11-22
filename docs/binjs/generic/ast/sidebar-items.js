@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Path","The path followed when walking an AST."],["PathItem",""]]});

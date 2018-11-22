@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["pick","Return a random item from a slice."],["type_of","Return a string describing a JSON value without dumping the entire AST."]]});

@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `crates/binjs_meta/src/spec.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>spec.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `crates/binjs_meta/src/spec.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>spec.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1075,10 +1018,106 @@
 <span id="1018">1018</span>
 <span id="1019">1019</span>
 <span id="1020">1020</span>
-</pre><pre class="rust ">
+<span id="1021">1021</span>
+<span id="1022">1022</span>
+<span id="1023">1023</span>
+<span id="1024">1024</span>
+<span id="1025">1025</span>
+<span id="1026">1026</span>
+<span id="1027">1027</span>
+<span id="1028">1028</span>
+<span id="1029">1029</span>
+<span id="1030">1030</span>
+<span id="1031">1031</span>
+<span id="1032">1032</span>
+<span id="1033">1033</span>
+<span id="1034">1034</span>
+<span id="1035">1035</span>
+<span id="1036">1036</span>
+<span id="1037">1037</span>
+<span id="1038">1038</span>
+<span id="1039">1039</span>
+<span id="1040">1040</span>
+<span id="1041">1041</span>
+<span id="1042">1042</span>
+<span id="1043">1043</span>
+<span id="1044">1044</span>
+<span id="1045">1045</span>
+<span id="1046">1046</span>
+<span id="1047">1047</span>
+<span id="1048">1048</span>
+<span id="1049">1049</span>
+<span id="1050">1050</span>
+<span id="1051">1051</span>
+<span id="1052">1052</span>
+<span id="1053">1053</span>
+<span id="1054">1054</span>
+<span id="1055">1055</span>
+<span id="1056">1056</span>
+<span id="1057">1057</span>
+<span id="1058">1058</span>
+<span id="1059">1059</span>
+<span id="1060">1060</span>
+<span id="1061">1061</span>
+<span id="1062">1062</span>
+<span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Definition of a spec for a version (or subset) of JavaScript.</span>
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">util</span>::<span class="ident">ToStr</span>;
+
+<span class="kw">use</span> <span class="ident">itertools</span>::<span class="ident">Itertools</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">cell</span>::<span class="kw-2">*</span>;
@@ -1087,6 +1126,14 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="kw-2">*</span>;
 
+<span class="doccomment">/// Whether an attribute is eager or lazy.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Laziness</span> {
+    <span class="doccomment">/// An eager attribute is designed to be parsed immediately.</span>
+    <span class="ident">Eager</span>,
+    <span class="doccomment">/// A lazy attribute is designed for deferred parsing.</span>
+    <span class="ident">Lazy</span>
+}
 
 <span class="doccomment">/// The name of an interface or enum.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
@@ -1094,6 +1141,12 @@
 <span class="kw">impl</span> <span class="ident">NodeName</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">String</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>()
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>()
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_rc_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 <span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">NodeName</span> {
@@ -1119,6 +1172,9 @@
 <span class="kw">impl</span> <span class="ident">FieldName</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">String</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>()
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_rc_string</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 <span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">FieldName</span> {
@@ -1181,9 +1237,16 @@
 <span class="doccomment">/// Representation of a field in an interface.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Field</span> {
+    <span class="doccomment">/// The name of the field.</span>
     <span class="ident">name</span>: <span class="ident">FieldName</span>,
+
+    <span class="doccomment">/// The type of the field.</span>
     <span class="ident">type_</span>: <span class="ident">Type</span>,
+
+    <span class="doccomment">/// Documentation for the field. Ignored for the time being.</span>
     <span class="ident">documentation</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+
+    <span class="ident">laziness</span>: <span class="ident">Laziness</span>
 }
 <span class="kw">impl</span> <span class="ident">Hash</span> <span class="kw">for</span> <span class="ident">Field</span> {
     <span class="kw">fn</span> <span class="ident">hash</span><span class="op">&lt;</span><span class="ident">H</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">H</span>) <span class="kw">where</span> <span class="ident">H</span>: <span class="ident">Hasher</span> {
@@ -1196,6 +1259,7 @@
             <span class="ident">name</span>,
             <span class="ident">type_</span>,
             <span class="ident">documentation</span>: <span class="prelude-val">None</span>,
+            <span class="ident">laziness</span>: <span class="ident">Laziness</span>::<span class="ident">Eager</span>,
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">FieldName</span> {
@@ -1204,11 +1268,25 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">type_</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Type</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">type_</span>
     }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_lazy</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">laziness</span> <span class="op">==</span> <span class="ident">Laziness</span>::<span class="ident">Lazy</span>
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">laziness</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Laziness</span> {
+        <span class="self">self</span>.<span class="ident">laziness</span>.<span class="ident">clone</span>()
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_laziness</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">laziness</span>: <span class="ident">Laziness</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">laziness</span> <span class="op">=</span> <span class="ident">laziness</span>;
+        <span class="self">self</span>
+    }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">doc</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">documentation</span> {
             <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
             <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">s</span>)
         }
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_doc</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">doc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">documentation</span> <span class="op">=</span> <span class="ident">doc</span>;
+        <span class="self">self</span>
     }
 }
 
@@ -1241,17 +1319,29 @@
     <span class="doccomment">/// A number, as per JavaScript specifications.</span>
     <span class="ident">Number</span>,
 
+    <span class="ident">UnsignedLong</span>,
+
     <span class="doccomment">/// A number of bytes in the binary file.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This spec is used only internally, as a hidden</span>
     <span class="doccomment">/// field injected by deanonymization, to represent</span>
-    <span class="doccomment">/// Skippable nodes.</span>
+    <span class="doccomment">/// lazy fields.</span>
     <span class="ident">Offset</span>,
 
     <span class="doccomment">/// Nothing.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// For the moment, this spec is used only internally.</span>
     <span class="ident">Void</span>,
+
+    <span class="doccomment">/// A string used to represent something bound in a scope (i.e. a variable, but not a property).</span>
+    <span class="doccomment">/// At this level, we make no distinction between `Identifier` and `IdentifierName`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Actually maps to a subset of `IdentifierName` in webidl.</span>
+    <span class="ident">IdentifierName</span>,
+
+    <span class="doccomment">/// A key for a property. For the time being, we make no distinction between variants such</span>
+    <span class="doccomment">/// as `LiteralPropertyName` and `IdentifierName`-as-property-keys.</span>
+    <span class="ident">PropertyKey</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -1353,8 +1443,11 @@
             <span class="ident">TypeSpec</span>::<span class="ident">Boolean</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">Boolean</span>)),
             <span class="ident">TypeSpec</span>::<span class="ident">Void</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">Void</span>)),
             <span class="ident">TypeSpec</span>::<span class="ident">Number</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">Number</span>)),
+            <span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">UnsignedLong</span>)),
             <span class="ident">TypeSpec</span>::<span class="ident">String</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">String</span>)),
             <span class="ident">TypeSpec</span>::<span class="ident">Offset</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">Offset</span>)),
+            <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">IdentifierName</span>)),
+            <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span>::<span class="ident">non_nullable</span>(<span class="ident">Primitive</span>::<span class="ident">PropertyKey</span>)),
             <span class="ident">TypeSpec</span>::<span class="ident">NamedType</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
                 <span class="kw">match</span> <span class="ident">spec</span>.<span class="ident">get_type_by_name</span>(<span class="ident">name</span>).<span class="ident">unwrap</span>() {
                     <span class="ident">NamedType</span>::<span class="ident">Interface</span>(<span class="kw-2">ref</span> <span class="ident">interface</span>) <span class="op">=&gt;</span>
@@ -1389,8 +1482,11 @@
     <span class="ident">Boolean</span>,
     <span class="ident">Void</span>,
     <span class="ident">Number</span>,
+    <span class="ident">UnsignedLong</span>,
     <span class="ident">Offset</span>,
     <span class="ident">Interface</span>(<span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Interface</span><span class="op">&gt;</span>),
+    <span class="ident">IdentifierName</span>,
+    <span class="ident">PropertyKey</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>)]</span>
@@ -1443,11 +1539,20 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">number</span>() <span class="op">-&gt;</span> <span class="ident">TypeSpec</span> {
         <span class="ident">TypeSpec</span>::<span class="ident">Number</span>
     }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unsigned_long</span>() <span class="op">-&gt;</span> <span class="ident">TypeSpec</span> {
+        <span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span>
+    }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bool</span>() <span class="op">-&gt;</span> <span class="ident">TypeSpec</span> {
         <span class="ident">TypeSpec</span>::<span class="ident">Boolean</span>
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">void</span>() <span class="op">-&gt;</span> <span class="ident">TypeSpec</span> {
         <span class="ident">TypeSpec</span>::<span class="ident">Void</span>
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">identifier_name</span>() <span class="op">-&gt;</span> <span class="ident">TypeSpec</span> {
+        <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span>
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">property_key</span>() <span class="op">-&gt;</span> <span class="ident">TypeSpec</span> {
+        <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>
     }
 
     <span class="doccomment">/// An `offset` type, holding a number of bytes in the binary file.</span>
@@ -1523,17 +1628,16 @@
         <span class="self">self</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">with_field_aux</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">doc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">with_field_aux</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">laziness</span>: <span class="ident">Laziness</span>,
+                      <span class="ident">doc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">field</span>(<span class="ident">name</span>).<span class="ident">is_some</span>() {
             <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Field: attempting to overwrite {:?}&quot;</span>, <span class="ident">name</span>);
             <span class="kw">return</span> <span class="self">self</span>
         }
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fields</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">fields</span>;
-        <span class="ident">fields</span>.<span class="ident">push</span>(<span class="ident">Field</span> {
-            <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">clone</span>(),
-            <span class="ident">type_</span>,
-            <span class="ident">documentation</span>: <span class="ident">doc</span>.<span class="ident">map</span>(<span class="ident">str</span>::<span class="ident">to_string</span>),
-        });
+        <span class="ident">fields</span>.<span class="ident">push</span>(<span class="ident">Field</span>::<span class="ident">new</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">type_</span>)
+            .<span class="ident">with_doc</span>(<span class="ident">doc</span>.<span class="ident">map</span>(<span class="ident">str</span>::<span class="ident">to_string</span>))
+            .<span class="ident">with_laziness</span>(<span class="ident">laziness</span>));
         <span class="ident">Obj</span> {
             <span class="ident">fields</span>
         }
@@ -1542,11 +1646,15 @@
 
     <span class="doccomment">/// Extend a structure with a field.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">None</span>)
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="ident">Laziness</span>::<span class="ident">Eager</span>, <span class="prelude-val">None</span>)
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field_doc</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">Some</span>(<span class="ident">doc</span>))
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="ident">Laziness</span>::<span class="ident">Eager</span>, <span class="prelude-val">Some</span>(<span class="ident">doc</span>))
+    }
+
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field_lazy</span>(<span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="ident">Laziness</span>::<span class="ident">Lazy</span>, <span class="prelude-val">None</span>)
     }
 }
 
@@ -1584,8 +1692,7 @@
     <span class="doccomment">/// The contents of this interface, excluding the contents of parent interfaces.</span>
     <span class="ident">contents</span>: <span class="ident">Obj</span>,
 
-    <span class="doccomment">/// If `true`, objects of this interface may be skipped during parsing.</span>
-    <span class="ident">is_skippable</span>: <span class="ident">bool</span>,
+    <span class="ident">is_scope</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">InterfaceDeclaration</span> {
@@ -1594,23 +1701,26 @@
         <span class="self">self</span>
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">None</span>)
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">None</span>, <span class="ident">Laziness</span>::<span class="ident">Eager</span>)
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field_lazy</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">None</span>, <span class="ident">Laziness</span>::<span class="ident">Eager</span>)
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field_laziness</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">laziness</span>: <span class="ident">Laziness</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">None</span>, <span class="ident">laziness</span>)
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_field_doc</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">Some</span>(<span class="ident">doc</span>))
+        <span class="self">self</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="prelude-val">Some</span>(<span class="ident">doc</span>), <span class="ident">Laziness</span>::<span class="ident">Eager</span>)
     }
-    <span class="kw">fn</span> <span class="ident">with_field_aux</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">doc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">with_field_aux</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">type_</span>: <span class="ident">Type</span>, <span class="ident">doc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">laziness</span>: <span class="ident">Laziness</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">Obj</span>::<span class="ident">new</span>();
         <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">swap</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">contents</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">contents</span>);
-        <span class="self">self</span>.<span class="ident">contents</span> <span class="op">=</span> <span class="ident">contents</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="ident">doc</span>);
+        <span class="self">self</span>.<span class="ident">contents</span> <span class="op">=</span> <span class="ident">contents</span>.<span class="ident">with_field_aux</span>(<span class="ident">name</span>, <span class="ident">type_</span>, <span class="ident">laziness</span>, <span class="ident">doc</span>);
         <span class="self">self</span>
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_skippable</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">is_skippable</span> <span class="op">=</span> <span class="ident">value</span>;
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_scope</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">is_scope</span> <span class="op">=</span> <span class="ident">value</span>;
         <span class="self">self</span>
-    }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_skippable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">is_skippable</span>
     }
 }
 
@@ -1681,7 +1791,7 @@
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">InterfaceDeclaration</span> {
             <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">clone</span>(),
             <span class="ident">contents</span>: <span class="ident">Obj</span>::<span class="ident">new</span>(),
-            <span class="ident">is_skippable</span>: <span class="bool-val">false</span>,
+            <span class="ident">is_scope</span>: <span class="bool-val">false</span>,
         });
         <span class="self">self</span>.<span class="ident">interfaces_by_name</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="ident">result</span>);
         <span class="self">self</span>.<span class="ident">interfaces_by_name</span>.<span class="ident">get</span>(<span class="ident">name</span>)
@@ -1737,10 +1847,20 @@
             .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">k</span>, <span class="ident">v</span>)<span class="op">|</span> (<span class="ident">k</span>, <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">into_inner</span>(<span class="ident">v</span>))))
             .<span class="ident">collect</span>();
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node_names</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
-        <span class="kw">for</span> <span class="ident">name</span> <span class="kw">in</span> <span class="ident">interfaces_by_name</span>.<span class="ident">keys</span>().<span class="ident">chain</span>(<span class="ident">string_enums_by_name</span>.<span class="ident">keys</span>()).<span class="ident">chain</span>(<span class="ident">typedefs_by_name</span>.<span class="ident">keys</span>()) {
-            <span class="ident">node_names</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">to_string</span>().<span class="ident">clone</span>(), <span class="ident">name</span>.<span class="ident">clone</span>());
-        }
+        <span class="kw">let</span> <span class="ident">node_names</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">interfaces_by_name</span>
+            .<span class="ident">keys</span>()
+            .<span class="ident">chain</span>(<span class="ident">string_enums_by_name</span>
+                .<span class="ident">keys</span>())
+            .<span class="ident">chain</span>(<span class="ident">typedefs_by_name</span>
+                .<span class="ident">keys</span>())
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">name</span><span class="op">|</span> {
+                (<span class="ident">name</span>.<span class="ident">to_string</span>().<span class="ident">clone</span>(), <span class="ident">name</span>.<span class="ident">clone</span>())
+            })
+            .<span class="ident">collect</span>();
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;spec&quot;</span>, <span class="string">&quot;Established list of node names: {:?} ({})&quot;</span>,
+            <span class="ident">node_names</span>.<span class="ident">keys</span>()
+                .<span class="ident">sorted</span>(),
+            <span class="ident">node_names</span>.<span class="ident">len</span>());
 
         <span class="comment">// 2. Collect all field names.</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fields</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
@@ -1783,6 +1903,10 @@
                 }
             }
             <span class="kw">for</span> <span class="ident">name</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">used_typenames</span> {
+                <span class="comment">// Built-in types</span>
+                <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">to_str</span>() <span class="op">==</span> <span class="string">&quot;IdentifierName&quot;</span> <span class="op">||</span> <span class="ident">name</span>.<span class="ident">to_str</span>() <span class="op">==</span> <span class="string">&quot;Identifier&quot;</span> <span class="op">||</span> <span class="ident">name</span>.<span class="ident">to_str</span>() <span class="op">==</span> <span class="string">&quot;PropertyKey&quot;</span> {
+                    <span class="kw">continue</span>;
+                }
                 <span class="kw">if</span> <span class="ident">typedefs_by_name</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>) {
                     <span class="kw">continue</span>;
                 }
@@ -1828,7 +1952,14 @@
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;spec&quot;</span>, <span class="string">&quot;classify_type =&gt; don&#39;t put me in an interface&quot;</span>);
                         <span class="ident">TypeClassification</span>::<span class="ident">Array</span>
                     },
-                    <span class="ident">TypeSpec</span>::<span class="ident">Boolean</span> <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">Number</span> <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">String</span> <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">Void</span> <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">Offset</span> <span class="op">=&gt;</span> {
+                    <span class="ident">TypeSpec</span>::<span class="ident">Boolean</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">Number</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">String</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">Void</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">Offset</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span>
+                        <span class="op">|</span> <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span> <span class="op">=&gt;</span> {
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;spec&quot;</span>, <span class="string">&quot;classify_type =&gt; don&#39;t put me in an interface&quot;</span>);
                         <span class="ident">TypeClassification</span>::<span class="ident">Primitive</span>
                     }
@@ -1843,17 +1974,20 @@
                         }
                         <span class="comment">// Start lookup for this name.</span>
                         <span class="ident">cache</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="prelude-val">None</span>);
-                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">interfaces_by_name</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>) {
-                            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">names</span> <span class="op">=</span> <span class="ident">HashSet</span>::<span class="ident">new</span>();
-                            <span class="ident">names</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>());
-                            <span class="ident">TypeClassification</span>::<span class="ident">SumOfInterfaces</span>(<span class="ident">names</span>)
-                        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">string_enums_by_name</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>) {
-                            <span class="ident">TypeClassification</span>::<span class="ident">StringEnum</span>
-                        } <span class="kw">else</span> {
-                            <span class="kw">let</span> <span class="ident">type_</span> <span class="op">=</span> <span class="ident">typedefs_by_name</span>.<span class="ident">get</span>(<span class="ident">name</span>)
-                                .<span class="ident">unwrap</span>(); <span class="comment">// Completeness checked abover in this method.</span>
-                            <span class="ident">classify_type</span>(<span class="ident">typedefs_by_name</span>, <span class="ident">string_enums_by_name</span>, <span class="ident">interfaces_by_name</span>, <span class="ident">cache</span>, <span class="ident">type_</span>.<span class="ident">spec</span>(), <span class="ident">name</span>)
-                        };
+                        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span>
+                            <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">to_str</span>() <span class="op">==</span> <span class="string">&quot;IdentifierName&quot;</span> <span class="op">||</span> <span class="ident">name</span>.<span class="ident">to_str</span>() <span class="op">==</span> <span class="string">&quot;Identifier&quot;</span> <span class="op">||</span> <span class="ident">name</span>.<span class="ident">to_str</span>() <span class="op">==</span> <span class="string">&quot;PropertyKey&quot;</span> {
+                                <span class="ident">TypeClassification</span>::<span class="ident">Primitive</span>
+                            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">interfaces_by_name</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>) {
+                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">names</span> <span class="op">=</span> <span class="ident">HashSet</span>::<span class="ident">new</span>();
+                                <span class="ident">names</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>());
+                                <span class="ident">TypeClassification</span>::<span class="ident">SumOfInterfaces</span>(<span class="ident">names</span>)
+                            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">string_enums_by_name</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>) {
+                                <span class="ident">TypeClassification</span>::<span class="ident">StringEnum</span>
+                            } <span class="kw">else</span> {
+                                <span class="kw">let</span> <span class="ident">type_</span> <span class="op">=</span> <span class="ident">typedefs_by_name</span>.<span class="ident">get</span>(<span class="ident">name</span>)
+                                    .<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Type {} not found&quot;</span>, <span class="ident">name</span>)); <span class="comment">// Completeness checked abover in this method.</span>
+                                <span class="ident">classify_type</span>(<span class="ident">typedefs_by_name</span>, <span class="ident">string_enums_by_name</span>, <span class="ident">interfaces_by_name</span>, <span class="ident">cache</span>, <span class="ident">type_</span>.<span class="ident">spec</span>(), <span class="ident">name</span>)
+                            };
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;spec&quot;</span>, <span class="string">&quot;classify_type {:?} =&gt; (inserting in cache) {:?}&quot;</span>, <span class="ident">name</span>, <span class="ident">result</span>);
                         <span class="ident">cache</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">clone</span>(), <span class="prelude-val">Some</span>(<span class="ident">result</span>.<span class="ident">clone</span>()));
                         <span class="ident">result</span>
@@ -1927,8 +2061,7 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// Interfaces represent nodes in the AST. Each interface</span>
 <span class="doccomment">/// has a name, a type, defines properties (also known as</span>
-<span class="doccomment">/// `attribute` in webidl) which hold values. Interfaces</span>
-<span class="doccomment">/// may also have meta-properties, such as their skippability.</span>
+<span class="doccomment">/// `attribute` in webidl) which hold values.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Interface</span> {
     <span class="ident">declaration</span>: <span class="ident">InterfaceDeclaration</span>,
@@ -1969,10 +2102,8 @@
         <span class="prelude-val">None</span>
     }
 
-    <span class="doccomment">/// `true` if parsers should have the ability to skip instances of this</span>
-    <span class="doccomment">/// interface.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_skippable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">declaration</span>.<span class="ident">is_skippable</span>
+   <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_scope</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">declaration</span>.<span class="ident">is_scope</span>
     }
 }
 
@@ -2096,69 +2227,5 @@
         }
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "binjs_meta";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "binjs_meta";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

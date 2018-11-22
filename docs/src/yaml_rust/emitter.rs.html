@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.0/src/emitter.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>emitter.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.2/src/emitter.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>emitter.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -666,17 +609,46 @@
 <span id="609">609</span>
 <span id="610">610</span>
 <span id="611">611</span>
-</pre><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Display</span>};
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">convert</span>::<span class="ident">From</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{<span class="self">self</span>, <span class="ident">Display</span>};
 <span class="kw">use</span> <span class="ident">yaml</span>::{<span class="ident">Hash</span>, <span class="ident">Yaml</span>};
-
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">EmitError</span> {
-        <span class="ident">FmtError</span>(<span class="ident">fmt</span>::<span class="ident">Error</span>),
-        <span class="ident">BadHashmapKey</span>,
+    <span class="ident">FmtError</span>(<span class="ident">fmt</span>::<span class="ident">Error</span>),
+    <span class="ident">BadHashmapKey</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> <span class="kw">for</span> <span class="ident">EmitError</span> {
@@ -760,7 +732,7 @@
             <span class="string">b&#39;\x1e&#39;</span> <span class="op">=&gt;</span> <span class="string">&quot;\\u001e&quot;</span>,
             <span class="string">b&#39;\x1f&#39;</span> <span class="op">=&gt;</span> <span class="string">&quot;\\u001f&quot;</span>,
             <span class="string">b&#39;\x7f&#39;</span> <span class="op">=&gt;</span> <span class="string">&quot;\\u007f&quot;</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> { <span class="kw">continue</span>; }
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">continue</span>,
         };
 
         <span class="kw">if</span> <span class="ident">start</span> <span class="op">&lt;</span> <span class="ident">i</span> {
@@ -783,11 +755,10 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">YamlEmitter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Write</span>) <span class="op">-&gt;</span> <span class="ident">YamlEmitter</span> {
         <span class="ident">YamlEmitter</span> {
-            <span class="ident">writer</span>: <span class="ident">writer</span>,
+            <span class="ident">writer</span>,
             <span class="ident">best_indent</span>: <span class="number">2</span>,
             <span class="ident">compact</span>: <span class="bool-val">true</span>,
-
-            <span class="ident">level</span>: <span class="op">-</span><span class="number">1</span>
+            <span class="ident">level</span>: <span class="op">-</span><span class="number">1</span>,
         }
     }
 
@@ -800,12 +771,12 @@
     <span class="doccomment">/// or tags), which should be OK, because this emitter doesn&#39;t</span>
     <span class="doccomment">/// (currently) emit those anyways.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">compact</span>: <span class="ident">bool</span>) {
-      <span class="self">self</span>.<span class="ident">compact</span> <span class="op">=</span> <span class="ident">compact</span>;
+        <span class="self">self</span>.<span class="ident">compact</span> <span class="op">=</span> <span class="ident">compact</span>;
     }
 
     <span class="doccomment">/// Determine if this emitter is using &#39;compact inline notation&#39;.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">is_compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-      <span class="self">self</span>.<span class="ident">compact</span>
+        <span class="self">self</span>.<span class="ident">compact</span>
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dump</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="ident">Yaml</span>) <span class="op">-&gt;</span> <span class="ident">EmitResult</span> {
@@ -816,7 +787,9 @@
     }
 
     <span class="kw">fn</span> <span class="ident">write_indent</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">EmitResult</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">&lt;=</span> <span class="number">0</span> { <span class="kw">return</span> <span class="prelude-val">Ok</span>(()); }
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">level</span> <span class="op">&lt;=</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+        }
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">level</span> {
             <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="self">self</span>.<span class="ident">best_indent</span> {
                 <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot; &quot;</span>));
@@ -832,12 +805,11 @@
             <span class="ident">Yaml</span>::<span class="ident">String</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">need_quotes</span>(<span class="ident">v</span>) {
                     <span class="macro">try</span><span class="macro">!</span>(<span class="ident">escape_str</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="ident">v</span>));
-                }
-                <span class="kw">else</span> {
+                } <span class="kw">else</span> {
                     <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">v</span>));
                 }
                 <span class="prelude-val">Ok</span>(())
-            },
+            }
             <span class="ident">Yaml</span>::<span class="ident">Boolean</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">v</span> {
                     <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_str</span>(<span class="string">&quot;true&quot;</span>));
@@ -845,21 +817,21 @@
                     <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>.<span class="ident">write_str</span>(<span class="string">&quot;false&quot;</span>));
                 }
                 <span class="prelude-val">Ok</span>(())
-            },
+            }
             <span class="ident">Yaml</span>::<span class="ident">Integer</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">v</span>));
                 <span class="prelude-val">Ok</span>(())
-            },
+            }
             <span class="ident">Yaml</span>::<span class="ident">Real</span>(<span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
                 <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">v</span>));
                 <span class="prelude-val">Ok</span>(())
-            },
+            }
             <span class="ident">Yaml</span>::<span class="ident">Null</span> <span class="op">|</span> <span class="ident">Yaml</span>::<span class="ident">BadValue</span> <span class="op">=&gt;</span> {
                 <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;~&quot;</span>));
                 <span class="prelude-val">Ok</span>(())
-            },
+            }
             <span class="comment">// XXX(chenyh) Alias</span>
-            <span class="kw">_</span> <span class="op">=&gt;</span> { <span class="prelude-val">Ok</span>(()) }
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(()),
         }
     }
 
@@ -888,24 +860,24 @@
             <span class="self">self</span>.<span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
             <span class="kw">for</span> (<span class="ident">cnt</span>, (<span class="ident">k</span>, <span class="ident">v</span>)) <span class="kw">in</span> <span class="ident">h</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                 <span class="kw">let</span> <span class="ident">complex_key</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">k</span> {
-                  <span class="ident">Yaml</span>::<span class="ident">Hash</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Yaml</span>::<span class="ident">Array</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                  <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                    <span class="ident">Yaml</span>::<span class="ident">Hash</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="ident">Yaml</span>::<span class="ident">Array</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
                 };
                 <span class="kw">if</span> <span class="ident">cnt</span> <span class="op">&gt;</span> <span class="number">0</span> {
                     <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;\n&quot;</span>));
                     <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_indent</span>());
                 }
                 <span class="kw">if</span> <span class="ident">complex_key</span> {
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;?&quot;</span>));
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_val</span>(<span class="bool-val">true</span>, <span class="ident">k</span>));
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;\n&quot;</span>));
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_indent</span>());
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;:&quot;</span>));
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_val</span>(<span class="bool-val">true</span>, <span class="ident">v</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;?&quot;</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_val</span>(<span class="bool-val">true</span>, <span class="ident">k</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;\n&quot;</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_indent</span>());
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;:&quot;</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_val</span>(<span class="bool-val">true</span>, <span class="ident">v</span>));
                 } <span class="kw">else</span> {
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_node</span>(<span class="ident">k</span>));
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;:&quot;</span>));
-                  <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_val</span>(<span class="bool-val">false</span>, <span class="ident">v</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_node</span>(<span class="ident">k</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;:&quot;</span>));
+                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">emit_val</span>(<span class="bool-val">false</span>, <span class="ident">v</span>));
                 }
             }
             <span class="self">self</span>.<span class="ident">level</span> <span class="op">-=</span> <span class="number">1</span>;
@@ -929,7 +901,7 @@
                     <span class="self">self</span>.<span class="ident">level</span> <span class="op">-=</span> <span class="number">1</span>;
                 }
                 <span class="self">self</span>.<span class="ident">emit_array</span>(<span class="ident">v</span>)
-            },
+            }
             <span class="ident">Yaml</span>::<span class="ident">Hash</span>(<span class="kw-2">ref</span> <span class="ident">h</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> (<span class="ident">inline</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">compact</span>) <span class="op">||</span> <span class="ident">h</span>.<span class="ident">is_empty</span>() {
                     <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot; &quot;</span>));
@@ -940,7 +912,7 @@
                     <span class="self">self</span>.<span class="ident">level</span> <span class="op">-=</span> <span class="number">1</span>;
                 }
                 <span class="self">self</span>.<span class="ident">emit_hash</span>(<span class="ident">h</span>)
-            },
+            }
             <span class="kw">_</span> <span class="op">=&gt;</span> {
                 <span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot; &quot;</span>));
                 <span class="self">self</span>.<span class="ident">emit_node</span>(<span class="ident">val</span>)
@@ -950,8 +922,10 @@
 }
 
 <span class="doccomment">/// Check if the string requires quoting.</span>
+<span class="doccomment">/// Strings starting with any of the following characters must be quoted.</span>
+<span class="doccomment">/// :, &amp;, *, ?, |, -, &lt;, &gt;, =, !, %, @</span>
 <span class="doccomment">/// Strings containing any of the following characters must be quoted.</span>
-<span class="doccomment">/// :, {, }, [, ], ,, &amp;, *, #, ?, |, -, &lt;, &gt;, =, !, %, @, `</span>
+<span class="doccomment">/// {, }, [, ], ,, #, `</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// If the string contains any of the following control characters, it must be escaped with double quotes:</span>
 <span class="doccomment">/// \0, \x01, \x02, \x03, \x04, \x05, \x06, \a, \b, \t, \n, \v, \f, \r, \x0e, \x0f, \x10, \x11, \x12, \x13, \x14, \x15, \x16, \x17, \x18, \x19, \x1a, \e, \x1c, \x1d, \x1e, \x1f, \N, \_, \L, \P</span>
@@ -963,28 +937,49 @@
 <span class="doccomment">/// * When the string looks like a date (e.g. 2014-12-31) (otherwise it would be automatically converted into a Unix timestamp).</span>
 <span class="kw">fn</span> <span class="ident">need_quotes</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">fn</span> <span class="ident">need_quotes_spaces</span>(<span class="ident">string</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="ident">string</span>.<span class="ident">starts_with</span>(<span class="string">&#39; &#39;</span>)
-            <span class="op">||</span> <span class="ident">string</span>.<span class="ident">ends_with</span>(<span class="string">&#39; &#39;</span>)
+        <span class="ident">string</span>.<span class="ident">starts_with</span>(<span class="string">&#39; &#39;</span>) <span class="op">||</span> <span class="ident">string</span>.<span class="ident">ends_with</span>(<span class="string">&#39; &#39;</span>)
     }
 
     <span class="ident">string</span> <span class="op">==</span> <span class="string">&quot;&quot;</span>
-    <span class="op">||</span> <span class="ident">need_quotes_spaces</span>(<span class="ident">string</span>)
-    <span class="op">||</span> <span class="ident">string</span>.<span class="ident">contains</span>(<span class="op">|</span><span class="ident">character</span>: <span class="ident">char</span><span class="op">|</span> {
-        <span class="kw">match</span> <span class="ident">character</span> {
-            <span class="string">&#39;:&#39;</span> <span class="op">|</span> <span class="string">&#39;{&#39;</span> <span class="op">|</span> <span class="string">&#39;}&#39;</span> <span class="op">|</span> <span class="string">&#39;[&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> <span class="op">|</span> <span class="string">&#39;,&#39;</span> <span class="op">|</span> <span class="string">&#39;&amp;&#39;</span> <span class="op">|</span> <span class="string">&#39;*&#39;</span> <span class="op">|</span> <span class="string">&#39;#&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;|&#39;</span> <span class="op">|</span> <span class="string">&#39;-&#39;</span> <span class="op">|</span> <span class="string">&#39;&lt;&#39;</span> <span class="op">|</span> <span class="string">&#39;&gt;&#39;</span> <span class="op">|</span> <span class="string">&#39;=&#39;</span> <span class="op">|</span> <span class="string">&#39;!&#39;</span> <span class="op">|</span> <span class="string">&#39;%&#39;</span> <span class="op">|</span> <span class="string">&#39;@&#39;</span> <span class="op">|</span> <span class="string">&#39;`&#39;</span> <span class="op">|</span> <span class="string">&#39;\&quot;&#39;</span> <span class="op">|</span> <span class="string">&#39;\&#39;&#39;</span> <span class="op">|</span> <span class="string">&#39;\\&#39;</span> <span class="op">|</span> <span class="string">&#39;\0&#39;</span> ... <span class="string">&#39;\x06&#39;</span> <span class="op">|</span> <span class="string">&#39;\t&#39;</span> <span class="op">|</span> <span class="string">&#39;\n&#39;</span> <span class="op">|</span> <span class="string">&#39;\r&#39;</span> <span class="op">|</span> <span class="string">&#39;\x0e&#39;</span> ... <span class="string">&#39;\x1a&#39;</span> <span class="op">|</span> <span class="string">&#39;\x1c&#39;</span> ... <span class="string">&#39;\x1f&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        <span class="op">||</span> <span class="ident">need_quotes_spaces</span>(<span class="ident">string</span>)
+        <span class="op">||</span> <span class="ident">string</span>.<span class="ident">starts_with</span>(<span class="op">|</span><span class="ident">character</span>: <span class="ident">char</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">character</span> {
+            <span class="string">&#39;&amp;&#39;</span> <span class="op">|</span> <span class="string">&#39;*&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;|&#39;</span> <span class="op">|</span> <span class="string">&#39;-&#39;</span> <span class="op">|</span> <span class="string">&#39;&lt;&#39;</span> <span class="op">|</span> <span class="string">&#39;&gt;&#39;</span> <span class="op">|</span> <span class="string">&#39;=&#39;</span> <span class="op">|</span> <span class="string">&#39;!&#39;</span> <span class="op">|</span> <span class="string">&#39;%&#39;</span> <span class="op">|</span> <span class="string">&#39;@&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-        }
-    })
-    <span class="op">||</span> [<span class="comment">// http://yaml.org/type/bool.html</span>
-        <span class="string">&quot;y&quot;</span>,<span class="string">&quot;Y&quot;</span>,<span class="string">&quot;yes&quot;</span>,<span class="string">&quot;Yes&quot;</span>,<span class="string">&quot;YES&quot;</span>,<span class="string">&quot;n&quot;</span>,<span class="string">&quot;N&quot;</span>,<span class="string">&quot;no&quot;</span>,<span class="string">&quot;No&quot;</span>,<span class="string">&quot;NO&quot;</span>,
-        <span class="string">&quot;True&quot;</span>, <span class="string">&quot;TRUE&quot;</span>, <span class="string">&quot;true&quot;</span>, <span class="string">&quot;False&quot;</span>, <span class="string">&quot;FALSE&quot;</span>, <span class="string">&quot;false&quot;</span>,
-        <span class="string">&quot;on&quot;</span>,<span class="string">&quot;On&quot;</span>,<span class="string">&quot;ON&quot;</span>,<span class="string">&quot;off&quot;</span>,<span class="string">&quot;Off&quot;</span>,<span class="string">&quot;OFF&quot;</span>,
-        <span class="comment">// http://yaml.org/type/null.html</span>
-        <span class="string">&quot;null&quot;</span>,<span class="string">&quot;Null&quot;</span>,<span class="string">&quot;NULL&quot;</span>, <span class="string">&quot;~&quot;</span>
-    ].<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>)
-    <span class="op">||</span> <span class="ident">string</span>.<span class="ident">starts_with</span>(<span class="string">&#39;.&#39;</span>)
-    <span class="op">||</span> <span class="ident">string</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>()
-    <span class="op">||</span> <span class="ident">string</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>()
+        })
+        <span class="op">||</span> <span class="ident">string</span>.<span class="ident">contains</span>(<span class="op">|</span><span class="ident">character</span>: <span class="ident">char</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">character</span> {
+            <span class="string">&#39;:&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;{&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;}&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;[&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;]&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;,&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;#&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;`&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\&quot;&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\&#39;&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\\&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\0&#39;</span>...<span class="string">&#39;\x06&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\t&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\n&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\r&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\x0e&#39;</span>...<span class="string">&#39;\x1a&#39;</span>
+            <span class="op">|</span> <span class="string">&#39;\x1c&#39;</span>...<span class="string">&#39;\x1f&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        })
+        <span class="op">||</span> [
+            <span class="comment">// http://yaml.org/type/bool.html</span>
+            <span class="comment">// Note: &#39;y&#39;, &#39;Y&#39;, &#39;n&#39;, &#39;N&#39;, is not quoted deliberately, as in libyaml. PyYAML also parse</span>
+            <span class="comment">// them as string, not booleans, although it is volating the YAML 1.1 specification.</span>
+            <span class="comment">// See https://github.com/dtolnay/serde-yaml/pull/83#discussion_r152628088.</span>
+            <span class="string">&quot;yes&quot;</span>, <span class="string">&quot;Yes&quot;</span>, <span class="string">&quot;YES&quot;</span>, <span class="string">&quot;no&quot;</span>, <span class="string">&quot;No&quot;</span>, <span class="string">&quot;NO&quot;</span>, <span class="string">&quot;True&quot;</span>, <span class="string">&quot;TRUE&quot;</span>, <span class="string">&quot;true&quot;</span>, <span class="string">&quot;False&quot;</span>, <span class="string">&quot;FALSE&quot;</span>,
+            <span class="string">&quot;false&quot;</span>, <span class="string">&quot;on&quot;</span>, <span class="string">&quot;On&quot;</span>, <span class="string">&quot;ON&quot;</span>, <span class="string">&quot;off&quot;</span>, <span class="string">&quot;Off&quot;</span>, <span class="string">&quot;OFF&quot;</span>,
+            <span class="comment">// http://yaml.org/type/null.html</span>
+            <span class="string">&quot;null&quot;</span>, <span class="string">&quot;Null&quot;</span>, <span class="string">&quot;NULL&quot;</span>, <span class="string">&quot;~&quot;</span>,
+        ]
+            .<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">string</span>)
+        <span class="op">||</span> <span class="ident">string</span>.<span class="ident">starts_with</span>(<span class="string">&#39;.&#39;</span>)
+        <span class="op">||</span> <span class="ident">string</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">i64</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>()
+        <span class="op">||</span> <span class="ident">string</span>.<span class="ident">parse</span>::<span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>().<span class="ident">is_ok</span>()
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
@@ -1007,7 +1002,6 @@ a4:
     - 2
 &quot;</span>;
 
-
         <span class="kw">let</span> <span class="ident">docs</span> <span class="op">=</span> <span class="ident">YamlLoader</span>::<span class="ident">load_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">docs</span>[<span class="number">0</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">writer</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
@@ -1019,7 +1013,7 @@ a4:
         <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;emitted:\n{}&quot;</span>, <span class="ident">writer</span>);
         <span class="kw">let</span> <span class="ident">docs_new</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">YamlLoader</span>::<span class="ident">load_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">writer</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">y</span>) <span class="op">=&gt;</span> <span class="ident">y</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>))
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>)),
         };
         <span class="kw">let</span> <span class="ident">doc_new</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">docs_new</span>[<span class="number">0</span>];
 
@@ -1056,7 +1050,7 @@ products:
         }
         <span class="kw">let</span> <span class="ident">docs_new</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">YamlLoader</span>::<span class="ident">load_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">writer</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">y</span>) <span class="op">=&gt;</span> <span class="ident">y</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>))
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">e</span>)),
         };
         <span class="kw">let</span> <span class="ident">doc_new</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">docs_new</span>[<span class="number">0</span>];
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">doc</span>, <span class="ident">doc_new</span>);
@@ -1068,7 +1062,7 @@ products:
 a7: 你好
 boolean: &quot;true&quot;
 boolean2: &quot;false&quot;
-date: &quot;2014-12-31&quot;
+date: 2014-12-31
 empty_string: &quot;&quot;
 empty_string1: &quot; &quot;
 empty_string2: &quot;    a&quot;
@@ -1078,6 +1072,7 @@ field: &quot;:&quot;
 field2: &quot;{&quot;
 field3: &quot;\\&quot;
 field4: &quot;\n&quot;
+field5: &quot;can&#39;t avoid quote&quot;
 float: &quot;2.6&quot;
 int: &quot;4&quot;
 nullable: &quot;null&quot;
@@ -1094,7 +1089,7 @@ products:
   &quot;true&quot;: bool key
   &quot;{}&quot;: empty hash key
 x: test
-&quot;y&quot;: &quot;can&#39;t avoid quoting here&quot;
+y: avoid quoting here
 z: string with spaces&quot;#</span>;
 
         <span class="kw">let</span> <span class="ident">docs</span> <span class="op">=</span> <span class="ident">YamlLoader</span>::<span class="ident">load_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">unwrap</span>();
@@ -1135,13 +1130,13 @@ null0: ~
   - &quot;TRUE&quot;
   - &quot;False&quot;
   - &quot;FALSE&quot;
-  - &quot;y&quot;
-  - &quot;Y&quot;
+  - y
+  - Y
   - &quot;yes&quot;
   - &quot;Yes&quot;
   - &quot;YES&quot;
-  - &quot;n&quot;
-  - &quot;N&quot;
+  - n
+  - N
   - &quot;no&quot;
   - &quot;No&quot;
   - &quot;NO&quot;
@@ -1163,21 +1158,26 @@ bool1: false&quot;#</span>;
             <span class="ident">emitter</span>.<span class="ident">dump</span>(<span class="ident">doc</span>).<span class="ident">unwrap</span>();
         }
 
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">expected</span>, <span class="ident">writer</span>, <span class="string">&quot;actual:\n\n{}\n&quot;</span>, <span class="ident">writer</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(
+            <span class="ident">expected</span>, <span class="ident">writer</span>,
+            <span class="string">&quot;expected:\n{}\nactual:\n{}\n&quot;</span>,
+            <span class="ident">expected</span>, <span class="ident">writer</span>
+        );
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_empty_and_nested</span>() {
-      <span class="ident">test_empty_and_nested_flag</span>(<span class="bool-val">false</span>)
+        <span class="ident">test_empty_and_nested_flag</span>(<span class="bool-val">false</span>)
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_empty_and_nested_compact</span>() {
-      <span class="ident">test_empty_and_nested_flag</span>(<span class="bool-val">true</span>)
+        <span class="ident">test_empty_and_nested_flag</span>(<span class="bool-val">true</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">test_empty_and_nested_flag</span>(<span class="ident">compact</span>: <span class="ident">bool</span>) {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">compact</span> { <span class="string">r#&quot;---
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">compact</span> {
+            <span class="string">r#&quot;---
 a:
   b:
     c: hello
@@ -1185,7 +1185,9 @@ a:
 e:
   - f
   - g
-  - h: []&quot;#</span> } <span class="kw">else</span> { <span class="string">r#&quot;---
+  - h: []&quot;#</span>
+        } <span class="kw">else</span> {
+            <span class="string">r#&quot;---
 a:
   b:
     c: hello
@@ -1194,7 +1196,8 @@ e:
   - f
   - g
   -
-    h: []&quot;#</span> };
+    h: []&quot;#</span>
+        };
 
         <span class="kw">let</span> <span class="ident">docs</span> <span class="op">=</span> <span class="ident">YamlLoader</span>::<span class="ident">load_from_str</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>).<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">docs</span>[<span class="number">0</span>];
@@ -1278,69 +1281,5 @@ a:
     }
 
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "yaml_rust";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "yaml_rust";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

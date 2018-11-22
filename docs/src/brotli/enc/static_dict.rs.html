@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-1.2.0/src/enc/static_dict.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>static_dict.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
-    <script src="../../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-3.1.0/src/enc/static_dict.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>static_dict.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1135,7 +1078,90 @@
 <span id="1078">1078</span>
 <span id="1079">1079</span>
 <span id="1080">1080</span>
-</pre><pre class="rust ">
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
+<span id="1118">1118</span>
+<span id="1119">1119</span>
+<span id="1120">1120</span>
+<span id="1121">1121</span>
+<span id="1122">1122</span>
+<span id="1123">1123</span>
+<span id="1124">1124</span>
+<span id="1125">1125</span>
+<span id="1126">1126</span>
+<span id="1127">1127</span>
+<span id="1128">1128</span>
+<span id="1129">1129</span>
+<span id="1130">1130</span>
+<span id="1131">1131</span>
+<span id="1132">1132</span>
+<span id="1133">1133</span>
+<span id="1134">1134</span>
+<span id="1135">1135</span>
+<span id="1136">1136</span>
+<span id="1137">1137</span>
+<span id="1138">1138</span>
+<span id="1139">1139</span>
+<span id="1140">1140</span>
+<span id="1141">1141</span>
+<span id="1142">1142</span>
+<span id="1143">1143</span>
+<span id="1144">1144</span>
+<span id="1145">1145</span>
+<span id="1146">1146</span>
+<span id="1147">1147</span>
+<span id="1148">1148</span>
+<span id="1149">1149</span>
+<span id="1150">1150</span>
+<span id="1151">1151</span>
+<span id="1152">1152</span>
+<span id="1153">1153</span>
+<span id="1154">1154</span>
+<span id="1155">1155</span>
+<span id="1156">1156</span>
+<span id="1157">1157</span>
+<span id="1158">1158</span>
+<span id="1159">1159</span>
+<span id="1160">1160</span>
+<span id="1161">1161</span>
+<span id="1162">1162</span>
+<span id="1163">1163</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">kNumDistanceCacheEntries</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">4</span>;
 
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">static_dict_lut</span>::{<span class="ident">kDictHashMul32</span>, <span class="ident">kDictNumBits</span>, <span class="ident">kStaticDictionaryBuckets</span>,
@@ -1265,7 +1291,7 @@
   }
   <span class="kw">return</span> <span class="ident">limit</span>;
 }
-
+<span class="attribute">#[<span class="ident">inline</span>]</span> 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">FindMatchLengthWithLimit</span>(<span class="kw-2">mut</span> <span class="ident">s1</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">mut</span> <span class="ident">s2</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">mut</span> <span class="ident">limit</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">matched</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0usize</span>;
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s1_as_64</span> : <span class="ident">u64</span>;
@@ -1296,6 +1322,8 @@
           <span class="macro">sub_match8</span><span class="macro">!</span>(<span class="ident">s1</span>, <span class="ident">s2</span>, <span class="ident">limit</span>, <span class="ident">matched</span>, <span class="ident">s1_as_64</span>, <span class="ident">s2_as_64</span>);
       }
   }
+  <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">s1</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> (<span class="ident">limit</span> <span class="op">&amp;</span> <span class="number">7usize</span>));
+  <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">s2</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> (<span class="ident">limit</span> <span class="op">&amp;</span> <span class="number">7usize</span>));
   <span class="kw">for</span> <span class="ident">index</span> <span class="kw">in</span> <span class="number">0</span>..(<span class="ident">limit</span> <span class="op">&amp;</span> <span class="number">7usize</span>) {
     <span class="kw">if</span> <span class="ident">s1</span>[<span class="ident">index</span>] <span class="op">!=</span> <span class="ident">s2</span>[<span class="ident">index</span>] {
       <span class="kw">return</span> <span class="ident">matched</span> <span class="op">+</span> <span class="ident">index</span>;
@@ -1375,26 +1403,26 @@
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">IsMatch</span>(<span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>, <span class="ident">w</span>: <span class="ident">DictWord</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">max_length</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">i32</span> {
-  <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">usize</span>) <span class="op">&gt;</span> <span class="ident">max_length</span> {
+  <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>) <span class="op">&gt;</span> <span class="ident">max_length</span> {
     <span class="number">0i32</span>
   } <span class="kw">else</span> {
-    <span class="kw">let</span> <span class="ident">offset</span>: <span class="ident">usize</span> <span class="op">=</span> ((<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">offsets_by_length</span>[<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">usize</span>)] <span class="kw">as</span> (<span class="ident">usize</span>))
-      .<span class="ident">wrapping_add</span>((<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="ident">wrapping_mul</span>(<span class="ident">w</span>.<span class="ident">idx</span> <span class="kw">as</span> (<span class="ident">usize</span>)));
+    <span class="kw">let</span> <span class="ident">offset</span>: <span class="ident">usize</span> <span class="op">=</span> ((<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">offsets_by_length</span>[<span class="ident">w</span>.<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>)] <span class="kw">as</span> (<span class="ident">usize</span>))
+      .<span class="ident">wrapping_add</span>((<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="ident">wrapping_mul</span>(<span class="ident">w</span>.<span class="ident">idx</span>() <span class="kw">as</span> (<span class="ident">usize</span>)));
     <span class="kw">let</span> <span class="ident">dict</span> <span class="op">=</span> <span class="kw-2">&amp;</span>(<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">offset</span>).<span class="number">1</span>;
-    <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> {
-      <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">FindMatchLengthWithLimit</span>(<span class="ident">dict</span>, <span class="ident">data</span>, <span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">usize</span>)) <span class="op">==</span> <span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">usize</span>)) {
+    <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> {
+      <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">FindMatchLengthWithLimit</span>(<span class="ident">dict</span>, <span class="ident">data</span>, <span class="ident">w</span>.<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>)) <span class="op">==</span> <span class="ident">w</span>.<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>)) {
         <span class="number">1i32</span>
       } <span class="kw">else</span> {
         <span class="number">0i32</span>
       }
-    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">10i32</span> {
+    } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">10i32</span> {
       <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">dict</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&gt;=</span> <span class="string">b&#39;a&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span>
             (<span class="ident">dict</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&lt;=</span> <span class="string">b&#39;z&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
             (<span class="ident">dict</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">^</span> <span class="number">32i32</span> <span class="op">==</span> <span class="ident">data</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
             (<span class="ident">FindMatchLengthWithLimit</span>(<span class="kw-2">&amp;</span><span class="ident">dict</span>.<span class="ident">split_at</span>(<span class="number">1</span>).<span class="number">1</span>,
                                       <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="number">1</span>).<span class="number">1</span>,
-                                      (<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">u32</span>)).<span class="ident">wrapping_sub</span>(<span class="number">1u32</span>) <span class="kw">as</span> (<span class="ident">usize</span>)) <span class="op">==</span>
-             (<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">u32</span>)).<span class="ident">wrapping_sub</span>(<span class="number">1u32</span>) <span class="kw">as</span> (<span class="ident">usize</span>))) {
+                                      (<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">u32</span>)).<span class="ident">wrapping_sub</span>(<span class="number">1u32</span>) <span class="kw">as</span> (<span class="ident">usize</span>)) <span class="op">==</span>
+             (<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">u32</span>)).<span class="ident">wrapping_sub</span>(<span class="number">1u32</span>) <span class="kw">as</span> (<span class="ident">usize</span>))) {
         <span class="number">1i32</span>
       } <span class="kw">else</span> {
         <span class="number">0i32</span>
@@ -1402,7 +1430,7 @@
     } <span class="kw">else</span> {
       <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span>: <span class="ident">usize</span>;
       <span class="ident">i</span> <span class="op">=</span> <span class="number">0usize</span>;
-      <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">usize</span>) {
+      <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">usize</span>) {
         {
           <span class="kw">if</span> <span class="ident">dict</span>[(<span class="ident">i</span> <span class="kw">as</span> (<span class="ident">usize</span>))] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&gt;=</span> <span class="string">b&#39;a&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span>
              (<span class="ident">dict</span>[(<span class="ident">i</span> <span class="kw">as</span> (<span class="ident">usize</span>))] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&lt;=</span> <span class="string">b&#39;z&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
@@ -1456,7 +1484,7 @@
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused</span>)]</span>
-<span class="kw">fn</span> <span class="ident">BrotliFindAllStaticDictionaryMatches</span>(<span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliFindAllStaticDictionaryMatches</span>(<span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
                                         <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                                         <span class="ident">min_length</span>: <span class="ident">usize</span>,
                                         <span class="ident">max_length</span>: <span class="ident">usize</span>,
@@ -1472,22 +1500,24 @@
         <span class="ident">offset</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
         <span class="ident">_old</span>
       }];
-      <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
+      <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
       <span class="kw">let</span> <span class="ident">n</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1usize</span> <span class="op">&lt;&lt;</span> (<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">size_bits_by_length</span>[<span class="ident">l</span>] <span class="kw">as</span> (<span class="ident">i32</span>);
-      <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span> <span class="kw">as</span> (<span class="ident">usize</span>);
-      <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
-      <span class="ident">w</span>.<span class="ident">len</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
-      <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> {
+      <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span>() <span class="kw">as</span> (<span class="ident">usize</span>);
+      <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
+      <span class="ident">w</span>.<span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
+      <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> {
         <span class="kw">let</span> <span class="ident">matchlen</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">DictMatchLength</span>(<span class="ident">dictionary</span>, <span class="ident">data</span>, <span class="ident">id</span>, <span class="ident">l</span>, <span class="ident">max_length</span>);
         <span class="kw">let</span> <span class="ident">s</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">minlen</span>: <span class="ident">usize</span>;
         <span class="kw">let</span> <span class="ident">maxlen</span>: <span class="ident">usize</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span>: <span class="ident">usize</span>;
         <span class="kw">if</span> <span class="ident">matchlen</span> <span class="op">==</span> <span class="ident">l</span> {
+          <span class="comment">//eprint!(&quot;Adding match {} {} {}\n&quot;, w.len(), w.transform(), w.idx());</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>, <span class="ident">l</span>, <span class="ident">l</span>, <span class="ident">matches</span>);
           <span class="ident">has_found_match</span> <span class="op">=</span> <span class="number">1i32</span>;
         }
         <span class="kw">if</span> <span class="ident">matchlen</span> <span class="op">&gt;=</span> <span class="ident">l</span>.<span class="ident">wrapping_sub</span>(<span class="number">1usize</span>) {
+          <span class="comment">//eprint!(&quot;Bdding match {} {} {}\n&quot;, w.len(), w.transform(), w.idx());</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">12usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_sub</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
@@ -1497,7 +1527,8 @@
              (<span class="ident">data</span>[(<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>))] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;n&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
              (<span class="ident">data</span>[(<span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>) <span class="kw">as</span> (<span class="ident">usize</span>))] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;g&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
              (<span class="ident">data</span>[(<span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>) <span class="kw">as</span> (<span class="ident">usize</span>))] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
-            <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">49usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
+          <span class="comment">//eprint!(&quot;Cdding match {} {} {}\n&quot;, w.len(), w.transform(), w.idx());</span>
+             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">49usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
@@ -1512,7 +1543,8 @@
         <span class="ident">len</span> <span class="op">=</span> <span class="ident">minlen</span>;
         <span class="kw">while</span> <span class="ident">len</span> <span class="op">&lt;=</span> <span class="ident">maxlen</span> {
           {
-            <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="ident">kOmitLastNTransforms</span>[<span class="ident">l</span>.<span class="ident">wrapping_sub</span>(<span class="ident">len</span>)] <span class="kw">as</span> (<span class="ident">usize</span>))
+              <span class="comment">//eprint!(&quot;Ddding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
+              <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="ident">kOmitLastNTransforms</span>[<span class="ident">l</span>.<span class="ident">wrapping_sub</span>(<span class="ident">len</span>)] <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">len</span>,
                      <span class="ident">l</span>,
@@ -1528,15 +1560,18 @@
         }
         <span class="ident">s</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+          <span class="comment">//eprint!(&quot;Edding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>(<span class="ident">n</span>), <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>), <span class="ident">l</span>, <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;a&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+              <span class="comment">//eprint!(&quot;Fdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">28usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
                        <span class="ident">matches</span>);
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
-              <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Gdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">46usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1544,6 +1579,7 @@
               }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;t&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Hdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">60usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1551,6 +1587,7 @@
               }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;n&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;d&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Idding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">10usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">5usize</span>),
                          <span class="ident">l</span>,
@@ -1559,6 +1596,7 @@
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;b&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;y&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Jdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">38usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                        <span class="ident">l</span>,
@@ -1567,6 +1605,7 @@
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;i&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;n&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Kdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">16usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1574,6 +1613,7 @@
               }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Ldding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">47usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1583,6 +1623,7 @@
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;f&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;r&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Mdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">25usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">5usize</span>),
                          <span class="ident">l</span>,
@@ -1591,6 +1632,7 @@
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;r&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;m&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                  (<span class="ident">s</span>[(<span class="number">5usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Ndding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">37usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">6usize</span>),
                          <span class="ident">l</span>,
@@ -1600,6 +1642,7 @@
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;f&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Odding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">8usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1607,6 +1650,7 @@
               }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;n&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Pdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">45usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1616,6 +1660,7 @@
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;n&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;t&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                (<span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Qdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">80usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">5usize</span>),
                        <span class="ident">l</span>,
@@ -1625,6 +1670,7 @@
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;h&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
                 <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Rdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                   <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">5usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                            <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">5usize</span>),
                            <span class="ident">l</span>,
@@ -1633,6 +1679,7 @@
               } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;a&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
                 <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;t&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span>
                    (<span class="ident">s</span>[(<span class="number">5usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Sdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                   <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">29usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                            <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">6usize</span>),
                            <span class="ident">l</span>,
@@ -1641,6 +1688,7 @@
               }
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Tdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">17usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                          <span class="ident">l</span>,
@@ -1651,6 +1699,7 @@
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;i&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;t&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                (<span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;h&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                (<span class="ident">s</span>[(<span class="number">5usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;Udding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">35usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">6usize</span>),
                        <span class="ident">l</span>,
@@ -1658,22 +1707,26 @@
             }
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&quot;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Vdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">19usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Wdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">21usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;.&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Xdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">20usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Ydding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">31usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
@@ -1681,6 +1734,7 @@
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;T&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;h&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
               <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
                 <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">5usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;Zdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                   <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">43usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                            <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">6usize</span>),
                            <span class="ident">l</span>,
@@ -1689,6 +1743,7 @@
               } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;i&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
                 <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">5usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span>
                    (<span class="ident">s</span>[(<span class="number">6usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;AAdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
                   <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">75usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                            <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">7usize</span>),
                            <span class="ident">l</span>,
@@ -1698,54 +1753,64 @@
             }
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;,&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;ABdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">76usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;ACdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">14usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;ADdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">22usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\t&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AEdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">50usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;]&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AFdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">24usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AGdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">36usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;:&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AHdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">51usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;(&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AIdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">57usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;=&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&quot;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AJdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">70usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AKdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">86usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
@@ -1753,6 +1818,7 @@
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;a&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;l&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;ALdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">84usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                      <span class="ident">l</span>,
@@ -1761,6 +1827,7 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;d&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AMdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">53usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
@@ -1768,6 +1835,7 @@
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;r&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;ANdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">82usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
@@ -1775,6 +1843,7 @@
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;t&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;AOdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">95usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                        <span class="ident">l</span>,
@@ -1784,6 +1853,7 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;f&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;u&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;l&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
              (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;APdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">90usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                      <span class="ident">l</span>,
@@ -1792,6 +1862,7 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;i&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;v&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;AQdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">92usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                        <span class="ident">l</span>,
@@ -1799,6 +1870,7 @@
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;z&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;ARdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">100usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                        <span class="ident">l</span>,
@@ -1809,6 +1881,7 @@
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                (<span class="ident">s</span>[(<span class="number">4usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;ASdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">93usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">5usize</span>),
                        <span class="ident">l</span>,
@@ -1816,6 +1889,7 @@
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;y&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;ATdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">61usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
@@ -1825,6 +1899,7 @@
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;u&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;&amp;</span> (<span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;s&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
              (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;AUdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), len);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">106usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">4usize</span>),
                      <span class="ident">l</span>,
@@ -1832,7 +1907,7 @@
           }
         }
       } <span class="kw">else</span> {
-        <span class="kw">let</span> <span class="ident">is_all_caps</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">!=</span> <span class="ident">kUppercaseFirst</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+        <span class="kw">let</span> <span class="ident">is_all_caps</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">!=</span> <span class="ident">kUppercaseFirst</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
           <span class="number">1i32</span>
         } <span class="kw">else</span> {
           <span class="number">0i32</span>
@@ -1843,6 +1918,7 @@
             <span class="kw">continue</span>;
           }
         }
+                <span class="comment">//eprint!(&quot;AVdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
         <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">44i32</span> } <span class="kw">else</span> { <span class="number">9i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                    .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                  <span class="ident">l</span>,
@@ -1856,18 +1932,21 @@
         }
         <span class="ident">s</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">l</span> <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AWdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">68i32</span> } <span class="kw">else</span> { <span class="number">4i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&quot;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AXdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">87i32</span> } <span class="kw">else</span> { <span class="number">66i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AYdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">97i32</span> } <span class="kw">else</span> { <span class="number">69i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
@@ -1875,12 +1954,14 @@
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;.&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;AZdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">101i32</span> } <span class="kw">else</span> { <span class="number">79i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BAdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">114i32</span> } <span class="kw">else</span> { <span class="number">88i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
@@ -1888,12 +1969,14 @@
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;,&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BBdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">112i32</span> } <span class="kw">else</span> { <span class="number">99i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BCdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">107i32</span> } <span class="kw">else</span> { <span class="number">58i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
@@ -1901,12 +1984,14 @@
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BDdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">94i32</span> } <span class="kw">else</span> { <span class="number">74i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;(&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BEdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">113i32</span> } <span class="kw">else</span> { <span class="number">78i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
@@ -1914,12 +1999,14 @@
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;=&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&quot;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BFdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">105i32</span> } <span class="kw">else</span> { <span class="number">104i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BGdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">116i32</span> } <span class="kw">else</span> { <span class="number">108i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
@@ -1945,12 +2032,12 @@
         <span class="ident">offset</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
         <span class="ident">_old</span>
       }];
-      <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
+      <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
       <span class="kw">let</span> <span class="ident">n</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1usize</span> <span class="op">&lt;&lt;</span> (<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">size_bits_by_length</span>[<span class="ident">l</span>] <span class="kw">as</span> (<span class="ident">i32</span>);
-      <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span> <span class="kw">as</span> (<span class="ident">usize</span>);
-      <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
-      <span class="ident">w</span>.<span class="ident">len</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
-      <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> {
+      <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span>() <span class="kw">as</span> (<span class="ident">usize</span>);
+      <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
+      <span class="ident">w</span>.<span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
+      <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> {
         <span class="kw">let</span> <span class="ident">s</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>];
         <span class="kw">if</span> <span class="ident">IsMatch</span>(<span class="ident">dictionary</span>,
                    <span class="ident">w</span>,
@@ -1960,6 +2047,7 @@
             <span class="kw">continue</span>;
           }
         }
+                <span class="comment">//eprint!(&quot;BHdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
         <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_space</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">6i32</span> } <span class="kw">else</span> { <span class="number">32i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                    .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                  <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
@@ -1973,12 +2061,14 @@
         }
         <span class="ident">s</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>) <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BIdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_space</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">2i32</span> } <span class="kw">else</span> { <span class="number">77i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;(&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BJdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_space</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">89i32</span> } <span class="kw">else</span> { <span class="number">67i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
@@ -1986,22 +2076,26 @@
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_space</span> <span class="op">!=</span> <span class="number">0</span> {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;,&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BKdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">103usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BLdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">33usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
                        <span class="ident">matches</span>);
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;.&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BMdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">71usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BNdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">52usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
@@ -2009,11 +2103,13 @@
             }
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;=&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
             <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&quot;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BOdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">81usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
                        <span class="ident">matches</span>);
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;BPdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
               <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">98usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                        <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                        <span class="ident">l</span>,
@@ -2022,7 +2118,7 @@
           }
         }
       } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_space</span> <span class="op">!=</span> <span class="number">0</span> {
-        <span class="kw">let</span> <span class="ident">is_all_caps</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">!=</span> <span class="ident">kUppercaseFirst</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+        <span class="kw">let</span> <span class="ident">is_all_caps</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="op">!</span>(<span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">!=</span> <span class="ident">kUppercaseFirst</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
           <span class="number">1i32</span>
         } <span class="kw">else</span> {
           <span class="number">0i32</span>
@@ -2036,6 +2132,7 @@
             <span class="kw">continue</span>;
           }
         }
+                <span class="comment">//eprint!(&quot;CAdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
         <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">85i32</span> } <span class="kw">else</span> { <span class="number">30i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                    .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                  <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
@@ -2047,8 +2144,9 @@
             <span class="kw">continue</span>;
           }
         }
-        <span class="ident">s</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="number">1</span>).<span class="number">1</span>;
+        <span class="ident">s</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>)).<span class="number">1</span>;
         <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;CBdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">83i32</span> } <span class="kw">else</span> { <span class="number">15i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
@@ -2056,12 +2154,14 @@
                    <span class="ident">matches</span>);
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;,&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="comment">//eprint!(&quot;CCdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">109usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           }
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;CDdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">111i32</span> } <span class="kw">else</span> { <span class="number">65i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
@@ -2069,12 +2169,14 @@
                      <span class="ident">matches</span>);
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;.&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;CEdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">115i32</span> } <span class="kw">else</span> { <span class="number">96i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                      .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                    <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                    <span class="ident">l</span>,
                    <span class="ident">matches</span>);
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;CFdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">117i32</span> } <span class="kw">else</span> { <span class="number">91i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
@@ -2083,12 +2185,14 @@
           }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;=&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
           <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&quot;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;CGdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">110i32</span> } <span class="kw">else</span> { <span class="number">118i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                      <span class="ident">l</span>,
                      <span class="ident">matches</span>);
           } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;\&#39;&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
+                <span class="comment">//eprint!(&quot;CHdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">is_all_caps</span> <span class="op">!=</span> <span class="number">0</span> { <span class="number">119i32</span> } <span class="kw">else</span> { <span class="number">120i32</span> } <span class="kw">as</span> (<span class="ident">usize</span>))
                                        .<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
@@ -2113,17 +2217,18 @@
           <span class="ident">offset</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
           <span class="ident">_old</span>
         }];
-        <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
+        <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
         <span class="kw">let</span> <span class="ident">n</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1usize</span> <span class="op">&lt;&lt;</span> (<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">size_bits_by_length</span>[<span class="ident">l</span>] <span class="kw">as</span> (<span class="ident">i32</span>);
-        <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span> <span class="kw">as</span> (<span class="ident">usize</span>);
-        <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
-        <span class="ident">w</span>.<span class="ident">len</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
-        <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> <span class="op">&amp;&amp;</span>
+        <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span>() <span class="kw">as</span> (<span class="ident">usize</span>);
+        <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
+        <span class="ident">w</span>.<span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
+        <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> <span class="op">&amp;&amp;</span>
            (<span class="ident">IsMatch</span>(<span class="ident">dictionary</span>,
                     <span class="ident">w</span>,
                     <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="number">2</span>).<span class="number">1</span>,
                     <span class="ident">max_length</span>.<span class="ident">wrapping_sub</span>(<span class="number">2usize</span>)) <span class="op">!=</span> <span class="number">0</span>) {
           <span class="kw">if</span> <span class="ident">data</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0xc2i32</span> {
+                <span class="comment">//eprint!(&quot;CIdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">102usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">2usize</span>),
                      <span class="ident">l</span>,
@@ -2138,6 +2243,7 @@
             } <span class="kw">else</span> {
               <span class="number">13i32</span>
             }) <span class="kw">as</span> (<span class="ident">usize</span>);
+                <span class="comment">//eprint!(&quot;CJdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
             <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>(<span class="ident">t</span>.<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                      <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">3usize</span>),
                      <span class="ident">l</span>,
@@ -2166,16 +2272,17 @@
           <span class="ident">offset</span> <span class="op">=</span> <span class="ident">offset</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
           <span class="ident">_old</span>
         }];
-        <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
+        <span class="kw">let</span> <span class="ident">l</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x1fi32</span>) <span class="kw">as</span> (<span class="ident">usize</span>);
         <span class="kw">let</span> <span class="ident">n</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">1usize</span> <span class="op">&lt;&lt;</span> (<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">size_bits_by_length</span>[<span class="ident">l</span>] <span class="kw">as</span> (<span class="ident">i32</span>);
-        <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span> <span class="kw">as</span> (<span class="ident">usize</span>);
-        <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
-        <span class="ident">w</span>.<span class="ident">len</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
-        <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> <span class="op">&amp;&amp;</span>
+        <span class="kw">let</span> <span class="ident">id</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">w</span>.<span class="ident">idx</span>() <span class="kw">as</span> (<span class="ident">usize</span>);
+        <span class="ident">end</span> <span class="op">=</span> <span class="op">!</span>(<span class="ident">w</span>.<span class="ident">len</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">&amp;</span> <span class="number">0x80i32</span> <span class="op">==</span> <span class="number">0</span>) <span class="kw">as</span> (<span class="ident">i32</span>);
+        <span class="ident">w</span>.<span class="ident">l</span> <span class="op">=</span> <span class="ident">l</span> <span class="kw">as</span> (<span class="ident">u8</span>);
+        <span class="kw">if</span> <span class="ident">w</span>.<span class="ident">transform</span>() <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="number">0i32</span> <span class="op">&amp;&amp;</span>
            (<span class="ident">IsMatch</span>(<span class="ident">dictionary</span>,
                     <span class="ident">w</span>,
                     <span class="kw-2">&amp;</span><span class="ident">data</span>.<span class="ident">split_at</span>(<span class="number">5</span>).<span class="number">1</span>,
                     <span class="ident">max_length</span>.<span class="ident">wrapping_sub</span>(<span class="number">5usize</span>)) <span class="op">!=</span> <span class="number">0</span>) {
+                <span class="comment">//eprint!(&quot;CKdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
           <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="kw">if</span> <span class="ident">data</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>) {
                                       <span class="number">41i32</span>
                                     } <span class="kw">else</span> {
@@ -2193,6 +2300,7 @@
                  (<span class="ident">s</span>[(<span class="number">1usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;o&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                  (<span class="ident">s</span>[(<span class="number">2usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;f&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                  (<span class="ident">s</span>[(<span class="number">3usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;CLdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
                 <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">62usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                          <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">9usize</span>),
                          <span class="ident">l</span>,
@@ -2202,6 +2310,7 @@
                    (<span class="ident">s</span>[(<span class="number">5usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;h&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                    (<span class="ident">s</span>[(<span class="number">6usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39;e&#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) <span class="op">&amp;&amp;</span>
                    (<span class="ident">s</span>[(<span class="number">7usize</span>)] <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="kw">as</span> (<span class="ident">i32</span>)) {
+                <span class="comment">//eprint!(&quot;BQdding match {} {} {} {}\n&quot;, w.len(), w.transform(), w.idx(), 666);</span>
                   <span class="ident">AddMatch</span>(<span class="ident">id</span>.<span class="ident">wrapping_add</span>((<span class="number">73usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">n</span>)),
                            <span class="ident">l</span>.<span class="ident">wrapping_add</span>(<span class="number">13usize</span>),
                            <span class="ident">l</span>,
@@ -2216,69 +2325,5 @@
   }
   <span class="ident">has_found_match</span>
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "brotli";
-    </script>
-    <script src="../../../main.js"></script>
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "brotli";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["ToWebidl","Export a type specification as webidl."],["TypeDeanonymizer","A tool designed to replace all anonymous types in a specification of the language by explicitly named types."],["TypeName","Utility to give a name to a type or type spec."]]});

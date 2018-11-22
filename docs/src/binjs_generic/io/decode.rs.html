@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `crates/binjs_generic/src/io/decode.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>decode.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
-    <script src="../../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `crates/binjs_generic/src/io/decode.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>decode.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -333,29 +276,78 @@
 <span id="276">276</span>
 <span id="277">277</span>
 <span id="278">278</span>
-</pre><pre class="rust ">
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! With the help of an underlying `TokenReader`, decode a stream of bytes</span>
 <span class="doccomment">//! to a JSON matching a specific grammar.</span>
 
-<span class="kw">use</span> <span class="ident">binjs_io</span>::{ <span class="ident">Guard</span>, <span class="ident">TokenReader</span> };
+<span class="kw">use</span> <span class="ident">binjs_io</span>::{ <span class="ident">Guard</span>, <span class="ident">TokenReader</span>, <span class="ident">TokenReaderError</span> };
 <span class="kw">use</span> <span class="ident">binjs_meta</span>::<span class="ident">spec</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">binjs_shared</span>::{ <span class="ident">FieldName</span>, <span class="ident">InterfaceName</span>, <span class="ident">ToJSON</span> };
 
 <span class="kw">use</span> <span class="ident">json</span>;
 <span class="kw">use</span> <span class="ident">json</span>::<span class="ident">JsonValue</span> <span class="kw">as</span> <span class="ident">JSON</span>;
 <span class="kw">use</span> <span class="ident">json</span>::<span class="ident">object</span>::<span class="ident">Object</span> <span class="kw">as</span> <span class="ident">Object</span>;
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
 
+<span class="kw">type</span> <span class="ident">Path</span> <span class="op">=</span> <span class="ident">binjs_shared</span>::<span class="ident">ast</span>::<span class="ident">Path</span><span class="op">&lt;</span><span class="ident">binjs_shared</span>::<span class="ident">InterfaceName</span>, (<span class="ident">usize</span>, <span class="ident">binjs_shared</span>::<span class="ident">FieldName</span>)<span class="op">&gt;</span>;
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">E</span>: <span class="ident">Debug</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
     <span class="ident">UnexpectedValue</span>(<span class="ident">String</span>),
-    <span class="ident">TokenReaderError</span>(<span class="ident">E</span>),
-    <span class="ident">NoSuchInterface</span>(<span class="ident">String</span>),
+    <span class="ident">TokenReaderError</span>(<span class="ident">TokenReaderError</span>),
+    <span class="ident">NoSuchInterface</span>(<span class="ident">InterfaceName</span>),
     <span class="ident">NoSuchRefinement</span>(<span class="ident">String</span>),
-    <span class="ident">NoSuchKind</span>(<span class="ident">String</span>),
-    <span class="ident">NoSuchField</span>(<span class="ident">String</span>),
+    <span class="ident">NoSuchKind</span>(<span class="ident">InterfaceName</span>),
+    <span class="ident">NoSuchField</span>(<span class="ident">FieldName</span>),
     <span class="ident">NoSuchType</span>(<span class="ident">String</span>),
     <span class="ident">InvalidValue</span>(<span class="ident">String</span>),
     <span class="ident">MissingField</span> {
@@ -384,7 +376,7 @@
         <span class="self">self</span>.<span class="ident">latest</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">clone</span>();
         <span class="ident">value</span>
     }
-    <span class="kw">fn</span> <span class="ident">raise_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">error</span>: <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span>::<span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">raise_error</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">error</span>: <span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
         <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">poison</span>();
         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;Raising error {:?}&quot;</span>, <span class="ident">error</span>);
         <span class="ident">error</span>
@@ -393,28 +385,28 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">latest</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_root</span>();
-        <span class="self">self</span>.<span class="ident">decode_from_named_type</span>(<span class="kw-2">&amp;</span><span class="ident">start</span>, <span class="bool-val">false</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>();
+        <span class="self">self</span>.<span class="ident">decode_from_named_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">start</span>, <span class="bool-val">false</span>)
     }
-    <span class="kw">fn</span> <span class="ident">decode_from_named_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">named</span>: <span class="kw-2">&amp;</span><span class="ident">NamedType</span>, <span class="ident">is_optional</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">decode_from_named_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Path</span>, <span class="ident">named</span>: <span class="kw-2">&amp;</span><span class="ident">NamedType</span>, <span class="ident">is_optional</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">named</span> {
             <span class="ident">NamedType</span>::<span class="ident">Typedef</span>(<span class="kw-2">ref</span> <span class="ident">type_</span>) <span class="op">=&gt;</span>
-                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">type_</span>, <span class="ident">is_optional</span>),
+                <span class="kw">return</span> <span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">path</span>, <span class="ident">type_</span>, <span class="ident">is_optional</span>),
             <span class="ident">NamedType</span>::<span class="ident">StringEnum</span>(<span class="kw-2">ref</span> <span class="ident">enum_</span>) <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">string</span>()
-                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>
-                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="string">&quot;null string&quot;</span>.<span class="ident">to_owned</span>())))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">string</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">string_enum_at</span>(<span class="ident">path</span>)
+                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="kw">for</span> <span class="ident">candidate</span> <span class="kw">in</span> <span class="ident">enum_</span>.<span class="ident">strings</span>() {
-                    <span class="kw">if</span> <span class="ident">candidate</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">string</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">json</span>::<span class="ident">from</span>(<span class="ident">string</span>)));
+                    <span class="kw">if</span> <span class="ident">string</span> <span class="op">==</span> <span class="ident">candidate</span>.<span class="ident">as_ref</span>() {
+                        <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">string</span>.<span class="ident">export</span>()));
                     }
                 }
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;\&quot;{}\&quot;&quot;</span>, <span class="ident">string</span>))))
             }
             <span class="ident">NamedType</span>::<span class="ident">Interface</span>(<span class="kw-2">ref</span> <span class="ident">interface</span>) <span class="op">=&gt;</span> {
                 <span class="comment">// 1. Get the the interface.</span>
-                <span class="kw">let</span> (<span class="ident">object_name</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">tagged_tuple</span>()
+                <span class="kw">let</span> (<span class="ident">object_name</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">tagged_tuple_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decoder&quot;</span>, <span class="string">&quot;decoder: found kind {:?} while looking for {:?}&quot;</span>, <span class="ident">object_name</span>, <span class="ident">interface</span>.<span class="ident">name</span>().<span class="ident">to_str</span>());
 
@@ -430,16 +422,22 @@
                 <span class="comment">// 3. Check that the object is appropriate here.</span>
                 <span class="kw">if</span> <span class="ident">object_name</span> <span class="op">!=</span> <span class="ident">interface</span>.<span class="ident">name</span>().<span class="ident">to_str</span>() {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Object named {} instead of {}&quot;</span>,
-                        <span class="ident">object_name</span>,
+                        <span class="ident">object_name</span>.<span class="ident">as_str</span>(),
                         <span class="ident">interface</span>.<span class="ident">name</span>().<span class="ident">to_str</span>()))));
                 }
 
                 <span class="comment">// 4. Parse within interface.</span>
-                <span class="self">self</span>.<span class="ident">decode_object_contents</span>(<span class="ident">interface</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>)
+                <span class="kw">let</span> <span class="ident">interface_name</span> <span class="op">=</span> <span class="ident">InterfaceName</span>::<span class="ident">from_rc_string</span>(<span class="ident">interface</span>.<span class="ident">name</span>()
+                    .<span class="ident">to_rc_string</span>()
+                    .<span class="ident">clone</span>());
+                <span class="ident">path</span>.<span class="ident">enter_interface</span>(<span class="ident">interface_name</span>.<span class="ident">clone</span>());
+                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_object_contents</span>(<span class="ident">path</span>, <span class="ident">interface</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>)<span class="question-mark">?</span>;
+                <span class="ident">path</span>.<span class="ident">exit_interface</span>(<span class="ident">interface_name</span>);
+                <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
             }
         }
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_object_contents</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">interface</span>: <span class="kw-2">&amp;</span><span class="ident">Interface</span>, <span class="ident">field_names</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">String</span>]<span class="op">&gt;&gt;</span><span class="op">&gt;</span>, <span class="ident">guard</span>: <span class="ident">E</span>::<span class="ident">TaggedGuard</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_object_contents</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Path</span>, <span class="ident">interface</span>: <span class="kw-2">&amp;</span><span class="ident">Interface</span>, <span class="ident">field_names</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">FieldName</span>]<span class="op">&gt;&gt;</span><span class="op">&gt;</span>, <span class="ident">guard</span>: <span class="ident">E</span>::<span class="ident">TaggedGuard</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;decode_object_contents: Interface {:?} &quot;</span>, <span class="ident">interface</span>.<span class="ident">name</span>());
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">object</span> <span class="op">=</span> <span class="ident">Object</span>::<span class="ident">new</span>();
 
@@ -448,8 +446,9 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">expected</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw">_</span>,<span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">interface</span>.<span class="ident">contents</span>()
                 .<span class="ident">fields</span>()
                 .<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">field</span><span class="op">|</span> {
-                    (<span class="ident">field</span>.<span class="ident">name</span>().<span class="ident">clone</span>(), <span class="ident">field</span>.<span class="ident">type_</span>())
+                .<span class="ident">enumerate</span>()
+                .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">field</span>)<span class="op">|</span> {
+                    (<span class="ident">field</span>.<span class="ident">name</span>().<span class="ident">clone</span>(), (<span class="ident">i</span>, <span class="ident">field</span>.<span class="ident">type_</span>()))
                 })
                 .<span class="ident">collect</span>();
             <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;decode_object_contents: Expecting fields {:?} &quot;</span>, <span class="ident">expected</span>);
@@ -457,23 +456,26 @@
             <span class="comment">// Read the fields **in the order** in which they appear in the stream.</span>
             <span class="kw">for</span> <span class="ident">field</span> <span class="kw">in</span> <span class="ident">field_names</span>.<span class="ident">as_ref</span>().<span class="ident">iter</span>() {
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;decode_object_contents: Looking at field {:?} &quot;</span>, <span class="ident">field</span>);
-                <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_field_name</span>(<span class="ident">field</span>)
+                <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_field_name</span>(<span class="ident">field</span>.<span class="ident">as_str</span>())
                     .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">NoSuchField</span>(<span class="ident">field</span>.<span class="ident">clone</span>())))<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">type_</span> <span class="op">=</span>
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">type_</span>) <span class="op">=</span> <span class="ident">expected</span>.<span class="ident">remove</span>(<span class="ident">field_name</span>) {
-                        <span class="ident">type_</span>
+                <span class="kw">let</span> (<span class="ident">index</span>, <span class="ident">type_</span>) <span class="op">=</span>
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">index</span>, <span class="ident">type_</span>)) <span class="op">=</span> <span class="ident">expected</span>.<span class="ident">remove</span>(<span class="ident">field_name</span>) {
+                        (<span class="ident">index</span>, <span class="ident">type_</span>)
                     } <span class="kw">else</span> {
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;decode_object_contents: I didn&#39;t expect field {:?}.&quot;</span>, <span class="ident">field</span>);
                         <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">poison</span>();
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">NoSuchField</span>(<span class="ident">field</span>.<span class="ident">clone</span>())))
                     };
-                <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">type_</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
-                <span class="ident">object</span>.<span class="ident">insert</span>(<span class="ident">field</span>, <span class="ident">item</span>);
+                <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="ident">binjs_shared</span>::<span class="ident">FieldName</span>::<span class="ident">from_rc_string</span>(<span class="ident">field_name</span>.<span class="ident">to_rc_string</span>().<span class="ident">clone</span>());
+                <span class="ident">path</span>.<span class="ident">enter_field</span>((<span class="ident">index</span>, <span class="ident">field_name</span>.<span class="ident">clone</span>()));
+                <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">path</span>, <span class="ident">type_</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+                <span class="ident">path</span>.<span class="ident">exit_field</span>((<span class="ident">index</span>, <span class="ident">field_name</span>.<span class="ident">clone</span>()));
+                <span class="ident">object</span>.<span class="ident">insert</span>(<span class="ident">field</span>.<span class="ident">as_str</span>(), <span class="ident">item</span>);
             }
             <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;decode_object_contents: Remaining fields {:?} &quot;</span>, <span class="ident">expected</span>);
 
             <span class="comment">// Any field missing? Find out if there is a default value.</span>
-            <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">type_</span>) <span class="kw">in</span> <span class="ident">expected</span>.<span class="ident">drain</span>() {
+            <span class="kw">for</span> (<span class="ident">name</span>, (<span class="kw">_</span>, <span class="ident">type_</span>)) <span class="kw">in</span> <span class="ident">expected</span>.<span class="ident">drain</span>() {
                 <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">to_str</span>();
                 <span class="kw">if</span> <span class="ident">type_</span>.<span class="ident">is_optional</span>() {
                     <span class="ident">object</span>.<span class="ident">insert</span>(<span class="ident">name</span>, <span class="ident">JSON</span>::<span class="ident">Null</span>);
@@ -488,11 +490,14 @@
 
         } <span class="kw">else</span> {
             <span class="comment">// Read the fields **in the order** in which they appear in the spec.</span>
-            <span class="kw">for</span> <span class="ident">field</span> <span class="kw">in</span> <span class="ident">interface</span>.<span class="ident">contents</span>().<span class="ident">fields</span>() {
+            <span class="kw">for</span> (<span class="ident">index</span>, <span class="ident">field</span>) <span class="kw">in</span> <span class="ident">interface</span>.<span class="ident">contents</span>().<span class="ident">fields</span>().<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decode&quot;</span>, <span class="string">&quot;decode_object_contents: Looking at field {:?} with type {:?}&quot;</span>,
                     <span class="ident">field</span>.<span class="ident">name</span>(),
                     <span class="ident">field</span>.<span class="ident">type_</span>());
-                <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">field</span>.<span class="ident">type_</span>(), <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">field_name</span> <span class="op">=</span> <span class="ident">binjs_shared</span>::<span class="ident">FieldName</span>::<span class="ident">from_rc_string</span>(<span class="ident">field</span>.<span class="ident">name</span>().<span class="ident">to_rc_string</span>().<span class="ident">clone</span>());
+                <span class="ident">path</span>.<span class="ident">enter_field</span>((<span class="ident">index</span>, <span class="ident">field_name</span>.<span class="ident">clone</span>()));
+                <span class="kw">let</span> <span class="ident">item</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">path</span>, <span class="ident">field</span>.<span class="ident">type_</span>(), <span class="bool-val">false</span>)<span class="question-mark">?</span>;
+                <span class="ident">path</span>.<span class="ident">exit_field</span>((<span class="ident">index</span>, <span class="ident">field_name</span>));
                 <span class="ident">object</span>.<span class="ident">insert</span>(<span class="ident">field</span>.<span class="ident">name</span>().<span class="ident">to_str</span>(), <span class="ident">item</span>);
             }
         }
@@ -507,39 +512,63 @@
 
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Object</span>(<span class="ident">object</span>)))
     }
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_from_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">kind</span>: <span class="kw-2">&amp;</span><span class="ident">Type</span>, <span class="ident">is_optional</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">E</span>::<span class="ident">Error</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">decode_from_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Path</span>, <span class="ident">kind</span>: <span class="kw-2">&amp;</span><span class="ident">Type</span>, <span class="ident">is_optional</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">JSON</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">binjs_meta</span>::<span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="kw-2">*</span>;
         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decoder&quot;</span>, <span class="string">&quot;decode: {:?}&quot;</span>, <span class="ident">kind</span>);
         <span class="kw">let</span> <span class="ident">is_optional</span> <span class="op">=</span> <span class="ident">kind</span>.<span class="ident">is_optional</span>() <span class="op">||</span> <span class="ident">is_optional</span>;
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">kind</span>.<span class="ident">spec</span>() {
             <span class="ident">Array</span> { <span class="ident">contents</span>: <span class="kw-2">ref</span> <span class="ident">kind</span>, <span class="ident">supports_empty</span> } <span class="op">=&gt;</span> {
-                <span class="kw">let</span> (<span class="ident">len</span>, <span class="ident">guard</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">list</span>()
+                <span class="kw">let</span> (<span class="ident">len</span>, <span class="ident">guard</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">list_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="kw">if</span> <span class="ident">len</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">supports_empty</span> {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">InvalidValue</span>(<span class="string">&quot;Empty list&quot;</span>.<span class="ident">to_string</span>())));
                 }
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">len</span> <span class="kw">as</span> <span class="ident">usize</span>);
                 <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">len</span> {
-                    <span class="ident">values</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">kind</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>);
+                    <span class="ident">values</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">decode_from_type</span>(<span class="ident">path</span>, <span class="ident">kind</span>, <span class="bool-val">false</span>)<span class="question-mark">?</span>);
                 }
                 <span class="ident">guard</span>.<span class="ident">done</span>()
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Array</span>(<span class="ident">values</span>)))
             }
             <span class="ident">String</span> <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">string</span>()
+                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">string_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="kw">match</span> <span class="ident">extracted</span> {
                     <span class="prelude-val">None</span> <span class="kw">if</span> <span class="ident">is_optional</span> <span class="op">=&gt;</span>
                         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Null</span>)),
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span>
-                        <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="string">&quot;null string&quot;</span>.<span class="ident">to_owned</span>()))),
+                        <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="string">&quot;unexpected null string&quot;</span>.<span class="ident">to_owned</span>()))),
                     <span class="prelude-val">Some</span>(<span class="ident">string</span>) <span class="op">=&gt;</span>
-                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">json</span>::<span class="ident">from</span>(<span class="ident">string</span>))),
+                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">string</span>.<span class="ident">export</span>()))
+                }
+            }
+            <span class="ident">IdentifierName</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">identifier_name_at</span>(<span class="ident">path</span>)
+                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
+                <span class="kw">match</span> <span class="ident">extracted</span> {
+                    <span class="prelude-val">None</span> <span class="kw">if</span> <span class="ident">is_optional</span> <span class="op">=&gt;</span>
+                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Null</span>)),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span>
+                        <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="string">&quot;unexpected null identifier name&quot;</span>.<span class="ident">to_owned</span>()))),
+                    <span class="prelude-val">Some</span>(<span class="ident">string</span>) <span class="op">=&gt;</span>
+                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">string</span>.<span class="ident">export</span>()))
+                }
+            }
+            <span class="ident">PropertyKey</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">property_key_at</span>(<span class="ident">path</span>)
+                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
+                <span class="kw">match</span> <span class="ident">extracted</span> {
+                    <span class="prelude-val">None</span> <span class="kw">if</span> <span class="ident">is_optional</span> <span class="op">=&gt;</span>
+                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Null</span>)),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span>
+                        <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="string">&quot;unexpected null property key&quot;</span>.<span class="ident">to_owned</span>()))),
+                    <span class="prelude-val">Some</span>(<span class="ident">string</span>) <span class="op">=&gt;</span>
+                        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">string</span>.<span class="ident">export</span>()))
                 }
             }
             <span class="ident">Boolean</span> <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">bool</span>()
+                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">bool_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="kw">match</span> <span class="ident">extracted</span> {
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span>
@@ -549,12 +578,12 @@
                 }
             }
             <span class="ident">Offset</span> <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">offset</span>()
+                <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">offset_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">json</span>::<span class="ident">from</span>(<span class="ident">offset</span>)))
             }
             <span class="ident">Number</span> <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">float</span>()
+                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">float_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="kw">match</span> <span class="ident">extracted</span> {
                     <span class="prelude-val">None</span> <span class="op">=&gt;</span>
@@ -563,10 +592,15 @@
                         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">json</span>::<span class="ident">from</span>(<span class="ident">f</span>)))
                 }
             }
+            <span class="ident">UnsignedLong</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">extracted</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">unsigned_long_at</span>(<span class="ident">path</span>)
+                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">json</span>::<span class="ident">from</span>(<span class="ident">extracted</span>)))
+            }
             <span class="ident">NamedType</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">named_type</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_type_by_name</span>(<span class="ident">name</span>)
                     .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">NoSuchType</span>(<span class="ident">name</span>.<span class="ident">to_string</span>().<span class="ident">clone</span>())))<span class="question-mark">?</span>;
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_from_named_type</span>(<span class="kw-2">&amp;</span><span class="ident">named_type</span>, <span class="ident">is_optional</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_from_named_type</span>(<span class="ident">path</span>, <span class="kw-2">&amp;</span><span class="ident">named_type</span>, <span class="ident">is_optional</span>)<span class="question-mark">?</span>;
                 <span class="kw">if</span> <span class="kw">let</span> <span class="ident">JSON</span>::<span class="ident">Null</span> <span class="op">=</span> <span class="ident">result</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">is_optional</span> {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="string">&quot;null&quot;</span>.<span class="ident">to_string</span>())));
@@ -577,11 +611,11 @@
             <span class="ident">TypeSum</span>(<span class="kw-2">ref</span> <span class="ident">sum</span>) <span class="op">=&gt;</span> {
                 <span class="comment">// The `sum` is necessarily a sum of interfaces, so this must be an object.</span>
                 <span class="comment">// 1. Get the the interface.</span>
-                <span class="kw">let</span> (<span class="ident">interface_name</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">tagged_tuple</span>()
+                <span class="kw">let</span> (<span class="ident">interface_name</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">extractor</span>.<span class="ident">tagged_tuple_at</span>(<span class="ident">path</span>)
                     .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">TokenReaderError</span>)<span class="question-mark">?</span>;
                 <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;decoder&quot;</span>, <span class="string">&quot;decoder: found kind {:?}&quot;</span>, <span class="ident">interface_name</span>);
-                <span class="kw">let</span> <span class="ident">interface_node_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_node_name</span>(<span class="kw-2">&amp;</span><span class="ident">interface_name</span>)
-                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">Error</span>::<span class="ident">NoSuchInterface</span>(<span class="ident">interface_name</span>.<span class="ident">to_string</span>().<span class="ident">clone</span>()))<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">interface_node_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_node_name</span>(<span class="ident">interface_name</span>.<span class="ident">as_str</span>())
+                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">Error</span>::<span class="ident">NoSuchInterface</span>(<span class="ident">interface_name</span>.<span class="ident">clone</span>()))<span class="question-mark">?</span>;
 
                 <span class="kw">if</span> <span class="ident">interface_node_name</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_null_name</span>() {
                     <span class="kw">if</span> <span class="ident">is_optional</span> {
@@ -591,7 +625,7 @@
                     }
                 }
                 <span class="kw">let</span> <span class="ident">interface</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar</span>.<span class="ident">get_interface_by_name</span>(<span class="kw-2">&amp;</span><span class="ident">interface_node_name</span>)
-                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">NoSuchInterface</span>(<span class="ident">interface_name</span>.<span class="ident">to_string</span>().<span class="ident">clone</span>())))<span class="question-mark">?</span>;
+                    .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">NoSuchInterface</span>(<span class="ident">interface_name</span>.<span class="ident">clone</span>())))<span class="question-mark">?</span>;
 
                 <span class="comment">// 2. Check that the interface somehow belongs in `sum`</span>
                 <span class="kw">if</span> <span class="ident">sum</span>.<span class="ident">types</span>().<span class="ident">iter</span>()
@@ -601,79 +635,19 @@
                     }).<span class="ident">is_none</span>()
                 {
                     <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">raise_error</span>(<span class="ident">Error</span>::<span class="ident">UnexpectedValue</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;Unexpected interface {interface} doesn&#39;t fit in sum {sum:?}&quot;</span>,
-                        <span class="ident">interface</span> <span class="op">=</span> <span class="ident">interface_name</span>,
+                        <span class="ident">interface</span> <span class="op">=</span> <span class="ident">interface_name</span>.<span class="ident">as_str</span>(),
                         <span class="ident">sum</span> <span class="op">=</span> <span class="ident">sum</span>.<span class="ident">types</span>()))));
                 }
 
                 <span class="comment">// 3. Parse within interface.</span>
-                <span class="self">self</span>.<span class="ident">decode_object_contents</span>(<span class="ident">interface</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>)
+                <span class="ident">path</span>.<span class="ident">enter_interface</span>(<span class="ident">interface_name</span>.<span class="ident">clone</span>());
+                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">decode_object_contents</span>(<span class="ident">path</span>, <span class="ident">interface</span>, <span class="ident">mapped_field_names</span>, <span class="ident">guard</span>)<span class="question-mark">?</span>;
+                <span class="ident">path</span>.<span class="ident">exit_interface</span>(<span class="ident">interface_name</span>.<span class="ident">clone</span>());
+                <span class="prelude-val">Ok</span>(<span class="ident">result</span>)
             }
-            <span class="ident">Void</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Null</span>))
+            <span class="ident">Void</span> <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">JSON</span>::<span class="ident">Null</span>)),
         }
     }
-}</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "binjs_generic";
-    </script>
-    <script src="../../../main.js"></script>
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "binjs_generic";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

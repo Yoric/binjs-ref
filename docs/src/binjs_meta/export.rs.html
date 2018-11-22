@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `crates/binjs_meta/src/export.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>export.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `crates/binjs_meta/src/export.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>export.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -511,7 +454,37 @@
 <span id="454">454</span>
 <span id="455">455</span>
 <span id="456">456</span>
-</pre><pre class="rust ">
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">spec</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">util</span>::<span class="kw-2">*</span>;
 
@@ -591,13 +564,21 @@
             <span class="ident">builder</span>: <span class="ident">SpecBuilder</span>::<span class="ident">new</span>(),
             <span class="ident">supersums_of</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
         };
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">skip_name_map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="ident">FieldName</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span>::<span class="ident">new</span>();
+
         <span class="comment">// Copy field names</span>
         <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">name</span>) <span class="kw">in</span> <span class="ident">spec</span>.<span class="ident">field_names</span>() {
             <span class="ident">result</span>.<span class="ident">builder</span>.<span class="ident">import_field_name</span>(<span class="ident">name</span>)
         }
 
-        <span class="comment">// We may need to introduce name `offset`, we&#39;ll see.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">field_offset</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+        <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">interface</span>) <span class="kw">in</span> <span class="ident">spec</span>.<span class="ident">interfaces_by_name</span>() {
+            <span class="kw">for</span> <span class="ident">field</span> <span class="kw">in</span> <span class="ident">interface</span>.<span class="ident">contents</span>().<span class="ident">fields</span>() {
+                <span class="kw">if</span> <span class="ident">field</span>.<span class="ident">is_lazy</span>() {
+                    <span class="kw">let</span> <span class="ident">skip_name</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">builder</span>.<span class="ident">field_name</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}_skip&quot;</span>, <span class="ident">field</span>.<span class="ident">name</span>().<span class="ident">to_str</span>()).<span class="ident">to_str</span>());
+                    <span class="ident">skip_name_map</span>.<span class="ident">insert</span>(<span class="ident">field</span>.<span class="ident">name</span>(), <span class="ident">skip_name</span>);
+                }
+            }
+        }
 
         <span class="comment">// Copy and deanonymize interfaces.</span>
         <span class="kw">for</span> (<span class="ident">name</span>, <span class="ident">interface</span>) <span class="kw">in</span> <span class="ident">spec</span>.<span class="ident">interfaces_by_name</span>() {
@@ -606,16 +587,6 @@
             <span class="comment">// and walk through their fields to deanonymize types.</span>
 
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fields</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
-            <span class="comment">// If the interface is skippable, introduce a first invisible field `_offset`.</span>
-            <span class="kw">if</span> <span class="ident">interface</span>.<span class="ident">is_skippable</span>() {
-                <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">field_offset</span>.<span class="ident">get_or_insert_with</span>(<span class="op">||</span>
-                    <span class="ident">result</span>.<span class="ident">builder</span>.<span class="ident">field_name</span>(<span class="string">&quot;_offset&quot;</span>)
-                );
-                <span class="ident">fields</span>.<span class="ident">push</span>(<span class="ident">Field</span>::<span class="ident">new</span>(
-                    <span class="ident">name</span>.<span class="ident">clone</span>(),
-                    <span class="ident">Type</span>::<span class="ident">offset</span>().<span class="ident">required</span>()
-                ))
-            }
 
             <span class="comment">// Copy other fields.</span>
             <span class="kw">for</span> <span class="ident">field</span> <span class="kw">in</span> <span class="ident">interface</span>.<span class="ident">contents</span>().<span class="ident">fields</span>() {
@@ -627,7 +598,14 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">declaration</span> <span class="op">=</span> <span class="ident">result</span>.<span class="ident">builder</span>.<span class="ident">add_interface</span>(<span class="ident">name</span>)
                 .<span class="ident">unwrap</span>();
             <span class="kw">for</span> <span class="ident">field</span> <span class="kw">in</span> <span class="ident">fields</span>.<span class="ident">drain</span>(..) {
-                <span class="ident">declaration</span>.<span class="ident">with_field</span>(<span class="ident">field</span>.<span class="ident">name</span>(), <span class="ident">field</span>.<span class="ident">type_</span>().<span class="ident">clone</span>());
+                <span class="comment">// Create *_skip field just before the lazy field.</span>
+                <span class="comment">// See also tagged_tuple in write.rs.</span>
+                <span class="kw">if</span> <span class="ident">field</span>.<span class="ident">is_lazy</span>() {
+                    <span class="ident">declaration</span>.<span class="ident">with_field</span>(<span class="ident">skip_name_map</span>.<span class="ident">get</span>(<span class="ident">field</span>.<span class="ident">name</span>()).<span class="ident">unwrap</span>(),
+                                           <span class="ident">Type</span>::<span class="ident">offset</span>().<span class="ident">required</span>());
+                }
+                <span class="ident">declaration</span>.<span class="ident">with_field_laziness</span>(<span class="ident">field</span>.<span class="ident">name</span>(), <span class="ident">field</span>.<span class="ident">type_</span>().<span class="ident">clone</span>(),
+                                                <span class="ident">field</span>.<span class="ident">laziness</span>());
             }
         }
         <span class="comment">// Copy and deanonymize typedefs</span>
@@ -698,6 +676,9 @@
         <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">type_spec</span> {
             <span class="ident">TypeSpec</span>::<span class="ident">Boolean</span> <span class="op">|</span>
             <span class="ident">TypeSpec</span>::<span class="ident">Number</span> <span class="op">|</span>
+            <span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span> <span class="op">|</span>
+            <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span> <span class="op">|</span>
+            <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span> <span class="op">|</span>
             <span class="ident">TypeSpec</span>::<span class="ident">String</span> <span class="op">|</span>
             <span class="ident">TypeSpec</span>::<span class="ident">Offset</span> <span class="op">|</span>
             <span class="ident">TypeSpec</span>::<span class="ident">Void</span>    <span class="op">=&gt;</span> {
@@ -709,7 +690,14 @@
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;export_utils&quot;</span>, <span class="string">&quot;import_typespec: Attempting to redefine typedef {name}&quot;</span>, <span class="ident">name</span> <span class="op">=</span> <span class="ident">my_name</span>.<span class="ident">to_str</span>());
                     }
                 }
-                (<span class="prelude-val">None</span>, <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="string">&quot;@@&quot;</span>))
+                <span class="comment">// This is a workaround for typedefs in the webidl that are not truly typedefs.</span>
+                <span class="comment">// See https://github.com/Yoric/ecmascript-binary-ast/pull/1</span>
+                <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">type_spec</span> {
+                    <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="string">&quot;PropertyKey&quot;</span>),
+                    <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="string">&quot;IdentifierName&quot;</span>),
+                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;@@{:?}&quot;</span>, <span class="ident">type_spec</span>)),
+                };
+                (<span class="prelude-val">None</span>, <span class="ident">name</span>)
             }
             <span class="ident">TypeSpec</span>::<span class="ident">NamedType</span>(<span class="kw-2">ref</span> <span class="ident">link</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">resolved</span> <span class="op">=</span> <span class="ident">spec</span>.<span class="ident">get_type_by_name</span>(<span class="ident">link</span>)
@@ -745,10 +733,13 @@
                             <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">is_nullable</span>: <span class="bool-val">true</span>, .. }) <span class="op">|</span>
                             <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">Interface</span>(<span class="kw">_</span>), .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">named</span>(<span class="kw-2">&amp;</span><span class="ident">content</span>).<span class="ident">required</span>(),
                             <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">String</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">string</span>().<span class="ident">required</span>(),
+                            <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">IdentifierName</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">identifier_name</span>().<span class="ident">required</span>(),
+                            <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">PropertyKey</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">property_key</span>().<span class="ident">required</span>(),
                             <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">Number</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">number</span>().<span class="ident">required</span>(),
+                            <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">UnsignedLong</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">unsigned_long</span>().<span class="ident">required</span>(),
                             <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">Boolean</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">bool</span>().<span class="ident">required</span>(),
                             <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">Offset</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">offset</span>().<span class="ident">required</span>(),
-                            <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">Void</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">void</span>().<span class="ident">required</span>()
+                            <span class="prelude-val">Some</span>(<span class="ident">IsNullable</span> { <span class="ident">content</span>: <span class="ident">Primitive</span>::<span class="ident">Void</span>, .. }) <span class="op">=&gt;</span> <span class="ident">Type</span>::<span class="ident">void</span>().<span class="ident">required</span>(),
                         };
                         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;export_utils&quot;</span>, <span class="string">&quot;import_typespec aliasing {:?} =&gt; {:?}&quot;</span>,
                             <span class="ident">my_name</span>, <span class="ident">deanonymized</span>);
@@ -875,10 +866,16 @@
                 <span class="string">&quot;_Bool&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">Number</span> <span class="op">=&gt;</span>
                 <span class="string">&quot;_Number&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span> <span class="op">=&gt;</span>
+                <span class="string">&quot;_UnsignedLong&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">String</span> <span class="op">=&gt;</span>
                 <span class="string">&quot;_String&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">Void</span> <span class="op">=&gt;</span>
                 <span class="string">&quot;_Void&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span> <span class="op">=&gt;</span>
+                <span class="string">&quot;IdentifierName&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span> <span class="op">=&gt;</span>
+                <span class="string">&quot;PropertyKey&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">TypeSum</span>(<span class="kw-2">ref</span> <span class="ident">sum</span>) <span class="op">=&gt;</span> {
                 <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">sum</span>.<span class="ident">types</span>()
                     .<span class="ident">iter</span>()
@@ -912,8 +909,14 @@
                 <span class="string">&quot;bool&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">String</span> <span class="op">=&gt;</span>
                 <span class="string">&quot;string&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span> <span class="op">=&gt;</span>
+                <span class="string">&quot;[PropertyKey] string&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span> <span class="op">=&gt;</span>
+                <span class="string">&quot;[IdentifierName] string&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">Number</span> <span class="op">=&gt;</span>
                 <span class="string">&quot;number&quot;</span>.<span class="ident">to_string</span>(),
+            <span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span> <span class="op">=&gt;</span>
+                <span class="string">&quot;unsigned long&quot;</span>.<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">NamedType</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span>
                 <span class="ident">name</span>.<span class="ident">to_str</span>().<span class="ident">to_string</span>(),
             <span class="ident">TypeSpec</span>::<span class="ident">TypeSum</span>(<span class="kw-2">ref</span> <span class="ident">sum</span>) <span class="op">=&gt;</span> {
@@ -968,69 +971,5 @@
         <span class="ident">result</span>
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "binjs_meta";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "binjs_meta";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

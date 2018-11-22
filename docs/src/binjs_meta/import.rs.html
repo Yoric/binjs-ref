@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `crates/binjs_meta/src/import.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>import.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `crates/binjs_meta/src/import.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>import.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -210,13 +153,101 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
-</pre><pre class="rust ">
-<span class="kw">use</span> <span class="ident">spec</span>::{ <span class="self">self</span>, <span class="ident">SpecBuilder</span>, <span class="ident">TypeSum</span> };
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
+</pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="ident">spec</span>::{ <span class="self">self</span>, <span class="ident">Laziness</span>, <span class="ident">SpecBuilder</span>, <span class="ident">TypeSum</span> };
 
 <span class="kw">use</span> <span class="ident">webidl</span>::<span class="ident">ast</span>::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Importer</span> {
     <span class="ident">builder</span>: <span class="ident">SpecBuilder</span>,
+    <span class="doccomment">/// The interfaces we have traversed so far.</span>
+    <span class="ident">path</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 <span class="kw">impl</span> <span class="ident">Importer</span> {
     <span class="doccomment">/// Import an AST into a SpecBuilder.</span>
@@ -225,38 +256,57 @@
     <span class="doccomment">/// extern crate binjs_meta;</span>
     <span class="doccomment">/// extern crate webidl;</span>
     <span class="doccomment">/// use webidl;</span>
+    <span class="doccomment">/// use binjs_meta::spec::SpecOptions;</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let parser = webidl::Parser::new();</span>
-    <span class="doccomment">/// let ast = parser.parse_string(&quot;</span>
-    <span class="doccomment">///    [Skippable] interface SkippableFoo {</span>
-    <span class="doccomment">///       attribute EagerFoo eager;</span>
+    <span class="doccomment">/// let ast = webidl::parse_string(&quot;</span>
+    <span class="doccomment">///    interface FooContents {</span>
+    <span class="doccomment">///      attribute boolean value;</span>
+    <span class="doccomment">///    };</span>
+    <span class="doccomment">///    interface LazyFoo {</span>
+    <span class="doccomment">///       [Lazy] attribute FooContents contents;</span>
     <span class="doccomment">///    };</span>
     <span class="doccomment">///    interface EagerFoo {</span>
-    <span class="doccomment">///       attribute bool value;</span>
+    <span class="doccomment">///       attribute FooContents contents;</span>
     <span class="doccomment">///    };</span>
     <span class="doccomment">/// &quot;).expect(&quot;Could not parse&quot;);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// let mut builder = binjs_meta::import::Importer::import(&amp;ast);</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let name_eager = builder.get_node_name(&quot;EagerFoo&quot;)</span>
+    <span class="doccomment">/// let fake_root = builder.node_name(&quot;@@ROOT@@&quot;); // Unused</span>
+    <span class="doccomment">/// let null = builder.node_name(&quot;&quot;); // Used</span>
+    <span class="doccomment">/// let spec = builder.into_spec(SpecOptions {</span>
+    <span class="doccomment">///     root: &amp;fake_root,</span>
+    <span class="doccomment">///     null: &amp;null,</span>
+    <span class="doccomment">/// });</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let name_eager = spec.get_node_name(&quot;EagerFoo&quot;)</span>
     <span class="doccomment">///     .expect(&quot;Missing name EagerFoo&quot;);</span>
-    <span class="doccomment">/// let name_skippable = builder.get_node_name(&quot;SkippableFoo&quot;)</span>
-    <span class="doccomment">///     .expect(&quot;Missing name SkippableFoo&quot;);</span>
+    <span class="doccomment">/// let name_lazy = spec.get_node_name(&quot;LazyFoo&quot;)</span>
+    <span class="doccomment">///     .expect(&quot;Missing name LazyFoo&quot;);</span>
+    <span class="doccomment">/// let name_contents = spec.get_field_name(&quot;contents&quot;)</span>
+    <span class="doccomment">///     .expect(&quot;Missing name contents&quot;);</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// {</span>
-    <span class="doccomment">///     let interface_eager = builder.get_interface(&amp;name_eager)</span>
+    <span class="doccomment">///     let interface_eager = spec.get_interface_by_name(&amp;name_eager)</span>
     <span class="doccomment">///         .expect(&quot;Missing interface EagerFoo&quot;);</span>
-    <span class="doccomment">///     assert_eq!(interface_eager.is_skippable(), false);</span>
+    <span class="doccomment">///     let contents_field =</span>
+    <span class="doccomment">///         interface_eager.get_field_by_name(&amp;name_contents)</span>
+    <span class="doccomment">///         .expect(&quot;Missing field contents&quot;);</span>
+    <span class="doccomment">///     assert_eq!(contents_field.is_lazy(), false);</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// {</span>
-    <span class="doccomment">///     let interface_skippable = builder.get_interface(&amp;name_skippable)</span>
-    <span class="doccomment">///         .expect(&quot;Missing interface SkippableFoo&quot;);</span>
-    <span class="doccomment">///     assert_eq!(interface_skippable.is_skippable(), true);</span>
+    <span class="doccomment">///     let interface_lazy = spec.get_interface_by_name(&amp;name_lazy)</span>
+    <span class="doccomment">///         .expect(&quot;Missing interface LazyFoo&quot;);</span>
+    <span class="doccomment">///     let contents_field =</span>
+    <span class="doccomment">///         interface_lazy.get_field_by_name(&amp;name_contents)</span>
+    <span class="doccomment">///         .expect(&quot;Missing field contents&quot;);</span>
+    <span class="doccomment">///     assert_eq!(contents_field.is_lazy(), true);</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">import</span>(<span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="ident">AST</span>) <span class="op">-&gt;</span> <span class="ident">SpecBuilder</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">importer</span> <span class="op">=</span> <span class="ident">Importer</span> {
+            <span class="ident">path</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">256</span>),
             <span class="ident">builder</span>: <span class="ident">SpecBuilder</span>::<span class="ident">new</span>()
         };
         <span class="ident">importer</span>.<span class="ident">import_ast</span>(<span class="ident">ast</span>);
@@ -285,9 +335,22 @@
     }
     <span class="kw">fn</span> <span class="ident">import_typedef</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">typedef</span>: <span class="kw-2">&amp;</span><span class="ident">Typedef</span>) {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="kw-2">&amp;</span><span class="ident">typedef</span>.<span class="ident">name</span>);
-        <span class="kw">let</span> <span class="ident">type_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">convert_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">typedef</span>.<span class="ident">type_</span>);
+        <span class="comment">// The following are, unfortunately, not true typedefs.</span>
+        <span class="comment">// Ignore their definition.</span>
+        <span class="kw">let</span> <span class="ident">type_</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">typedef</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>() {
+            <span class="string">&quot;Identifier&quot;</span>  <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span>
+                .<span class="ident">required</span>(),
+            <span class="string">&quot;IdentifierName&quot;</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span>
+                .<span class="ident">required</span>(),
+            <span class="string">&quot;PropertyKey&quot;</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>
+                .<span class="ident">required</span>(),
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">convert_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">typedef</span>.<span class="ident">type_</span>)
+        };
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;meta::import&quot;</span>, <span class="string">&quot;Importing typedef {type_:?} {name:?}&quot;</span>,
+            <span class="ident">type_</span> <span class="op">=</span> <span class="ident">type_</span>,
+            <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">add_typedef</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>)
-            .<span class="ident">expect</span>(<span class="string">&quot;Name already present&quot;</span>);
+            .<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Error: Name {} is defined more than once in the spec.&quot;</span>, <span class="ident">name</span>));
         <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">type_</span>.<span class="ident">is_optional</span>());
         <span class="ident">node</span>.<span class="ident">with_spec</span>(<span class="ident">type_</span>.<span class="ident">spec</span>);
     }
@@ -297,19 +360,47 @@
         } <span class="kw">else</span> {
             <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected a non-partial interface, got {:?}&quot;</span>, <span class="ident">interface</span>);
         };
-        <span class="kw">if</span> <span class="ident">interface</span>.<span class="ident">name</span> <span class="op">==</span> <span class="string">&quot;Node&quot;</span> {
-            <span class="comment">// We&#39;re not interested in the root interface.</span>
-            <span class="kw">return</span>;
+
+        <span class="comment">// Handle special, hardcoded, interfaces.</span>
+        <span class="kw">match</span> <span class="ident">interface</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>() {
+            <span class="string">&quot;Node&quot;</span> <span class="op">=&gt;</span> {
+                <span class="comment">// We&#39;re not interested in the root interface.</span>
+                <span class="kw">return</span>;
+            }
+            <span class="string">&quot;IdentifierName&quot;</span> <span class="op">=&gt;</span> {
+                <span class="macro">unimplemented</span><span class="macro">!</span>()
+            }
+            <span class="kw">_</span> <span class="op">=&gt;</span> {
+
+            }
         }
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="ident">parent</span>) <span class="op">=</span> <span class="ident">interface</span>.<span class="ident">inherits</span> {
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parent</span>, <span class="string">&quot;Node&quot;</span>);
         }
+
+        <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">push</span>(<span class="ident">interface</span>.<span class="ident">name</span>.<span class="ident">clone</span>());
+
+        <span class="comment">// Now handle regular stuff.</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">fields</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
         <span class="kw">for</span> <span class="ident">member</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">interface</span>.<span class="ident">members</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="ident">InterfaceMember</span>::<span class="ident">Attribute</span>(<span class="ident">Attribute</span>::<span class="ident">Regular</span>(<span class="kw-2">ref</span> <span class="ident">attribute</span>)) <span class="op">=</span> <span class="kw-2">*</span><span class="ident">member</span> {
+                <span class="kw">use</span> <span class="ident">webidl</span>::<span class="ident">ast</span>::<span class="ident">ExtendedAttribute</span>::<span class="ident">NoArguments</span>;
+                <span class="kw">use</span> <span class="ident">webidl</span>::<span class="ident">ast</span>::<span class="ident">Other</span>::<span class="ident">Identifier</span>;
+
                 <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">field_name</span>(<span class="kw-2">&amp;</span><span class="ident">attribute</span>.<span class="ident">name</span>);
                 <span class="kw">let</span> <span class="ident">type_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">convert_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">attribute</span>.<span class="ident">type_</span>);
-                <span class="ident">fields</span>.<span class="ident">push</span>((<span class="ident">name</span>, <span class="ident">type_</span>));
+
+                <span class="kw">let</span> <span class="ident">is_lazy</span> <span class="op">=</span> <span class="ident">attribute</span>.<span class="ident">extended_attributes</span>.<span class="ident">iter</span>()
+                    .<span class="ident">find</span>(<span class="op">|</span><span class="ident">attribute</span><span class="op">|</span> {
+                        <span class="kw">if</span> <span class="kw">let</span> <span class="kw-2">&amp;</span><span class="ident">NoArguments</span>(<span class="ident">Identifier</span>(<span class="kw-2">ref</span> <span class="ident">id</span>)) <span class="op">=</span> <span class="ident">attribute</span>.<span class="ident">as_ref</span>() {
+                            <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">id</span> <span class="op">==</span> <span class="string">&quot;Lazy&quot;</span> {
+                                <span class="kw">return</span> <span class="bool-val">true</span>;
+                            }
+                        }
+                        <span class="bool-val">false</span>
+                    })
+                    .<span class="ident">is_some</span>();
+                <span class="ident">fields</span>.<span class="ident">push</span>((<span class="ident">name</span>, <span class="ident">type_</span>, <span class="kw">if</span> <span class="ident">is_lazy</span> { <span class="ident">Laziness</span>::<span class="ident">Lazy</span> } <span class="kw">else</span> { <span class="ident">Laziness</span>:: <span class="ident">Eager</span> }));
             } <span class="kw">else</span> {
                 <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected an attribute, got {:?}&quot;</span>, <span class="ident">member</span>);
             }
@@ -317,8 +408,8 @@
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="kw-2">&amp;</span><span class="ident">interface</span>.<span class="ident">name</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">node</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">add_interface</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>)
             .<span class="ident">expect</span>(<span class="string">&quot;Name already present&quot;</span>);
-        <span class="kw">for</span> (<span class="ident">field_name</span>, <span class="ident">field_type</span>) <span class="kw">in</span> <span class="ident">fields</span>.<span class="ident">drain</span>(..) {
-            <span class="ident">node</span>.<span class="ident">with_field</span>(<span class="kw-2">&amp;</span><span class="ident">field_name</span>, <span class="ident">field_type</span>);
+        <span class="kw">for</span> (<span class="ident">field_name</span>, <span class="ident">field_type</span>, <span class="ident">laziness</span>) <span class="kw">in</span> <span class="ident">fields</span>.<span class="ident">drain</span>(..) {
+            <span class="ident">node</span>.<span class="ident">with_field_laziness</span>(<span class="kw-2">&amp;</span><span class="ident">field_name</span>, <span class="ident">field_type</span>, <span class="ident">laziness</span>);
         }
 
         <span class="kw">for</span> <span class="ident">extended_attribute</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">interface</span>.<span class="ident">extended_attributes</span> {
@@ -326,18 +417,33 @@
             <span class="kw">use</span> <span class="ident">webidl</span>::<span class="ident">ast</span>::<span class="ident">Other</span>::<span class="ident">Identifier</span>;
             <span class="kw">if</span> <span class="kw">let</span> <span class="kw-2">&amp;</span><span class="ident">NoArguments</span>(<span class="ident">Identifier</span>(<span class="kw-2">ref</span> <span class="ident">id</span>)) <span class="op">=</span> <span class="ident">extended_attribute</span>.<span class="ident">as_ref</span>() {
                 <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">id</span> <span class="op">==</span> <span class="string">&quot;Skippable&quot;</span> {
-                    <span class="ident">node</span>.<span class="ident">with_skippable</span>(<span class="bool-val">true</span>);
+                    <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Encountered deprecated attribute [Skippable]&quot;</span>);
+                }
+                <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">id</span> <span class="op">==</span> <span class="string">&quot;Scope&quot;</span> {
+                    <span class="ident">node</span>.<span class="ident">with_scope</span>(<span class="bool-val">true</span>);
                 }
             }
         }
+        <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">pop</span>();
     }
     <span class="kw">fn</span> <span class="ident">convert_type</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">t</span>: <span class="kw-2">&amp;</span><span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="ident">spec</span>::<span class="ident">Type</span> {
         <span class="kw">let</span> <span class="ident">spec</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">t</span>.<span class="ident">kind</span> {
             <span class="ident">TypeKind</span>::<span class="ident">Boolean</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">Boolean</span>,
             <span class="ident">TypeKind</span>::<span class="ident">Identifier</span>(<span class="kw-2">ref</span> <span class="ident">id</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">builder</span>.<span class="ident">node_name</span>(<span class="ident">id</span>);
-                <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">NamedType</span>(<span class="ident">name</span>.<span class="ident">clone</span>())
+                <span class="comment">// Sadly, some identifiers are not truly `typedef`s.</span>
+                <span class="kw">match</span> <span class="ident">name</span>.<span class="ident">to_str</span>() {
+                    <span class="string">&quot;IdentifierName&quot;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_at_interface</span>(<span class="string">&quot;StaticMemberAssignmentTarget&quot;</span>) <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>,
+                    <span class="string">&quot;IdentifierName&quot;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_at_interface</span>(<span class="string">&quot;StaticMemberExpression&quot;</span>) <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>,
+                    <span class="string">&quot;IdentifierName&quot;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_at_interface</span>(<span class="string">&quot;ImportSpecifier&quot;</span>) <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>,
+                    <span class="string">&quot;IdentifierName&quot;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_at_interface</span>(<span class="string">&quot;ExportSpecifier&quot;</span>) <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>,
+                    <span class="string">&quot;IdentifierName&quot;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_at_interface</span>(<span class="string">&quot;ExportLocalSpecifier&quot;</span>) <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>,
+                    <span class="string">&quot;IdentifierName&quot;</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span>,
+                    <span class="string">&quot;Identifier&quot;</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">IdentifierName</span>,
+                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">NamedType</span>(<span class="ident">name</span>.<span class="ident">clone</span>())
+                }
             }
+            <span class="ident">TypeKind</span>::<span class="ident">DOMString</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_at_interface</span>(<span class="string">&quot;LiteralPropertyName&quot;</span>) <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">PropertyKey</span>,
             <span class="ident">TypeKind</span>::<span class="ident">DOMString</span> <span class="op">=&gt;</span> <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">String</span>,
             <span class="ident">TypeKind</span>::<span class="ident">Union</span>(<span class="kw-2">ref</span> <span class="ident">types</span>) <span class="op">=&gt;</span> {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">dest</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">types</span>.<span class="ident">len</span>());
@@ -354,6 +460,8 @@
             }
             <span class="ident">TypeKind</span>::<span class="ident">RestrictedDouble</span> <span class="op">=&gt;</span>
                 <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">Number</span>,
+            <span class="ident">TypeKind</span>::<span class="ident">UnsignedLong</span> <span class="op">=&gt;</span>
+                <span class="ident">spec</span>::<span class="ident">TypeSpec</span>::<span class="ident">UnsignedLong</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> {
                 <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;I don&#39;t know how to import {:?} yet&quot;</span>, <span class="ident">t</span>);
             }
@@ -365,69 +473,13 @@
             <span class="ident">spec</span>.<span class="ident">required</span>()
         }
     }
-}</pre>
-</section>
-    <section id='search' class="content hidden"></section>
 
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "binjs_meta";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+    <span class="kw">fn</span> <span class="ident">is_at_interface</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">path</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">0</span> {
+            <span class="kw">return</span> <span class="bool-val">false</span>;
+        }
+        <span class="self">self</span>.<span class="ident">path</span>[<span class="number">0</span>].<span class="ident">as_str</span>() <span class="op">==</span> <span class="ident">name</span>
+    }
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "binjs_meta";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `crates/binjs_io/src/multipart/write.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>write.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
-    <script src="../../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `crates/binjs_io/src/multipart/write.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>write.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1326,13 +1269,84 @@
 <span id="1269">1269</span>
 <span id="1270">1270</span>
 <span id="1271">1271</span>
-</pre><pre class="rust ">
+<span id="1272">1272</span>
+<span id="1273">1273</span>
+<span id="1274">1274</span>
+<span id="1275">1275</span>
+<span id="1276">1276</span>
+<span id="1277">1277</span>
+<span id="1278">1278</span>
+<span id="1279">1279</span>
+<span id="1280">1280</span>
+<span id="1281">1281</span>
+<span id="1282">1282</span>
+<span id="1283">1283</span>
+<span id="1284">1284</span>
+<span id="1285">1285</span>
+<span id="1286">1286</span>
+<span id="1287">1287</span>
+<span id="1288">1288</span>
+<span id="1289">1289</span>
+<span id="1290">1290</span>
+<span id="1291">1291</span>
+<span id="1292">1292</span>
+<span id="1293">1293</span>
+<span id="1294">1294</span>
+<span id="1295">1295</span>
+<span id="1296">1296</span>
+<span id="1297">1297</span>
+<span id="1298">1298</span>
+<span id="1299">1299</span>
+<span id="1300">1300</span>
+<span id="1301">1301</span>
+<span id="1302">1302</span>
+<span id="1303">1303</span>
+<span id="1304">1304</span>
+<span id="1305">1305</span>
+<span id="1306">1306</span>
+<span id="1307">1307</span>
+<span id="1308">1308</span>
+<span id="1309">1309</span>
+<span id="1310">1310</span>
+<span id="1311">1311</span>
+<span id="1312">1312</span>
+<span id="1313">1313</span>
+<span id="1314">1314</span>
+<span id="1315">1315</span>
+<span id="1316">1316</span>
+<span id="1317">1317</span>
+<span id="1318">1318</span>
+<span id="1319">1319</span>
+<span id="1320">1320</span>
+<span id="1321">1321</span>
+<span id="1322">1322</span>
+<span id="1323">1323</span>
+<span id="1324">1324</span>
+<span id="1325">1325</span>
+<span id="1326">1326</span>
+<span id="1327">1327</span>
+<span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">bytes</span>;
 <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">compress</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">bytes</span>::<span class="ident">varnum</span>::<span class="kw-2">*</span>;
 <span class="kw">use</span> <span class="ident">io</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> ::<span class="ident">TokenWriterError</span>;
+<span class="kw">use</span> ::{ <span class="ident">CompressionTarget</span>, <span class="ident">TokenWriterError</span> };
+<span class="kw">use</span> <span class="ident">escaped_wtf8</span>;
 <span class="kw">use</span> <span class="ident">multipart</span>::<span class="kw-2">*</span>;
+
+<span class="kw">use</span> <span class="ident">binjs_shared</span>::{ <span class="ident">FieldName</span>, <span class="ident">InterfaceName</span>, <span class="ident">SharedString</span> };
 
 <span class="kw">use</span> <span class="ident">std</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::{ <span class="ident">HashMap</span>, <span class="ident">HashSet</span> };
@@ -1340,31 +1354,26 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::{ <span class="ident">Debug</span>, <span class="ident">Display</span>, <span class="ident">Formatter</span> };
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">hash</span>::<span class="ident">Hash</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{ <span class="ident">Add</span>, <span class="ident">AddAssign</span> };
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">ops</span>::{ <span class="ident">Add</span>, <span class="ident">AddAssign</span>, <span class="ident">Deref</span> };
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>;
-
-<span class="kw">use</span> <span class="ident">rand</span>::{ <span class="ident">Rand</span>, <span class="ident">Rng</span> };
 
 <span class="kw">use</span> <span class="ident">vec_map</span>;
 <span class="kw">use</span> <span class="ident">vec_map</span>::<span class="kw-2">*</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">WriteOptions</span> {
-    <span class="kw">pub</span> <span class="ident">grammar_table</span>: <span class="ident">Compression</span>,
-    <span class="kw">pub</span> <span class="ident">strings_table</span>: <span class="ident">Compression</span>,
-    <span class="kw">pub</span> <span class="ident">tree</span>: <span class="ident">Compression</span>,
-}
 
-<span class="kw">impl</span> <span class="ident">Rand</span> <span class="kw">for</span> <span class="ident">WriteOptions</span> {
-    <span class="kw">fn</span> <span class="ident">rand</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Rng</span><span class="op">&gt;</span>(<span class="ident">rng</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="ident">WriteOptions</span> {
-            <span class="ident">grammar_table</span>: <span class="ident">Compression</span>::<span class="ident">rand</span>(<span class="ident">rng</span>),
-            <span class="ident">strings_table</span>: <span class="ident">Compression</span>::<span class="ident">rand</span>(<span class="ident">rng</span>),
-            <span class="ident">tree</span>: <span class="ident">Compression</span>::<span class="ident">rand</span>(<span class="ident">rng</span>),
-        }
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Targets</span> {
+    <span class="kw">pub</span> <span class="ident">grammar_table</span>: <span class="ident">CompressionTarget</span>,
+    <span class="kw">pub</span> <span class="ident">strings_table</span>: <span class="ident">CompressionTarget</span>,
+    <span class="kw">pub</span> <span class="ident">tree</span>: <span class="ident">CompressionTarget</span>,
+}
+<span class="kw">impl</span> <span class="ident">Targets</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">reset</span>();
+        <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">reset</span>();
+        <span class="self">self</span>.<span class="ident">tree</span>.<span class="ident">reset</span>();
     }
 }
-
 
 <span class="doccomment">/// A value that may be serialized to bytes, optionally compressed.</span>
 <span class="kw">trait</span> <span class="ident">Serializable</span> {
@@ -1387,26 +1396,29 @@
 }
 
 <span class="doccomment">/// A `String` is serialized as:</span>
-<span class="doccomment">/// - number of UTF-8 bytes (varnum);</span>
-<span class="doccomment">/// - sequence of UTF-8 bytes.</span>
-<span class="kw">impl</span> <span class="ident">Serializable</span> <span class="kw">for</span> <span class="ident">String</span> {
+<span class="doccomment">/// - number of WTF-8 bytes (varnum);</span>
+<span class="doccomment">/// - sequence of WTF-8 bytes.</span>
+<span class="kw">impl</span> <span class="ident">Serializable</span> <span class="kw">for</span> <span class="ident">SharedString</span> {
     <span class="kw">fn</span> <span class="ident">write</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="ident">total</span> <span class="op">+=</span> <span class="ident">out</span>.<span class="ident">write_varnum</span>(<span class="self">self</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>)<span class="question-mark">?</span>;
-        <span class="ident">out</span>.<span class="ident">write_all</span>(<span class="self">self</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">deref</span>().<span class="ident">as_bytes</span>();
+
+        <span class="kw">let</span> <span class="ident">unescaped</span> <span class="op">=</span> <span class="ident">escaped_wtf8</span>::<span class="ident">unescape</span>(<span class="ident">bytes</span>);
+        <span class="ident">total</span> <span class="op">+=</span> <span class="ident">out</span>.<span class="ident">write_varnum</span>(<span class="ident">unescaped</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">u32</span>)<span class="question-mark">?</span>;
+        <span class="ident">out</span>.<span class="ident">write_all</span>(<span class="ident">unescaped</span>.<span class="ident">deref</span>())<span class="question-mark">?</span>;
         <span class="ident">total</span> <span class="op">+=</span> <span class="self">self</span>.<span class="ident">len</span>();
         <span class="prelude-val">Ok</span>(<span class="ident">total</span>)
     }
 }
 
 <span class="doccomment">/// A `String | null` is serialized as:</span>
-<span class="doccomment">/// - number of UTF-8 bytes (varnum);</span>
-<span class="doccomment">/// - sequence of UTF-8 bytes.</span>
+<span class="doccomment">/// - number of WTF-8 bytes (varnum);</span>
+<span class="doccomment">/// - sequence of WTF-8 bytes.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// With the following special case used to represent the null string:</span>
-<span class="doccomment">/// - number of UTF-8 bytes (2 as varnum);</span>
-<span class="doccomment">/// - sequence [255, 0] (which is invalid UTF-8).</span>
-<span class="kw">impl</span> <span class="ident">Serializable</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+<span class="doccomment">/// - number of WTF-8 bytes (2 as varnum);</span>
+<span class="doccomment">/// - sequence [255, 0] (which is invalid WTF-8).</span>
+<span class="kw">impl</span> <span class="ident">Serializable</span> <span class="kw">for</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SharedString</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">write</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">const</span> <span class="ident">EMPTY_STRING</span>: [<span class="ident">u8</span>; <span class="number">2</span>] <span class="op">=</span> [<span class="number">255</span>, <span class="number">0</span>];
         <span class="kw">let</span> <span class="ident">total</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
@@ -1429,7 +1441,7 @@
 <span class="doccomment">/// An entry in an WriterTable.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This entry tracks the number of instances of the entry used in the table.</span>
-<span class="kw">struct</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> { <span class="comment">// We shouldn&#39;t need the `Clone`, sigh.</span>
+<span class="kw">struct</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> { <span class="comment">// We shouldn&#39;t need the `Clone`, sigh.</span>
     <span class="doccomment">/// Number of instances of this entry around.</span>
     <span class="ident">instances</span>: <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
 
@@ -1439,7 +1451,7 @@
     <span class="doccomment">/// The index, actually computed in `write()`.</span>
     <span class="ident">index</span>: <span class="ident">TableIndex</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">data</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="ident">TableEntry</span> {
             <span class="ident">instances</span>: <span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="number">1</span>),
@@ -1448,13 +1460,31 @@
         }
     }
 }
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
+    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>) <span class="op">==</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span>::<span class="ident">Equal</span>
+    }
+}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
+}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">PartialOrd</span> <span class="kw">for</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
+    <span class="kw">fn</span> <span class="ident">partial_cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">cmp</span>(<span class="ident">other</span>))
+    }
+}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Ord</span> <span class="kw">for</span> <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
+    <span class="kw">fn</span> <span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">other</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">cmp</span>::<span class="ident">Ordering</span> {
+        <span class="ident">u32</span>::<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">other</span>.<span class="ident">instances</span>.<span class="ident">borrow</span>(), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">instances</span>.<span class="ident">borrow</span>())
+            .<span class="ident">then_with</span>(<span class="op">||</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">other</span>.<span class="ident">data</span>))
+    }
+}
 
 <span class="doccomment">/// A table, used to define a varnum-indexed header</span>
-<span class="kw">struct</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> {
+<span class="kw">struct</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
     <span class="ident">map</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Entry</span>, <span class="ident">TableEntry</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;&gt;</span>
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="ident">WriterTable</span> {
             <span class="ident">map</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>()
@@ -1463,7 +1493,7 @@
 }
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
     <span class="doccomment">/// Get an entry from the header.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The number of entries is incremented by 1.</span>
@@ -1505,13 +1535,13 @@
 <span class="doccomment">///       -   byte length of entry (varnum);</span>
 <span class="doccomment">/// - for each entry,</span>
 <span class="doccomment">/// -   serialization of entry.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="ident">Serializable</span> <span class="kw">for</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="ident">Serializable</span> <span class="kw">for</span> <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">Entry</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">Entry</span>: <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Hash</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Serializable</span> <span class="op">+</span> <span class="ident">FormatInTable</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Ord</span> {
     <span class="kw">fn</span> <span class="ident">write</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total</span> <span class="op">=</span> <span class="number">0</span>;
 
-        <span class="comment">// Sort entries by number of uses.</span>
+        <span class="comment">// Sort entries by number of uses and entry data specific ordering</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">contents</span> : <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">map</span>.<span class="ident">values</span>().<span class="ident">collect</span>();
-        <span class="ident">contents</span>.<span class="ident">sort_unstable_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">u32</span>::<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">b</span>.<span class="ident">instances</span>.<span class="ident">borrow</span>(), <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">a</span>.<span class="ident">instances</span>.<span class="ident">borrow</span>()));
+        <span class="ident">contents</span>.<span class="ident">sort_unstable</span>();
 
         <span class="comment">// Assign TableIndex</span>
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">contents</span>.<span class="ident">len</span>() {
@@ -1553,9 +1583,9 @@
 }
 
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span> <span class="comment">// FIXME: Clone shouldn&#39;t be necessary. Sigh.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialOrd</span>, <span class="ident">Ord</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">Debug</span>)]</span> <span class="comment">// FIXME: Clone shouldn&#39;t be necessary. Sigh.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NodeDescription</span> {
-    <span class="ident">kind</span>: <span class="ident">String</span>,
+    <span class="ident">kind</span>: <span class="ident">InterfaceName</span>,
 }
 
 <span class="doccomment">/// Format:</span>
@@ -1567,7 +1597,8 @@
     <span class="kw">fn</span> <span class="ident">write</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span>, <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">total</span> <span class="op">=</span> <span class="number">0</span>;
 
-        <span class="ident">total</span> <span class="op">+=</span> <span class="self">self</span>.<span class="ident">kind</span>.<span class="ident">to_string</span>().<span class="ident">write</span>(<span class="ident">out</span>)<span class="question-mark">?</span>;
+        <span class="ident">total</span> <span class="op">+=</span> <span class="self">self</span>.<span class="ident">kind</span>.<span class="ident">as_shared_string</span>()
+            .<span class="ident">write</span>(<span class="ident">out</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">total</span>)
     }
 }
@@ -1579,7 +1610,7 @@
 <span class="doccomment">/// The tree, as it is being built.</span>
 <span class="kw">enum</span> <span class="ident">UnresolvedTreeNode</span> {
     <span class="doccomment">/// An index into the table of strings.</span>
-    <span class="ident">UnresolvedStringIndex</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>),
+    <span class="ident">UnresolvedStringIndex</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SharedString</span><span class="op">&gt;&gt;</span>),
 
     <span class="doccomment">/// An index into the table of nodes.</span>
     <span class="ident">UnresolvedNodeIndex</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="ident">NodeDescription</span><span class="op">&gt;</span>),
@@ -1755,6 +1786,12 @@
                 <span class="ident">stats</span>.<span class="ident">float</span>.<span class="ident">total_bytes</span> <span class="op">+=</span> <span class="ident">total</span>;
                 <span class="ident">stats</span>.<span class="ident">float</span>.<span class="ident">shallow_bytes</span> <span class="op">+=</span> <span class="ident">own</span>;
             }
+            <span class="ident">Nature</span>::<span class="ident">UnsignedLong</span> <span class="op">=&gt;</span> {
+                <span class="ident">stats</span>.<span class="ident">unsigned_long</span>.<span class="ident">entries</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="ident">stats</span>.<span class="ident">unsigned_long</span>.<span class="ident">own_bytes</span> <span class="op">+=</span> <span class="ident">own</span>;
+                <span class="ident">stats</span>.<span class="ident">unsigned_long</span>.<span class="ident">total_bytes</span> <span class="op">+=</span> <span class="ident">total</span>;
+                <span class="ident">stats</span>.<span class="ident">unsigned_long</span>.<span class="ident">shallow_bytes</span> <span class="op">+=</span> <span class="ident">own</span>;
+            }
             <span class="ident">Nature</span>::<span class="ident">Offset</span> <span class="op">=&gt;</span> {
                 <span class="ident">stats</span>.<span class="ident">offset</span>.<span class="ident">entries</span> <span class="op">+=</span> <span class="number">1</span>;
                 <span class="ident">stats</span>.<span class="ident">bool</span>.<span class="ident">own_bytes</span> <span class="op">+=</span> <span class="ident">own</span>;
@@ -1777,8 +1814,9 @@
     <span class="ident">TaggedTuple</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="ident">NodeDescription</span><span class="op">&gt;</span>),
     <span class="ident">TaggedTupleHeader</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="ident">NodeDescription</span><span class="op">&gt;</span>),
     <span class="ident">Float</span>,
+    <span class="ident">UnsignedLong</span>,
     <span class="ident">Bool</span>,
-    <span class="ident">String</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>),
+    <span class="ident">String</span>(<span class="ident">TableIndex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SharedString</span><span class="op">&gt;&gt;</span>),
     <span class="doccomment">/// Internal data representing a number of bytes.</span>
     <span class="ident">Offset</span>,
 }
@@ -1789,7 +1827,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">TableIndex</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="ident">phantom</span>: <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>,
-    <span class="ident">description</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="comment">// For debugging purposes</span>
+    <span class="ident">description</span>: <span class="ident">SharedString</span>, <span class="comment">// For debugging purposes</span>
     <span class="ident">index</span>: <span class="ident">Rc</span><span class="op">&lt;</span><span class="ident">RefCell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
 }
 
@@ -1806,7 +1844,7 @@
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">description</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
         <span class="ident">TableIndex</span> {
             <span class="ident">phantom</span>: <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>,
-            <span class="ident">description</span>: <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">description</span>.<span class="ident">to_string</span>()),
+            <span class="ident">description</span>: <span class="ident">SharedString</span>::<span class="ident">from_string</span>(<span class="ident">description</span>.<span class="ident">to_string</span>()),
             <span class="ident">index</span>: <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="prelude-val">None</span>))
         }
     }
@@ -1830,13 +1868,14 @@
 
 
 <span class="kw">impl</span> <span class="ident">TreeTokenWriter</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">options</span>: <span class="ident">WriteOptions</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="kw-2">mut</span> <span class="ident">targets</span>: <span class="ident">Targets</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">targets</span>.<span class="ident">reset</span>();
         <span class="ident">TreeTokenWriter</span> {
             <span class="ident">grammar_table</span>: <span class="ident">WriterTable</span>::<span class="ident">new</span>(),
             <span class="ident">strings_table</span>: <span class="ident">WriterTable</span>::<span class="ident">new</span>(),
             <span class="ident">root</span>: <span class="prelude-val">None</span>,
             <span class="ident">data</span>: <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">1024</span>),
-            <span class="ident">options</span>,
+            <span class="ident">targets</span>,
             <span class="ident">statistics</span>: <span class="ident">Statistics</span>::<span class="ident">default</span>()
         }
     }
@@ -1847,14 +1886,14 @@
         <span class="ident">Tree</span>(<span class="ident">result</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">done</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">Statistics</span>), <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">done</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         <span class="kw">const</span> <span class="ident">MAGIC_HEADER</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>; <span class="number">5</span>] <span class="op">=</span> <span class="string">b&quot;BINJS&quot;</span>;
         <span class="comment">// Write header to byte stream</span>
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">MAGIC_HEADER</span>)
             .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">uncompressed_bytes</span> <span class="op">+=</span> <span class="ident">MAGIC_HEADER</span>.<span class="ident">len</span>();
 
-        <span class="kw">const</span> <span class="ident">FORMAT_VERSION</span> : <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
+        <span class="kw">const</span> <span class="ident">FORMAT_VERSION</span> : <span class="ident">u32</span> <span class="op">=</span> <span class="number">1</span>;
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_varnum</span>(<span class="ident">FORMAT_VERSION</span>)
             .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">uncompressed_bytes</span> <span class="op">+=</span> <span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">size_of_val</span>(<span class="kw-2">&amp;</span><span class="ident">FORMAT_VERSION</span>);
@@ -1863,20 +1902,32 @@
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">HEADER_GRAMMAR_TABLE</span>.<span class="ident">as_bytes</span>())
             .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">uncompressed_bytes</span> <span class="op">+=</span> <span class="ident">HEADER_GRAMMAR_TABLE</span>.<span class="ident">len</span>();
-        <span class="kw">let</span> <span class="ident">compression</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">write_with_compression</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">grammar_table</span>)
-            .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">max_entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">compression</span> <span class="op">=</span> <span class="ident">compression</span>;
+        {
+            <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">targets</span>.<span class="ident">grammar_table</span>)
+                .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> (<span class="ident">data</span>, <span class="ident">compression</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">targets</span>.<span class="ident">grammar_table</span>.<span class="ident">done</span>()
+                .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">data</span>.<span class="ident">as_ref</span>())
+                .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">max_entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">compression</span> <span class="op">=</span> <span class="ident">compression</span>;
+        }
 
         <span class="comment">// Write strings table to byte stream.</span>
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">HEADER_STRINGS_TABLE</span>.<span class="ident">as_bytes</span>())
             .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">compression</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">write_with_compression</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">strings_table</span>)
-            .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">max_entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
-        <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">compression</span> <span class="op">=</span> <span class="ident">compression</span>;
+        {
+            <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">targets</span>.<span class="ident">strings_table</span>)
+                .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> (<span class="ident">data</span>, <span class="ident">compression</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">targets</span>.<span class="ident">strings_table</span>.<span class="ident">done</span>()
+                .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">data</span>.<span class="ident">as_ref</span>())
+                .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">max_entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">map</span>.<span class="ident">len</span>();
+            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">compression</span> <span class="op">=</span> <span class="ident">compression</span>;
+        }
 
         <span class="comment">// Compute more statistics on strings.</span>
         <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">strings_table</span>.<span class="ident">map</span> {
@@ -1907,59 +1958,67 @@
 
 
         <span class="comment">// Write tree itself to byte stream.</span>
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">HEADER_TREE</span>.<span class="ident">as_bytes</span>())
-            .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">root</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">root</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">2048</span>);
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tree_buf</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">2048</span>);
             <span class="kw">let</span> <span class="ident">root</span> <span class="op">=</span> <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>::<span class="ident">try_unwrap</span>(<span class="ident">root</span>.<span class="number">0</span>)
                 .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Could not unwrap tree, it still has {} consumers&quot;</span>, <span class="ident">std</span>::<span class="ident">rc</span>::<span class="ident">Rc</span>::<span class="ident">strong_count</span>(<span class="kw-2">&amp;</span><span class="ident">e</span>)));
             <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">resolved</span>) <span class="op">=</span> <span class="ident">root</span>.<span class="ident">resolve</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">statistics</span>);
-            <span class="ident">resolved</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>)
+            <span class="ident">resolved</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">tree_buf</span>)
                 .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">compression</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">write_with_compression</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">data</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">tree</span>)
+
+            <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">HEADER_TREE</span>.<span class="ident">as_bytes</span>())
                 .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
-            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">entries</span> <span class="op">=</span> <span class="number">1</span>;
-            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">max_entries</span> <span class="op">=</span> <span class="number">1</span>;
-            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">compression</span> <span class="op">=</span> <span class="ident">compression</span>;
+            {
+                <span class="ident">tree_buf</span>.<span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">targets</span>.<span class="ident">tree</span>)
+                    .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> (<span class="ident">data</span>, <span class="ident">compression</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">targets</span>.<span class="ident">tree</span>.<span class="ident">done</span>()
+                    .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+                <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">write_all</span>(<span class="ident">data</span>.<span class="ident">as_ref</span>())
+                    .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+                <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">entries</span> <span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">max_entries</span> <span class="op">=</span> <span class="number">1</span>;
+                <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">compression</span> <span class="op">=</span> <span class="ident">compression</span>;
+            }
         }
 
         <span class="comment">// Compute more statistics on nodes.</span>
         <span class="kw">for</span> (<span class="ident">key</span>, <span class="ident">value</span>) <span class="kw">in</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">map</span> {
             <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="ident">value</span>.<span class="ident">index</span>.<span class="ident">index</span>.<span class="ident">borrow</span>()
                 .<span class="ident">expect</span>(<span class="string">&quot;Table index hasn&#39;t been resolved yet&quot;</span>);
-            <span class="kw">let</span> <span class="ident">stats</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">per_kind_index</span>.<span class="ident">get</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>)
-                .<span class="ident">unwrap_or_else</span>(<span class="op">||</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Could not find stats entry for index {} ({}, {} occurrences)&quot;</span>, <span class="ident">index</span>, <span class="ident">key</span>.<span class="ident">kind</span>, <span class="ident">value</span>.<span class="ident">instances</span>.<span class="ident">borrow</span>()));
-            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">per_kind_name</span>.<span class="ident">entry</span>(<span class="ident">key</span>.<span class="ident">kind</span>.<span class="ident">clone</span>()) {
-                <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">hash_map</span>::<span class="ident">Entry</span>::<span class="ident">Occupied</span>(<span class="kw-2">mut</span> <span class="ident">entry</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">borrow</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">get_mut</span>();
-                    <span class="kw-2">*</span><span class="ident">borrow</span> <span class="op">+=</span> <span class="ident">stats</span>.<span class="ident">clone</span>();
-                }
-                <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">hash_map</span>::<span class="ident">Entry</span>::<span class="ident">Vacant</span>(<span class="ident">entry</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">entry</span>.<span class="ident">insert</span>(<span class="ident">stats</span>.<span class="ident">clone</span>());
+            <span class="kw">match</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">per_kind_index</span>.<span class="ident">get</span>(<span class="ident">index</span> <span class="kw">as</span> <span class="ident">usize</span>) {
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">continue</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">stats</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">match</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">per_kind_name</span>.<span class="ident">entry</span>(<span class="ident">key</span>.<span class="ident">kind</span>.<span class="ident">clone</span>()) {
+                        <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">hash_map</span>::<span class="ident">Entry</span>::<span class="ident">Occupied</span>(<span class="kw-2">mut</span> <span class="ident">entry</span>) <span class="op">=&gt;</span> {
+                            <span class="kw">let</span> <span class="ident">borrow</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">get_mut</span>();
+                            <span class="kw-2">*</span><span class="ident">borrow</span> <span class="op">+=</span> <span class="ident">stats</span>.<span class="ident">clone</span>();
+                        }
+                        <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">hash_map</span>::<span class="ident">Entry</span>::<span class="ident">Vacant</span>(<span class="ident">entry</span>) <span class="op">=&gt;</span> {
+                            <span class="ident">entry</span>.<span class="ident">insert</span>(<span class="ident">stats</span>.<span class="ident">clone</span>());
+                        }
+                    }
+                    <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">per_description</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">stats</span>.<span class="ident">clone</span>());
                 }
             }
-            <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">per_description</span>.<span class="ident">insert</span>(<span class="ident">key</span>, <span class="ident">stats</span>.<span class="ident">clone</span>());
         }
         <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">number_of_files</span> <span class="op">=</span> <span class="number">1</span>;
         <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">compressed_bytes</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">len</span>();
         <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">uncompressed_bytes</span> <span class="op">+=</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">grammar_table</span>.<span class="ident">compression</span>.<span class="ident">before_bytes</span>
             <span class="op">+</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">strings_table</span>.<span class="ident">compression</span>.<span class="ident">before_bytes</span>
             <span class="op">+</span> <span class="self">self</span>.<span class="ident">statistics</span>.<span class="ident">tree</span>.<span class="ident">compression</span>.<span class="ident">before_bytes</span>;
-        <span class="prelude-val">Ok</span>((<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">into_boxed_slice</span>(), <span class="self">self</span>.<span class="ident">statistics</span>))
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>().<span class="ident">into_boxed_slice</span>())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">TokenWriter</span> <span class="kw">for</span> <span class="ident">TreeTokenWriter</span> {
+<span class="kw">impl</span> <span class="ident">TokenWriterWithTree</span> <span class="kw">for</span> <span class="ident">TreeTokenWriter</span> {
     <span class="kw">type</span> <span class="ident">Tree</span> <span class="op">=</span> <span class="ident">Tree</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">TokenWriterError</span>;
     <span class="kw">type</span> <span class="ident">Data</span> <span class="op">=</span> <span class="ident">Box</span><span class="op">&lt;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">Statistics</span> <span class="op">=</span> <span class="ident">Statistics</span>;
 
-    <span class="kw">fn</span> <span class="ident">done</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="self">Self</span>::<span class="ident">Data</span>, <span class="self">Self</span>::<span class="ident">Statistics</span>), <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">done</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Data</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         (<span class="self">self</span> <span class="kw">as</span> <span class="ident">TreeTokenWriter</span>).<span class="ident">done</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">float</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">float</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">f64</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">bytes</span> : <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bytes</span>::<span class="ident">float</span>::<span class="ident">bytes_of_float</span>(<span class="ident">value</span>).<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;writing float {:?} =&gt; {:?}&quot;</span>, <span class="ident">value</span>, <span class="ident">bytes</span>);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">UnresolvedTree</span> {
@@ -1968,7 +2027,18 @@
         }))
     }
 
-    <span class="kw">fn</span> <span class="ident">bool</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>)  <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">unsigned_long</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">value</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">4</span>);
+        <span class="ident">bytes</span>.<span class="ident">write_varnum</span>(<span class="ident">value</span> <span class="kw">as</span> <span class="ident">u32</span>)
+            .<span class="ident">map_err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">WriteError</span>)<span class="question-mark">?</span>;
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;writing unsigned_long {:?} =&gt; {:?}&quot;</span>, <span class="ident">value</span>, <span class="ident">bytes</span>);
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">UnresolvedTree</span> {
+            <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">UnsignedLong</span>,
+            <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">Encoded</span>(<span class="ident">bytes</span>),
+        }))
+    }
+
+    <span class="kw">fn</span> <span class="ident">bool</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>)  <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">bytes</span>::<span class="ident">bool</span>::<span class="ident">bytes_of_bool</span>(<span class="ident">data</span>).<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>();
         <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;writing bool {:?} =&gt; {:?}&quot;</span>, <span class="ident">data</span>, <span class="ident">bytes</span>);
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">UnresolvedTree</span> {
@@ -1977,15 +2047,15 @@
         }))
     }
 
-    <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">offset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">UnresolvedTree</span> {
             <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">UnresolvedOffset</span>(<span class="prelude-val">None</span>), <span class="comment">// This will be replaced later.</span>
             <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">Offset</span>
         }))
     }
 
-    <span class="kw">fn</span> <span class="ident">string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">map</span>(<span class="ident">str</span>::<span class="ident">to_string</span>);
+    <span class="kw">fn</span> <span class="ident">string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">SharedString</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">data</span>.<span class="ident">map</span>(<span class="ident">Clone</span>::<span class="ident">clone</span>);
         <span class="kw">let</span> <span class="ident">index</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">strings_table</span>
             .<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>)
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">entry</span><span class="op">|</span> <span class="ident">entry</span>.<span class="ident">index</span>.<span class="ident">clone</span>());
@@ -2003,7 +2073,7 @@
             <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">String</span>(<span class="ident">index</span>)
         }))
     }
-    <span class="kw">fn</span> <span class="ident">list</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">children</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">list</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">children</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">items</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">children</span>.<span class="ident">len</span>() <span class="op">+</span> <span class="number">1</span>);
         <span class="comment">// First child is the number of children.</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">encoded_number_of_items</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="number">4</span>);
@@ -2026,17 +2096,6 @@
             <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">List</span>,
         }))
     }
-    <span class="kw">fn</span> <span class="ident">untagged_tuple</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">children</span>: <span class="kw-2">&amp;</span>[<span class="self">Self</span>::<span class="ident">Tree</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">UnresolvedTree</span> {
-            <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">Tuple</span>(<span class="ident">children</span>.<span class="ident">iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">tree</span><span class="op">|</span> <span class="ident">tree</span>.<span class="number">0</span>.<span class="ident">clone</span>())
-                .<span class="ident">collect</span>()
-            ),
-            <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">UntaggedTuple</span>,
-        };
-        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;writing untagged tuple {} children&quot;</span>, <span class="ident">children</span>.<span class="ident">len</span>());
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">result</span>))
-    }
 
     <span class="comment">// Tagged tuple:</span>
     <span class="comment">//</span>
@@ -2045,73 +2104,82 @@
     <span class="comment">// - index in the grammar table (varnum);</span>
     <span class="comment">// - for each item, in the order specified</span>
     <span class="comment">//    - the item (see item)</span>
-    <span class="kw">fn</span> <span class="ident">tagged_tuple</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">children</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="self">Self</span>::<span class="ident">Tree</span>)]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">tagged_tuple</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">InterfaceName</span>, <span class="ident">children</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="ident">FieldName</span>, <span class="self">Self</span>::<span class="ident">Tree</span>)]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Tree</span>, <span class="ident">TokenWriterError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">data</span>;
         <span class="kw">let</span> <span class="ident">description</span> <span class="op">=</span> <span class="ident">NodeDescription</span> {
-            <span class="ident">kind</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
+            <span class="ident">kind</span>: <span class="ident">name</span>.<span class="ident">clone</span>()
         };
-        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;writing tagged tuple {} with {} children as {:?}&quot;</span>,
+        <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;writing tagged tuple {:?} with {} children as {:?}&quot;</span>,
             <span class="ident">name</span>,
             <span class="ident">children</span>.<span class="ident">len</span>(),
             <span class="ident">description</span>,
         );
         <span class="kw">let</span> <span class="ident">index</span> : <span class="ident">TableIndex</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">grammar_table</span>.<span class="ident">insert</span>(<span class="ident">description</span>);
         {
+            <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;tagged tuple index: {index:?}&quot;</span>,
+                <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span>);
+
             <span class="comment">// Now, we determine if we should add an Offset</span>
-            <span class="kw">let</span> <span class="ident">inject_in_offset</span> <span class="op">=</span>
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="ident">tree</span>)) <span class="op">=</span> <span class="ident">children</span>.<span class="ident">get</span>(<span class="number">0</span>)
-                {
-                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">UnresolvedTree</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">children_data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+            <span class="comment">// [lazy] field has preceding Nature::Offset child.</span>
+            <span class="comment">//</span>
+            <span class="comment">//   ...</span>
+            <span class="comment">//   { nature: Nature::Offset, data: UnresolvedOffset(none) },</span>
+            <span class="comment">//   { nature: any, data: any },</span>
+            <span class="comment">//   ...</span>
+            <span class="comment">//</span>
+            <span class="comment">// The following loop converts them into single child.</span>
+            <span class="comment">//</span>
+            <span class="comment">//   ...</span>
+            <span class="comment">//   { nature: Nature::Offset,</span>
+            <span class="comment">//     data: UnresolvedOffset({ nature: any, data: any }) },</span>
+            <span class="comment">//   ...</span>
+            <span class="comment">//</span>
+            <span class="comment">// `is_lazy_field` is used to detect the child after Nature::Offset</span>
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_lazy_field</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            <span class="kw">for</span> <span class="ident">child</span> <span class="kw">in</span> <span class="ident">children</span>.<span class="ident">iter</span>() {
+                <span class="kw">let</span> <span class="ident">child_data</span> <span class="op">=</span> (<span class="ident">child</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">clone</span>();
+                <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">child_data</span> {
+                    <span class="ident">UnresolvedTree</span> {
+                        <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">UnresolvedOffset</span>(<span class="kw-2">ref</span> <span class="ident">v</span>),
                         <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">Offset</span>,
-                        <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">UnresolvedOffset</span>(<span class="kw-2">ref</span> <span class="ident">v</span>)
-                    } <span class="op">=</span> <span class="kw-2">*</span><span class="ident">tree</span>.<span class="number">0</span> {
+                    } <span class="op">=&gt;</span> {
+                        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">is_lazy_field</span>);
                         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">v</span>.<span class="ident">is_none</span>());
-                        <span class="bool-val">true</span>
-                    } <span class="kw">else</span> {
-                        <span class="bool-val">false</span>
+                        <span class="comment">// The next child is [lazy] field.</span>
+                        <span class="ident">is_lazy_field</span> <span class="op">=</span> <span class="bool-val">true</span>;
                     }
-                } <span class="kw">else</span> {
-                    <span class="bool-val">false</span>
-                };
+                    <span class="kw">_</span> <span class="op">=&gt;</span> {
+                        <span class="kw">if</span> <span class="ident">is_lazy_field</span> {
+                            <span class="kw">let</span> <span class="ident">offset_child</span> <span class="op">=</span> <span class="ident">UnresolvedTree</span> {
+                                <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">Tuple</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">child_data</span>.<span class="ident">clone</span>()]),
+                                <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">UntaggedTuple</span>,
+                            };
 
-            <span class="macro">debug</span><span class="macro">!</span>(<span class="ident">target</span>: <span class="string">&quot;multipart&quot;</span>, <span class="string">&quot;tagged tuple index: {index:?}, with{has_offset} offset&quot;</span>,
-                <span class="ident">index</span> <span class="op">=</span> <span class="ident">index</span>,
-                <span class="ident">has_offset</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">inject_in_offset</span> { <span class="string">&quot;&quot;</span> } <span class="kw">else</span> { <span class="string">&quot;OUT&quot;</span>});
-
-            <span class="comment">// Sanity check</span>
-            <span class="kw">for</span> (<span class="ident">i</span>, <span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="kw-2">ref</span> <span class="ident">child</span>)) <span class="kw">in</span> <span class="ident">children</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
-                <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Nature</span>::<span class="ident">Offset</span> <span class="op">=</span> <span class="ident">child</span>.<span class="number">0</span>.<span class="ident">nature</span> {
-                    <span class="kw">if</span> <span class="ident">i</span> <span class="op">==</span> <span class="number">0</span> {
-                        <span class="comment">// No problem.</span>
-                    } <span class="kw">else</span> {
-                        <span class="comment">// Offsets may only appear as first child.</span>
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">TokenWriterError</span>::<span class="ident">InvalidOffsetField</span>)
+                            <span class="ident">children_data</span>.<span class="ident">push</span>(<span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">UnresolvedTree</span> {
+                                <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">UnresolvedOffset</span>(<span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">offset_child</span>))),
+                                <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">Offset</span>,
+                            }));
+                            <span class="ident">is_lazy_field</span> <span class="op">=</span> <span class="bool-val">false</span>;
+                        } <span class="kw">else</span> {
+                            <span class="ident">children_data</span>.<span class="ident">push</span>(<span class="ident">child_data</span>.<span class="ident">clone</span>());
+                        }
                     }
                 }
             }
+            <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">is_lazy_field</span>);
+
+            <span class="kw">let</span> <span class="ident">children</span> <span class="op">=</span> <span class="ident">UnresolvedTree</span> {
+                <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">Tuple</span>(<span class="ident">children_data</span>),
+                <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">UntaggedTuple</span>,
+            };
 
             <span class="kw">let</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">UnresolvedTree</span> {
                 <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">UnresolvedNodeIndex</span>(<span class="ident">index</span>.<span class="ident">clone</span>()),
                 <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">TaggedTupleHeader</span>(<span class="ident">index</span>.<span class="ident">clone</span>()),
             });
 
-            <span class="kw">let</span> <span class="ident">children</span> <span class="op">=</span> <span class="ident">UnresolvedTree</span> {
-                <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">Tuple</span>(<span class="ident">children</span>.<span class="ident">iter</span>()
-                    .<span class="ident">skip</span>(<span class="kw">if</span> <span class="ident">inject_in_offset</span> { <span class="number">1</span> } <span class="kw">else</span> { <span class="number">0</span> })
-                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> (<span class="ident">c</span>.<span class="number">1</span>).<span class="number">0</span>.<span class="ident">clone</span>())
-                    .<span class="ident">collect</span>()),
-                <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">UntaggedTuple</span>,
-            };
-
-            <span class="kw">if</span> <span class="ident">inject_in_offset</span> {
-                <span class="comment">// Now inject in data.</span>
-                <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">prefix</span>, <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">UnresolvedTree</span> {
-                    <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">UnresolvedOffset</span>(<span class="prelude-val">Some</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">children</span>))),
-                    <span class="ident">nature</span>: <span class="ident">Nature</span>::<span class="ident">Offset</span>,
-                })];
-            } <span class="kw">else</span> {
-                <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">prefix</span>, <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">children</span>)];
-            }
+            <span class="ident">data</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">prefix</span>, <span class="ident">Rc</span>::<span class="ident">new</span>(<span class="ident">children</span>)];
         }
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">register</span>(<span class="ident">UnresolvedTree</span> {
             <span class="ident">data</span>: <span class="ident">UnresolvedTreeNode</span>::<span class="ident">Tuple</span>(<span class="ident">data</span>),
@@ -2127,13 +2195,13 @@
     <span class="ident">grammar_table</span>: <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="ident">NodeDescription</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// The strings used in the binary.</span>
-    <span class="ident">strings_table</span>: <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">strings_table</span>: <span class="ident">WriterTable</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SharedString</span><span class="op">&gt;&gt;</span>,
 
     <span class="ident">root</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Tree</span><span class="op">&gt;</span>,
 
     <span class="ident">data</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 
-    <span class="ident">options</span>: <span class="ident">WriteOptions</span>,
+    <span class="ident">targets</span>: <span class="ident">Targets</span>,
 
     <span class="ident">statistics</span>: <span class="ident">Statistics</span>,
 }
@@ -2223,7 +2291,7 @@
     <span class="kw">pub</span> <span class="ident">tree</span>: <span class="ident">SectionStatistics</span>,
 
     <span class="kw">pub</span> <span class="ident">per_kind_index</span>: <span class="ident">VecMap</span><span class="op">&lt;</span><span class="ident">NodeStatistics</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">per_kind_name</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">NodeStatistics</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">per_kind_name</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">InterfaceName</span>, <span class="ident">NodeStatistics</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">per_description</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">NodeDescription</span>, <span class="ident">NodeStatistics</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// Mapping length -&gt; number of lists of that length.</span>
@@ -2237,6 +2305,7 @@
 
     <span class="kw">pub</span> <span class="ident">bool</span>: <span class="ident">NodeStatistics</span>,
     <span class="kw">pub</span> <span class="ident">float</span>: <span class="ident">NodeStatistics</span>,
+    <span class="kw">pub</span> <span class="ident">unsigned_long</span>: <span class="ident">NodeStatistics</span>,
     <span class="kw">pub</span> <span class="ident">string</span>: <span class="ident">NodeStatistics</span>,
     <span class="kw">pub</span> <span class="ident">list</span>: <span class="ident">NodeStatistics</span>,
     <span class="kw">pub</span> <span class="ident">offset</span>: <span class="ident">NodeStatistics</span>,
@@ -2331,6 +2400,7 @@
 
         <span class="self">self</span>.<span class="ident">bool</span> <span class="op">+=</span> <span class="ident">rhs</span>.<span class="ident">bool</span>;
         <span class="self">self</span>.<span class="ident">float</span> <span class="op">+=</span> <span class="ident">rhs</span>.<span class="ident">float</span>;
+        <span class="self">self</span>.<span class="ident">unsigned_long</span> <span class="op">+=</span> <span class="ident">rhs</span>.<span class="ident">unsigned_long</span>;
         <span class="self">self</span>.<span class="ident">string</span> <span class="op">+=</span> <span class="ident">rhs</span>.<span class="ident">string</span>;
         <span class="self">self</span>.<span class="ident">list</span> <span class="op">+=</span> <span class="ident">rhs</span>.<span class="ident">list</span>;
         <span class="self">self</span>.<span class="ident">list_header</span> <span class="op">+=</span> <span class="ident">rhs</span>.<span class="ident">list_header</span>;
@@ -2415,7 +2485,7 @@
 
 <span class="kw">struct</span> <span class="ident">NodeNameAndStatistics</span> {
     <span class="ident">total_uncompressed_bytes</span>: <span class="ident">usize</span>,
-    <span class="ident">nodes</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">String</span>, <span class="ident">NodeStatistics</span>)<span class="op">&gt;</span>
+    <span class="ident">nodes</span>: <span class="ident">Vec</span><span class="op">&lt;</span>(<span class="ident">InterfaceName</span>, <span class="ident">NodeStatistics</span>)<span class="op">&gt;</span>
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">NodeNameAndStatistics</span> {
@@ -2430,7 +2500,7 @@
                 <span class="ident">header_bytes</span>: <span class="number">0</span>,
                 <span class="ident">total_uncompressed_bytes</span>: <span class="self">self</span>.<span class="ident">total_uncompressed_bytes</span>,
                 <span class="ident">total_number_of_entries</span>,
-                <span class="ident">name</span>: <span class="ident">name</span>,
+                <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">as_str</span>(),
                 <span class="ident">stats</span>
             };
             <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">for_display</span>)<span class="question-mark">?</span>;
@@ -2486,6 +2556,7 @@
 
         <span class="kw">let</span> <span class="ident">total_number_of_tokens</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">bool</span>.<span class="ident">entries</span>
             <span class="op">+</span> <span class="self">self</span>.<span class="ident">float</span>.<span class="ident">entries</span>
+            <span class="op">+</span> <span class="self">self</span>.<span class="ident">unsigned_long</span>.<span class="ident">entries</span>
             <span class="op">+</span> <span class="self">self</span>.<span class="ident">string</span>.<span class="ident">entries</span>
             <span class="op">+</span> <span class="self">self</span>.<span class="ident">list</span>.<span class="ident">entries</span>
             <span class="op">+</span> <span class="self">self</span>.<span class="ident">tagged_tuple</span>.<span class="ident">entries</span>;
@@ -2509,6 +2580,7 @@ Statistics
 \tTokens:
 {token_bool}
 {token_float}
+{token_unsigned_long}
 {token_offset}
 {token_string}
 {token_list}
@@ -2567,6 +2639,13 @@ Statistics
             <span class="ident">total_uncompressed_bytes</span>: <span class="self">self</span>.<span class="ident">uncompressed_bytes</span>,
             <span class="ident">header_bytes</span>: <span class="number">0</span>,
         },
+        <span class="ident">token_unsigned_long</span> <span class="op">=</span> <span class="ident">NodeAndStatistics</span> {
+            <span class="ident">name</span>: <span class="string">&quot;UnsignedLong&quot;</span>,
+            <span class="ident">stats</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">unsigned_long</span>,
+            <span class="ident">total_number_of_entries</span>: <span class="ident">total_number_of_tokens</span>,
+            <span class="ident">total_uncompressed_bytes</span>: <span class="self">self</span>.<span class="ident">uncompressed_bytes</span>,
+            <span class="ident">header_bytes</span>: <span class="number">0</span>,
+        },
         <span class="ident">token_offset</span> <span class="op">=</span> <span class="ident">NodeAndStatistics</span> {
             <span class="ident">name</span>: <span class="string">&quot;Offset&quot;</span>,
             <span class="ident">stats</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">offset</span>,
@@ -2598,69 +2677,5 @@ Statistics
         )
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "binjs_io";
-    </script>
-    <script src="../../../main.js"></script>
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "binjs_io";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

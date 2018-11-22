@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/flate2-0.2.20/src/lib.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>lib.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/flate2-1.0.4/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -289,98 +232,29 @@
 <span id="232">232</span>
 <span id="233">233</span>
 <span id="234">234</span>
-<span id="235">235</span>
-<span id="236">236</span>
-<span id="237">237</span>
-<span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-</pre><pre class="rust ">
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! A DEFLATE-based stream compression/decompression library</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This library is meant to supplement/replace the standard distributon&#39;s</span>
-<span class="doccomment">//! libflate library by providing a streaming encoder/decoder rather than purely</span>
+<span class="doccomment">//! This library is meant to supplement/replace the</span>
+<span class="doccomment">//! `flate` library that was previously part of the standard rust distribution</span>
+<span class="doccomment">//! providing a streaming encoder/decoder rather than purely</span>
 <span class="doccomment">//! an in-memory encoder/decoder.</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! Like with [`libflate`], flate2 is based on [`miniz.c`][1]</span>
+<span class="doccomment">//! Like with [`flate`], flate2 is based on [`miniz.c`][1]</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! [1]: https://code.google.com/p/miniz/</span>
-<span class="doccomment">//! [`libflate`]: https://docs.rs/crate/libflate/</span>
+<span class="doccomment">//! [1]: https://github.com/richgel999/miniz</span>
+<span class="doccomment">//! [`flate`]: https://github.com/rust-lang/rust/tree/1.19.0/src/libflate</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Organization</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! This crate consists mainly of two modules, [`read`] and [`write`]. Each</span>
-<span class="doccomment">//! module contains a number of types used to encode and decode various streams</span>
-<span class="doccomment">//! of data. All types in the [`write`] module work on instances of [`Write`],</span>
-<span class="doccomment">//! whereas all types in the [`read`] module work on instances of [`Read`].</span>
+<span class="doccomment">//! This crate consists mainly of three modules, [`read`], [`write`], and</span>
+<span class="doccomment">//! [`bufread`]. Each module contains a number of types used to encode and</span>
+<span class="doccomment">//! decode various streams of data.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! All types in the [`write`] module work on instances of [`Write`][write],</span>
+<span class="doccomment">//! whereas all types in the [`read`] module work on instances of</span>
+<span class="doccomment">//! [`Read`][read] and [`bufread`] works with [`BufRead`][bufread]. If you</span>
+<span class="doccomment">//! are decoding directly from a `&amp;[u8]`, use the [`bufread`] types.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//! use flate2::write::GzEncoder;</span>
@@ -390,54 +264,26 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # fn main() { let _ = run(); }</span>
 <span class="doccomment">//! # fn run() -&gt; io::Result&lt;()&gt; {</span>
-<span class="doccomment">//! let mut encoder = GzEncoder::new(Vec::new(), Compression::Default);</span>
-<span class="doccomment">//! encoder.write(b&quot;Example&quot;)?;</span>
+<span class="doccomment">//! let mut encoder = GzEncoder::new(Vec::new(), Compression::default());</span>
+<span class="doccomment">//! encoder.write_all(b&quot;Example&quot;)?;</span>
 <span class="doccomment">//! # Ok(())</span>
 <span class="doccomment">//! # }</span>
 <span class="doccomment">//! ```</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Other various types are provided at the top-level of the crate for</span>
-<span class="doccomment">//! management and dealing with encoders/decoders.</span>
+<span class="doccomment">//! management and dealing with encoders/decoders. Also note that types which</span>
+<span class="doccomment">//! operate over a specific trait often implement the mirroring trait as well.</span>
+<span class="doccomment">//! For example a `flate2::read::DeflateDecoder&lt;T&gt;` *also* implements the</span>
+<span class="doccomment">//! `Write` trait if `T: Write`. That is, the &quot;dual trait&quot; is forwarded directly</span>
+<span class="doccomment">//! to the underlying object if available.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`read`]: read/index.html</span>
+<span class="doccomment">//! [`bufread`]: bufread/index.html</span>
 <span class="doccomment">//! [`write`]: write/index.html</span>
-<span class="doccomment">//! [`Read`]: https://doc.rust-lang.org/std/io/trait.Read.html</span>
-<span class="doccomment">//! [`Write`]: https://doc.rust-lang.org/std/io/trait.Write.html</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # Helper traits</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! There are two helper traits provided: [`FlateReadExt`] and [`FlateWriteExt`].</span>
-<span class="doccomment">//! These provide convenience methods for creating a decoder/encoder out of an</span>
-<span class="doccomment">//! already existing stream to chain construction.</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! [`FlateReadExt`]: trait.FlateReadExt.html</span>
-<span class="doccomment">//! [`FlateWriteExt`]: trait.FlateWriteExt.html</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! ```</span>
-<span class="doccomment">//! use flate2::{FlateReadExt, Compression};</span>
-<span class="doccomment">//! use std::io::prelude::*;</span>
-<span class="doccomment">//! use std::io;</span>
-<span class="doccomment">//! use std::fs::File;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # fn main() {</span>
-<span class="doccomment">//! #    println!(&quot;{}&quot;, run().unwrap());</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! #</span>
-<span class="doccomment">//! // Read contents of file with a compression stream, then decompress with GZ</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! # fn run() -&gt; io::Result&lt;String&gt; {</span>
-<span class="doccomment">//! let f = File::open(&quot;examples/hello_world.txt&quot;)?;</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! //gz_encode method comes from FlateReadExt and applies to a std::fs::File</span>
-<span class="doccomment">//! let data = f.gz_encode(Compression::Default);</span>
-<span class="doccomment">//! let mut buffer = String::new();</span>
-<span class="doccomment">//!</span>
-<span class="doccomment">//! //gz_decode method comes from FlateReadExt and applies to a &amp;[u8]</span>
-<span class="doccomment">//! &amp;data.gz_decode()?.read_to_string(&amp;mut buffer)?;</span>
-<span class="doccomment">//! # Ok(buffer)</span>
-<span class="doccomment">//! # }</span>
-<span class="doccomment">//! ```</span>
+<span class="doccomment">//! [read]: https://doc.rust-lang.org/std/io/trait.Read.html</span>
+<span class="doccomment">//! [write]: https://doc.rust-lang.org/std/io/trait.Write.html</span>
+<span class="doccomment">//! [bufread]: https://doc.rust-lang.org/std/io/trait.BufRead.html</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # Async I/O</span>
 <span class="doccomment">//!</span>
@@ -470,6 +316,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tokio&quot;</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">futures</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">all</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>, <span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;emscripten&quot;</span>))))]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">libc</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quickcheck</span>;
@@ -479,13 +326,27 @@
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">tokio_io</span>;
 
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="comment">// These must currently agree with here --</span>
+<span class="comment">// https://github.com/Frommi/miniz_oxide/blob/e6c214efd253491ac072c2c9adba87ef5b4cd5cb/src/lib.rs#L14-L19</span>
+<span class="comment">//</span>
+<span class="comment">// Eventually we&#39;ll want to actually move these into `libc` itself for wasm, or</span>
+<span class="comment">// otherwise not use the capi crate for miniz_oxide but rather use the</span>
+<span class="comment">// underlying types.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>, <span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;emscripten&quot;</span>)))]</span>
+<span class="kw">mod</span> <span class="ident">libc</span> {
+    <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">c_ulong</span> <span class="op">=</span> <span class="ident">u64</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">off_t</span> <span class="op">=</span> <span class="ident">i64</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">c_int</span> <span class="op">=</span> <span class="ident">i32</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">c_uint</span> <span class="op">=</span> <span class="ident">u32</span>;
+    <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">size_t</span> <span class="op">=</span> <span class="ident">usize</span>;
+}
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">gz</span>::<span class="ident">Builder</span> <span class="kw">as</span> <span class="ident">GzBuilder</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">gz</span>::<span class="ident">Header</span> <span class="kw">as</span> <span class="ident">GzHeader</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">mem</span>::{<span class="ident">Compress</span>, <span class="ident">DataError</span>, <span class="ident">Decompress</span>, <span class="ident">Flush</span>, <span class="ident">Status</span>};
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">crc</span>::{<span class="ident">Crc</span>, <span class="ident">CrcReader</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">gz</span>::<span class="ident">GzBuilder</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">gz</span>::<span class="ident">GzHeader</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">mem</span>::{<span class="ident">Compress</span>, <span class="ident">CompressError</span>, <span class="ident">Decompress</span>, <span class="ident">DecompressError</span>, <span class="ident">Status</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">mem</span>::{<span class="ident">FlushCompress</span>, <span class="ident">FlushDecompress</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">crc</span>::{<span class="ident">Crc</span>, <span class="ident">CrcReader</span>, <span class="ident">CrcWriter</span>};
 
 <span class="kw">mod</span> <span class="ident">bufreader</span>;
 <span class="kw">mod</span> <span class="ident">crc</span>;
@@ -520,6 +381,7 @@
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">zlib</span>::<span class="ident">write</span>::<span class="ident">ZlibEncoder</span>;
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">zlib</span>::<span class="ident">write</span>::<span class="ident">ZlibDecoder</span>;
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">gz</span>::<span class="ident">write</span>::<span class="ident">GzEncoder</span>;
+    <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">gz</span>::<span class="ident">write</span>::<span class="ident">GzDecoder</span>;
 }
 
 <span class="doccomment">/// Types which operate over [`BufRead`] streams, both encoders and decoders for</span>
@@ -551,190 +413,59 @@
     <span class="ident">_assert_send_sync</span>::<span class="op">&lt;</span><span class="ident">write</span>::<span class="ident">ZlibEncoder</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>();
     <span class="ident">_assert_send_sync</span>::<span class="op">&lt;</span><span class="ident">write</span>::<span class="ident">ZlibDecoder</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>();
     <span class="ident">_assert_send_sync</span>::<span class="op">&lt;</span><span class="ident">write</span>::<span class="ident">GzEncoder</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>();
+    <span class="ident">_assert_send_sync</span>::<span class="op">&lt;</span><span class="ident">write</span>::<span class="ident">GzDecoder</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>();
 }
 
 <span class="doccomment">/// When compressing data, the compression level can be specified by a value in</span>
 <span class="doccomment">/// this enum.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Compression</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Compression</span>(<span class="ident">u32</span>);
+
+<span class="kw">impl</span> <span class="ident">Compression</span> {
+    <span class="doccomment">/// Creates a new description of the compression level with an explicitly</span>
+    <span class="doccomment">/// specified integer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The integer here is typically on a scale of 0-9 where 0 means &quot;no</span>
+    <span class="doccomment">/// compression&quot; and 9 means &quot;take as long as you&#39;d like&quot;.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">level</span>: <span class="ident">u32</span>) <span class="op">-&gt;</span> <span class="ident">Compression</span> {
+        <span class="ident">Compression</span>(<span class="ident">level</span>)
+    }
+
     <span class="doccomment">/// No compression is to be performed, this may actually inflate data</span>
     <span class="doccomment">/// slightly when encoding.</span>
-    <span class="prelude-val">None</span> <span class="op">=</span> <span class="number">0</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">none</span>() <span class="op">-&gt;</span> <span class="ident">Compression</span> {
+        <span class="ident">Compression</span>(<span class="number">0</span>)
+    }
+
     <span class="doccomment">/// Optimize for the best speed of encoding.</span>
-    <span class="ident">Fast</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fast</span>() <span class="op">-&gt;</span> <span class="ident">Compression</span> {
+        <span class="ident">Compression</span>(<span class="number">1</span>)
+    }
+
     <span class="doccomment">/// Optimize for the size of data being encoded.</span>
-    <span class="ident">Best</span> <span class="op">=</span> <span class="number">9</span>,
-    <span class="doccomment">/// Choose the default compression, a balance between speed and size.</span>
-    <span class="ident">Default</span> <span class="op">=</span> <span class="number">6</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">best</span>() <span class="op">-&gt;</span> <span class="ident">Compression</span> {
+        <span class="ident">Compression</span>(<span class="number">9</span>)
+    }
+
+    <span class="doccomment">/// Returns an integer representing the compression level, typically on a</span>
+    <span class="doccomment">/// scale of 0-9</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">level</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
+        <span class="self">self</span>.<span class="number">0</span>
+    }
 }
 
-<span class="doccomment">/// Default to Compression::Default.</span>
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Compression</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">Compression</span> {
-        <span class="ident">Compression</span>::<span class="ident">Default</span>
+        <span class="ident">Compression</span>(<span class="number">6</span>)
     }
 }
-
-<span class="doccomment">/// A helper trait to create encoder/decoders with method syntax.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FlateReadExt</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Sized</span> {
-    <span class="doccomment">/// Consume this reader to create a compression stream at the specified</span>
-    <span class="doccomment">/// compression level.</span>
-    <span class="kw">fn</span> <span class="ident">gz_encode</span>(<span class="self">self</span>, <span class="ident">lvl</span>: <span class="ident">Compression</span>) <span class="op">-&gt;</span> <span class="ident">read</span>::<span class="ident">GzEncoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">read</span>::<span class="ident">GzEncoder</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">lvl</span>)
-    }
-
-    <span class="doccomment">/// Consume this reader to create a decompression stream of this stream.</span>
-    <span class="kw">fn</span> <span class="ident">gz_decode</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">read</span>::<span class="ident">GzDecoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;&gt;</span> {
-        <span class="ident">read</span>::<span class="ident">GzDecoder</span>::<span class="ident">new</span>(<span class="self">self</span>)
-    }
-
-    <span class="doccomment">/// Consume this reader to create a compression stream at the specified</span>
-    <span class="doccomment">/// compression level.</span>
-    <span class="kw">fn</span> <span class="ident">zlib_encode</span>(<span class="self">self</span>, <span class="ident">lvl</span>: <span class="ident">Compression</span>) <span class="op">-&gt;</span> <span class="ident">read</span>::<span class="ident">ZlibEncoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">read</span>::<span class="ident">ZlibEncoder</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">lvl</span>)
-    }
-
-    <span class="doccomment">/// Consume this reader to create a decompression stream of this stream.</span>
-    <span class="kw">fn</span> <span class="ident">zlib_decode</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">read</span>::<span class="ident">ZlibDecoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">read</span>::<span class="ident">ZlibDecoder</span>::<span class="ident">new</span>(<span class="self">self</span>)
-    }
-
-    <span class="doccomment">/// Consume this reader to create a compression stream at the specified</span>
-    <span class="doccomment">/// compression level.</span>
-    <span class="kw">fn</span> <span class="ident">deflate_encode</span>(<span class="self">self</span>, <span class="ident">lvl</span>: <span class="ident">Compression</span>) <span class="op">-&gt;</span> <span class="ident">read</span>::<span class="ident">DeflateEncoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">read</span>::<span class="ident">DeflateEncoder</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">lvl</span>)
-    }
-
-    <span class="doccomment">/// Consume this reader to create a decompression stream of this stream.</span>
-    <span class="kw">fn</span> <span class="ident">deflate_decode</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">read</span>::<span class="ident">DeflateDecoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">read</span>::<span class="ident">DeflateDecoder</span>::<span class="ident">new</span>(<span class="self">self</span>)
-    }
-}
-
-<span class="doccomment">/// A helper trait to create encoder/decoders with method syntax.</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">FlateWriteExt</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Sized</span> {
-    <span class="doccomment">/// Consume this writer to create a compression stream at the specified</span>
-    <span class="doccomment">/// compression level.</span>
-    <span class="kw">fn</span> <span class="ident">gz_encode</span>(<span class="self">self</span>, <span class="ident">lvl</span>: <span class="ident">Compression</span>) <span class="op">-&gt;</span> <span class="ident">write</span>::<span class="ident">GzEncoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">write</span>::<span class="ident">GzEncoder</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">lvl</span>)
-    }
-
-    <span class="comment">// TODO: coming soon to a theater near you!</span>
-    <span class="comment">// /// Consume this writer to create a decompression stream of this stream.</span>
-    <span class="comment">// fn gz_decode(self) -&gt; IoResult&lt;write::GzDecoder&lt;Self&gt;&gt; {</span>
-    <span class="comment">//     write::GzDecoder::new(self)</span>
-    <span class="comment">// }</span>
-
-    <span class="doccomment">/// Consume this writer to create a compression stream at the specified</span>
-    <span class="doccomment">/// compression level.</span>
-    <span class="kw">fn</span> <span class="ident">zlib_encode</span>(<span class="self">self</span>, <span class="ident">lvl</span>: <span class="ident">Compression</span>) <span class="op">-&gt;</span> <span class="ident">write</span>::<span class="ident">ZlibEncoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">write</span>::<span class="ident">ZlibEncoder</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">lvl</span>)
-    }
-
-    <span class="doccomment">/// Consume this writer to create a decompression stream of this stream.</span>
-    <span class="kw">fn</span> <span class="ident">zlib_decode</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">write</span>::<span class="ident">ZlibDecoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">write</span>::<span class="ident">ZlibDecoder</span>::<span class="ident">new</span>(<span class="self">self</span>)
-    }
-
-    <span class="doccomment">/// Consume this writer to create a compression stream at the specified</span>
-    <span class="doccomment">/// compression level.</span>
-    <span class="kw">fn</span> <span class="ident">deflate_encode</span>(<span class="self">self</span>, <span class="ident">lvl</span>: <span class="ident">Compression</span>) <span class="op">-&gt;</span> <span class="ident">write</span>::<span class="ident">DeflateEncoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">write</span>::<span class="ident">DeflateEncoder</span>::<span class="ident">new</span>(<span class="self">self</span>, <span class="ident">lvl</span>)
-    }
-
-    <span class="doccomment">/// Consume this writer to create a decompression stream of this stream.</span>
-    <span class="kw">fn</span> <span class="ident">deflate_decode</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">write</span>::<span class="ident">DeflateDecoder</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
-        <span class="ident">write</span>::<span class="ident">DeflateDecoder</span>::<span class="ident">new</span>(<span class="self">self</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Read</span><span class="op">&gt;</span> <span class="ident">FlateReadExt</span> <span class="kw">for</span> <span class="ident">T</span> {}
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">FlateWriteExt</span> <span class="kw">for</span> <span class="ident">T</span> {}
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
-<span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">prelude</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> {<span class="ident">Compression</span>, <span class="ident">FlateReadExt</span>};
+<span class="kw">fn</span> <span class="ident">random_bytes</span>() <span class="op">-&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u8</span><span class="op">&gt;</span> {
+    <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>;
+    <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">Rng</span>;
 
-    <span class="attribute">#[<span class="ident">test</span>]</span>
-    <span class="kw">fn</span> <span class="ident">crazy</span>() {
-        <span class="kw">let</span> <span class="ident">rdr</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="string">b&quot;foobar&quot;</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">res</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
-        <span class="ident">rdr</span>.<span class="ident">gz_encode</span>(<span class="ident">Compression</span>::<span class="ident">Default</span>)
-            .<span class="ident">deflate_encode</span>(<span class="ident">Compression</span>::<span class="ident">Default</span>)
-            .<span class="ident">zlib_encode</span>(<span class="ident">Compression</span>::<span class="ident">Default</span>)
-            .<span class="ident">zlib_decode</span>()
-            .<span class="ident">deflate_decode</span>()
-            .<span class="ident">gz_decode</span>()
-            .<span class="ident">unwrap</span>()
-            .<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">res</span>)
-            .<span class="ident">unwrap</span>();
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">res</span>, <span class="string">b&quot;foobar&quot;</span>);
-    }
+    <span class="ident">iter</span>::<span class="ident">repeat</span>(()).<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">rand</span>::<span class="ident">thread_rng</span>().<span class="ident">gen</span>())
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "flate2";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "flate2";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

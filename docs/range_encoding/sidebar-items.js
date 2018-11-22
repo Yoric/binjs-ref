@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["opus","Implementation of the Opus range encoder."]],"struct":[["CumulativeDistributionFrequency",""],["DefinitionRequirement","Determine whether the symbol needs to be somehow injected in a dictionary."],["IndexedSegment",""],["Segment",""]]});

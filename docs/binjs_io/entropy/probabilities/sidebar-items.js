@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["SymbolIndex","A newtype for `usize` used to count the number of some item in a given file."],["SymbolInfo","Representation of a symbol in a Cumulative Distribution Frequency (CDF)."]],"trait":[["InstancesToProbabilities","A structure that may be converted into a probability distribution or a set of probability distributions."]]});

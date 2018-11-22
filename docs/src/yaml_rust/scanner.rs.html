@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.0/src/scanner.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>scanner.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/yaml-rust-0.4.2/src/scanner.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>scanner.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -2058,14 +2001,108 @@
 <span id="2001">2001</span>
 <span id="2002">2002</span>
 <span id="2003">2003</span>
-</pre><pre class="rust ">
+<span id="2004">2004</span>
+<span id="2005">2005</span>
+<span id="2006">2006</span>
+<span id="2007">2007</span>
+<span id="2008">2008</span>
+<span id="2009">2009</span>
+<span id="2010">2010</span>
+<span id="2011">2011</span>
+<span id="2012">2012</span>
+<span id="2013">2013</span>
+<span id="2014">2014</span>
+<span id="2015">2015</span>
+<span id="2016">2016</span>
+<span id="2017">2017</span>
+<span id="2018">2018</span>
+<span id="2019">2019</span>
+<span id="2020">2020</span>
+<span id="2021">2021</span>
+<span id="2022">2022</span>
+<span id="2023">2023</span>
+<span id="2024">2024</span>
+<span id="2025">2025</span>
+<span id="2026">2026</span>
+<span id="2027">2027</span>
+<span id="2028">2028</span>
+<span id="2029">2029</span>
+<span id="2030">2030</span>
+<span id="2031">2031</span>
+<span id="2032">2032</span>
+<span id="2033">2033</span>
+<span id="2034">2034</span>
+<span id="2035">2035</span>
+<span id="2036">2036</span>
+<span id="2037">2037</span>
+<span id="2038">2038</span>
+<span id="2039">2039</span>
+<span id="2040">2040</span>
+<span id="2041">2041</span>
+<span id="2042">2042</span>
+<span id="2043">2043</span>
+<span id="2044">2044</span>
+<span id="2045">2045</span>
+<span id="2046">2046</span>
+<span id="2047">2047</span>
+<span id="2048">2048</span>
+<span id="2049">2049</span>
+<span id="2050">2050</span>
+<span id="2051">2051</span>
+<span id="2052">2052</span>
+<span id="2053">2053</span>
+<span id="2054">2054</span>
+<span id="2055">2055</span>
+<span id="2056">2056</span>
+<span id="2057">2057</span>
+<span id="2058">2058</span>
+<span id="2059">2059</span>
+<span id="2060">2060</span>
+<span id="2061">2061</span>
+<span id="2062">2062</span>
+<span id="2063">2063</span>
+<span id="2064">2064</span>
+<span id="2065">2065</span>
+<span id="2066">2066</span>
+<span id="2067">2067</span>
+<span id="2068">2068</span>
+<span id="2069">2069</span>
+<span id="2070">2070</span>
+<span id="2071">2071</span>
+<span id="2072">2072</span>
+<span id="2073">2073</span>
+<span id="2074">2074</span>
+<span id="2075">2075</span>
+<span id="2076">2076</span>
+<span id="2077">2077</span>
+<span id="2078">2078</span>
+<span id="2079">2079</span>
+<span id="2080">2080</span>
+<span id="2081">2081</span>
+<span id="2082">2082</span>
+<span id="2083">2083</span>
+<span id="2084">2084</span>
+<span id="2085">2085</span>
+<span id="2086">2086</span>
+<span id="2087">2087</span>
+<span id="2088">2088</span>
+<span id="2089">2089</span>
+<span id="2090">2090</span>
+<span id="2091">2091</span>
+<span id="2092">2092</span>
+<span id="2093">2093</span>
+<span id="2094">2094</span>
+<span id="2095">2095</span>
+<span id="2096">2096</span>
+<span id="2097">2097</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">VecDeque</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">char</span>, <span class="ident">fmt</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">char</span>, <span class="ident">fmt</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">TEncoding</span> {
-    <span class="ident">Utf8</span>
+    <span class="ident">Utf8</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>)]</span>
@@ -2076,7 +2113,7 @@
     <span class="ident">DoubleQuoted</span>,
 
     <span class="ident">Literal</span>,
-    <span class="ident">Foled</span>
+    <span class="ident">Foled</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>)]</span>
@@ -2088,11 +2125,7 @@
 
 <span class="kw">impl</span> <span class="ident">Marker</span> {
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">index</span>: <span class="ident">usize</span>, <span class="ident">line</span>: <span class="ident">usize</span>, <span class="ident">col</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Marker</span> {
-        <span class="ident">Marker</span> {
-            <span class="ident">index</span>: <span class="ident">index</span>,
-            <span class="ident">line</span>: <span class="ident">line</span>,
-            <span class="ident">col</span>: <span class="ident">col</span>
-        }
+        <span class="ident">Marker</span> { <span class="ident">index</span>, <span class="ident">line</span>, <span class="ident">col</span> }
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">index</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
@@ -2118,7 +2151,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">loc</span>: <span class="ident">Marker</span>, <span class="ident">info</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">ScanError</span> {
         <span class="ident">ScanError</span> {
             <span class="ident">mark</span>: <span class="ident">loc</span>,
-            <span class="ident">info</span>: <span class="ident">info</span>.<span class="ident">to_owned</span>()
+            <span class="ident">info</span>: <span class="ident">info</span>.<span class="ident">to_owned</span>(),
         }
     }
 
@@ -2140,8 +2173,13 @@
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ScanError</span> {
     <span class="comment">// col starts from 0</span>
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">formatter</span>, <span class="string">&quot;{} at line {} column {}&quot;</span>, <span class="self">self</span>.<span class="ident">info</span>,
-               <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">line</span>, <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">+</span> <span class="number">1</span>)
+        <span class="macro">write</span><span class="macro">!</span>(
+            <span class="ident">formatter</span>,
+            <span class="string">&quot;{} at line {} column {}&quot;</span>,
+            <span class="self">self</span>.<span class="ident">info</span>,
+            <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">line</span>,
+            <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">+</span> <span class="number">1</span>
+        )
     }
 }
 
@@ -2171,7 +2209,7 @@
     <span class="ident">Anchor</span>(<span class="ident">String</span>),
     <span class="doccomment">/// handle, suffix</span>
     <span class="ident">Tag</span>(<span class="ident">String</span>, <span class="ident">String</span>),
-    <span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>, <span class="ident">String</span>)
+    <span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>, <span class="ident">String</span>),
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>)]</span>
@@ -2191,7 +2229,7 @@
             <span class="ident">possible</span>: <span class="bool-val">false</span>,
             <span class="ident">required</span>: <span class="bool-val">false</span>,
             <span class="ident">token_number</span>: <span class="number">0</span>,
-            <span class="ident">mark</span>: <span class="ident">mark</span>,
+            <span class="ident">mark</span>,
         }
     }
 }
@@ -2210,12 +2248,12 @@
     <span class="ident">simple_keys</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SimpleKey</span><span class="op">&gt;</span>,
     <span class="ident">indent</span>: <span class="ident">isize</span>,
     <span class="ident">indents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">isize</span><span class="op">&gt;</span>,
-    <span class="ident">flow_level</span>: <span class="ident">usize</span>,
+    <span class="ident">flow_level</span>: <span class="ident">u8</span>,
     <span class="ident">tokens_parsed</span>: <span class="ident">usize</span>,
     <span class="ident">token_available</span>: <span class="ident">bool</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">char</span><span class="op">&gt;&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Scanner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">char</span><span class="op">&gt;&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Scanner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Token</span>;
     <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Token</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">error</span>.<span class="ident">is_some</span>() {
@@ -2260,14 +2298,12 @@
     <span class="kw">match</span> <span class="ident">c</span> {
         <span class="string">&#39;0&#39;</span>...<span class="string">&#39;9&#39;</span> <span class="op">|</span> <span class="string">&#39;a&#39;</span>...<span class="string">&#39;z&#39;</span> <span class="op">|</span> <span class="string">&#39;A&#39;</span>...<span class="string">&#39;Z&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
         <span class="string">&#39;_&#39;</span> <span class="op">|</span> <span class="string">&#39;-&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
     }
 }
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">fn</span> <span class="ident">is_hex</span>(<span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-    (<span class="ident">c</span> <span class="op">&gt;=</span> <span class="string">&#39;0&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;=</span> <span class="string">&#39;9&#39;</span>)
-        <span class="op">||</span> (<span class="ident">c</span> <span class="op">&gt;=</span> <span class="string">&#39;a&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;=</span> <span class="string">&#39;f&#39;</span>)
-        <span class="op">||</span> (<span class="ident">c</span> <span class="op">&gt;=</span> <span class="string">&#39;A&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;=</span> <span class="string">&#39;F&#39;</span>)
+    (<span class="ident">c</span> <span class="op">&gt;=</span> <span class="string">&#39;0&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;=</span> <span class="string">&#39;9&#39;</span>) <span class="op">||</span> (<span class="ident">c</span> <span class="op">&gt;=</span> <span class="string">&#39;a&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;=</span> <span class="string">&#39;f&#39;</span>) <span class="op">||</span> (<span class="ident">c</span> <span class="op">&gt;=</span> <span class="string">&#39;A&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">&lt;=</span> <span class="string">&#39;F&#39;</span>)
 }
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">fn</span> <span class="ident">as_hex</span>(<span class="ident">c</span>: <span class="ident">char</span>) <span class="op">-&gt;</span> <span class="ident">u32</span> {
@@ -2275,17 +2311,17 @@
         <span class="string">&#39;0&#39;</span>...<span class="string">&#39;9&#39;</span> <span class="op">=&gt;</span> (<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">-</span> (<span class="string">&#39;0&#39;</span> <span class="kw">as</span> <span class="ident">u32</span>),
         <span class="string">&#39;a&#39;</span>...<span class="string">&#39;f&#39;</span> <span class="op">=&gt;</span> (<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">-</span> (<span class="string">&#39;a&#39;</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">+</span> <span class="number">10</span>,
         <span class="string">&#39;A&#39;</span>...<span class="string">&#39;F&#39;</span> <span class="op">=&gt;</span> (<span class="ident">c</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">-</span> (<span class="string">&#39;A&#39;</span> <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">+</span> <span class="number">10</span>,
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>()
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
     }
 }
 
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">ScanResult</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ScanError</span><span class="op">&gt;</span>;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span><span class="op">=</span><span class="ident">char</span><span class="op">&gt;&gt;</span> <span class="ident">Scanner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">char</span><span class="op">&gt;&gt;</span> <span class="ident">Scanner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Creates the YAML tokenizer.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">rdr</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Scanner</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="ident">Scanner</span> {
-            <span class="ident">rdr</span>: <span class="ident">rdr</span>,
+            <span class="ident">rdr</span>,
             <span class="ident">buffer</span>: <span class="ident">VecDeque</span>::<span class="ident">new</span>(),
             <span class="ident">mark</span>: <span class="ident">Marker</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>),
             <span class="ident">tokens</span>: <span class="ident">VecDeque</span>::<span class="ident">new</span>(),
@@ -2387,10 +2423,10 @@
         }
     }
     <span class="kw">fn</span> <span class="ident">allow_simple_key</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-            <span class="self">self</span>.<span class="ident">simple_key_allowed</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="self">self</span>.<span class="ident">simple_key_allowed</span> <span class="op">=</span> <span class="bool-val">true</span>;
     }
     <span class="kw">fn</span> <span class="ident">disallow_simple_key</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-            <span class="self">self</span>.<span class="ident">simple_key_allowed</span> <span class="op">=</span> <span class="bool-val">false</span>;
+        <span class="self">self</span>.<span class="ident">simple_key_allowed</span> <span class="op">=</span> <span class="bool-val">false</span>;
     }
 
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">fetch_next_token</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
@@ -2424,7 +2460,8 @@
             <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>
             <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>
             <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>]) {
+            <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>])
+        {
             <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">fetch_document_indicator</span>(<span class="ident">TokenType</span>::<span class="ident">DocumentStart</span>));
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
@@ -2433,7 +2470,8 @@
             <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>
             <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>
             <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>
-            <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>]) {
+            <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>])
+        {
             <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">fetch_document_indicator</span>(<span class="ident">TokenType</span>::<span class="ident">DocumentEnd</span>));
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
@@ -2463,8 +2501,10 @@
             <span class="comment">// plain scalar</span>
             <span class="string">&#39;-&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">is_blankz</span>(<span class="ident">nc</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">fetch_plain_scalar</span>(),
             <span class="string">&#39;:&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">is_blankz</span>(<span class="ident">nc</span>) <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">==</span> <span class="number">0</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">fetch_plain_scalar</span>(),
-            <span class="string">&#39;%&#39;</span> <span class="op">|</span> <span class="string">&#39;@&#39;</span> <span class="op">|</span> <span class="string">&#39;`&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>,
-                    <span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unexpected character: `{}&#39;&quot;</span>, <span class="ident">c</span>))),
+            <span class="string">&#39;%&#39;</span> <span class="op">|</span> <span class="string">&#39;@&#39;</span> <span class="op">|</span> <span class="string">&#39;`&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="self">self</span>.<span class="ident">mark</span>,
+                <span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unexpected character: `{}&#39;&quot;</span>, <span class="ident">c</span>),
+            )),
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">fetch_plain_scalar</span>(),
         }
     }
@@ -2503,7 +2543,9 @@
                 }
             }
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">need_more</span> { <span class="kw">break</span>; }
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">need_more</span> {
+                <span class="kw">break</span>;
+            }
             <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">fetch_next_token</span>());
         }
         <span class="self">self</span>.<span class="ident">token_available</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -2513,13 +2555,14 @@
 
     <span class="kw">fn</span> <span class="ident">stale_simple_keys</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
         <span class="kw">for</span> <span class="ident">sk</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">simple_keys</span> {
-            <span class="kw">if</span> <span class="ident">sk</span>.<span class="ident">possible</span> <span class="op">&amp;&amp;</span> (<span class="ident">sk</span>.<span class="ident">mark</span>.<span class="ident">line</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">line</span>
-                <span class="op">||</span> <span class="ident">sk</span>.<span class="ident">mark</span>.<span class="ident">index</span> <span class="op">+</span> <span class="number">1024</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">index</span>) {
-                    <span class="kw">if</span> <span class="ident">sk</span>.<span class="ident">required</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="string">&quot;simple key expect &#39;:&#39;&quot;</span>));
-                    }
-                    <span class="ident">sk</span>.<span class="ident">possible</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            <span class="kw">if</span> <span class="ident">sk</span>.<span class="ident">possible</span>
+                <span class="op">&amp;&amp;</span> (<span class="ident">sk</span>.<span class="ident">mark</span>.<span class="ident">line</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">line</span> <span class="op">||</span> <span class="ident">sk</span>.<span class="ident">mark</span>.<span class="ident">index</span> <span class="op">+</span> <span class="number">1024</span> <span class="op">&lt;</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">index</span>)
+            {
+                <span class="kw">if</span> <span class="ident">sk</span>.<span class="ident">required</span> {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="string">&quot;simple key expect &#39;:&#39;&quot;</span>));
                 }
+                <span class="ident">sk</span>.<span class="ident">possible</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            }
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -2537,9 +2580,12 @@
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">==</span> <span class="number">0</span> {
                         <span class="self">self</span>.<span class="ident">allow_simple_key</span>();
                     }
+                }
+                <span class="string">&#39;#&#39;</span> <span class="op">=&gt;</span> <span class="kw">while</span> <span class="op">!</span><span class="ident">is_breakz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
+                    <span class="self">self</span>.<span class="ident">skip</span>();
+                    <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
                 },
-                <span class="string">&#39;#&#39;</span> <span class="op">=&gt;</span> <span class="kw">while</span> <span class="op">!</span><span class="ident">is_breakz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) { <span class="self">self</span>.<span class="ident">skip</span>(); <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>); },
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
             }
         }
     }
@@ -2549,8 +2595,9 @@
         <span class="self">self</span>.<span class="ident">indent</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span>;
         <span class="self">self</span>.<span class="ident">stream_start_produced</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="self">self</span>.<span class="ident">allow_simple_key</span>();
-        <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">mark</span>, <span class="ident">TokenType</span>::<span class="ident">StreamStart</span>(<span class="ident">TEncoding</span>::<span class="ident">Utf8</span>)));
-        <span class="self">self</span>.<span class="ident">simple_keys</span>.<span class="ident">push</span>(<span class="ident">SimpleKey</span>::<span class="ident">new</span>(<span class="ident">Marker</span>::<span class="ident">new</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)));
+        <span class="self">self</span>.<span class="ident">tokens</span>
+            .<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">mark</span>, <span class="ident">TokenType</span>::<span class="ident">StreamStart</span>(<span class="ident">TEncoding</span>::<span class="ident">Utf8</span>)));
+        <span class="self">self</span>.<span class="ident">simple_keys</span>.<span class="ident">push</span>(<span class="ident">SimpleKey</span>::<span class="ident">new</span>(<span class="ident">Marker</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)));
     }
 
     <span class="kw">fn</span> <span class="ident">fetch_stream_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
@@ -2564,7 +2611,8 @@
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">remove_simple_key</span>());
         <span class="self">self</span>.<span class="ident">disallow_simple_key</span>();
 
-        <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="ident">TokenType</span>::<span class="ident">StreamEnd</span>));
+        <span class="self">self</span>.<span class="ident">tokens</span>
+            .<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="ident">TokenType</span>::<span class="ident">StreamEnd</span>));
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -2587,12 +2635,8 @@
 
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_directive_name</span>());
         <span class="kw">let</span> <span class="ident">tok</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">name</span>.<span class="ident">as_ref</span>() {
-            <span class="string">&quot;YAML&quot;</span> <span class="op">=&gt;</span> {
-                <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_version_directive_value</span>(<span class="kw-2">&amp;</span><span class="ident">start_mark</span>))
-            },
-            <span class="string">&quot;TAG&quot;</span> <span class="op">=&gt;</span> {
-                <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_tag_directive_value</span>(<span class="kw-2">&amp;</span><span class="ident">start_mark</span>))
-            },
+            <span class="string">&quot;YAML&quot;</span> <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_version_directive_value</span>(<span class="kw-2">&amp;</span><span class="ident">start_mark</span>)),
+            <span class="string">&quot;TAG&quot;</span> <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_tag_directive_value</span>(<span class="kw-2">&amp;</span><span class="ident">start_mark</span>)),
             <span class="comment">// XXX This should be a warning instead of an error</span>
             <span class="kw">_</span> <span class="op">=&gt;</span> {
                 <span class="comment">// skip current line</span>
@@ -2602,7 +2646,10 @@
                     <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
                 }
                 <span class="comment">// XXX return an empty TagDirective token</span>
-                <span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">TagDirective</span>(<span class="ident">String</span>::<span class="ident">new</span>(), <span class="ident">String</span>::<span class="ident">new</span>()))
+                <span class="ident">Token</span>(
+                    <span class="ident">start_mark</span>,
+                    <span class="ident">TokenType</span>::<span class="ident">TagDirective</span>(<span class="ident">String</span>::<span class="ident">new</span>(), <span class="ident">String</span>::<span class="ident">new</span>()),
+                )
                 <span class="comment">// return Err(ScanError::new(start_mark,</span>
                 <span class="comment">//     &quot;while scanning a directive, found unknown directive name&quot;))</span>
             }
@@ -2622,8 +2669,10 @@
         }
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">is_breakz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                <span class="string">&quot;while scanning a directive, did not find expected comment or line break&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="ident">start_mark</span>,
+                <span class="string">&quot;while scanning a directive, did not find expected comment or line break&quot;</span>,
+            ));
         }
 
         <span class="comment">// Eat a line break</span>
@@ -2646,8 +2695,10 @@
         <span class="kw">let</span> <span class="ident">major</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_version_directive_number</span>(<span class="ident">mark</span>));
 
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">!=</span> <span class="string">&#39;.&#39;</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                <span class="string">&quot;while scanning a YAML directive, did not find expected digit or &#39;.&#39; character&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while scanning a YAML directive, did not find expected digit or &#39;.&#39; character&quot;</span>,
+            ));
         }
 
         <span class="self">self</span>.<span class="ident">skip</span>();
@@ -2668,13 +2719,17 @@
         }
 
         <span class="kw">if</span> <span class="ident">string</span>.<span class="ident">is_empty</span>() {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                    <span class="string">&quot;while scanning a directive, could not find expected directive name&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="ident">start_mark</span>,
+                <span class="string">&quot;while scanning a directive, could not find expected directive name&quot;</span>,
+            ));
         }
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                    <span class="string">&quot;while scanning a directive, found unexpected non-alphabetical character&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="ident">start_mark</span>,
+                <span class="string">&quot;while scanning a directive, found unexpected non-alphabetical character&quot;</span>,
+            ));
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">string</span>)
@@ -2686,8 +2741,10 @@
         <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
         <span class="kw">while</span> <span class="ident">is_digit</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
             <span class="kw">if</span> <span class="ident">length</span> <span class="op">+</span> <span class="number">1</span> <span class="op">&gt;</span> <span class="number">9</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                    <span class="string">&quot;while scanning a YAML directive, found extremely long version number&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="kw-2">*</span><span class="ident">mark</span>,
+                    <span class="string">&quot;while scanning a YAML directive, found extremely long version number&quot;</span>,
+                ));
             }
             <span class="ident">length</span> <span class="op">+=</span> <span class="number">1</span>;
             <span class="ident">val</span> <span class="op">=</span> <span class="ident">val</span> <span class="op">*</span> <span class="number">10</span> <span class="op">+</span> ((<span class="self">self</span>.<span class="ident">ch</span>() <span class="kw">as</span> <span class="ident">u32</span>) <span class="op">-</span> (<span class="string">&#39;0&#39;</span> <span class="kw">as</span> <span class="ident">u32</span>));
@@ -2696,8 +2753,10 @@
         }
 
         <span class="kw">if</span> <span class="ident">length</span> <span class="op">==</span> <span class="number">0</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                    <span class="string">&quot;while scanning a YAML directive, did not find expected version number&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while scanning a YAML directive, did not find expected version number&quot;</span>,
+            ));
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">val</span>)
@@ -2727,8 +2786,10 @@
         <span class="kw">if</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
             <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="kw-2">*</span><span class="ident">mark</span>, <span class="ident">TokenType</span>::<span class="ident">TagDirective</span>(<span class="ident">handle</span>, <span class="ident">prefix</span>)))
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                <span class="string">&quot;while scanning TAG, did not find expected whitespace or line break&quot;</span>))
+            <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while scanning TAG, did not find expected whitespace or line break&quot;</span>,
+            ))
         }
     }
 
@@ -2757,8 +2818,10 @@
             <span class="ident">suffix</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">scan_tag_uri</span>(<span class="bool-val">false</span>, <span class="bool-val">false</span>, <span class="kw-2">&amp;</span><span class="ident">String</span>::<span class="ident">new</span>(), <span class="kw-2">&amp;</span><span class="ident">start_mark</span>));
 
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">!=</span> <span class="string">&#39;&gt;&#39;</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                    <span class="string">&quot;while scanning a tag, did not find the expected &#39;&gt;&#39;&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="ident">start_mark</span>,
+                    <span class="string">&quot;while scanning a tag, did not find the expected &#39;&gt;&#39;&quot;</span>,
+                ));
             }
 
             <span class="self">self</span>.<span class="ident">skip</span>();
@@ -2788,8 +2851,10 @@
             <span class="comment">// XXX: ex 7.2, an empty scalar can follow a secondary tag</span>
             <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">Tag</span>(<span class="ident">handle</span>, <span class="ident">suffix</span>)))
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                <span class="string">&quot;while scanning a tag, did not find expected whitespace or line break&quot;</span>))
+            <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="ident">start_mark</span>,
+                <span class="string">&quot;while scanning a tag, did not find expected whitespace or line break&quot;</span>,
+            ))
         }
     }
 
@@ -2797,8 +2862,10 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
         <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">!=</span> <span class="string">&#39;!&#39;</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                <span class="string">&quot;while scanning a tag, did not find expected &#39;!&#39;&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while scanning a tag, did not find expected &#39;!&#39;&quot;</span>,
+            ));
         }
 
         <span class="ident">string</span>.<span class="ident">push</span>(<span class="self">self</span>.<span class="ident">ch</span>());
@@ -2819,14 +2886,21 @@
             <span class="comment">// It&#39;s either the &#39;!&#39; tag or not really a tag handle.  If it&#39;s a %TAG</span>
             <span class="comment">// directive, it&#39;s an error.  If it&#39;s a tag token, it must be a part of</span>
             <span class="comment">// URI.</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                <span class="string">&quot;while parsing a tag directive, did not find expected &#39;!&#39;&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while parsing a tag directive, did not find expected &#39;!&#39;&quot;</span>,
+            ));
         }
         <span class="prelude-val">Ok</span>(<span class="ident">string</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">scan_tag_uri</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">directive</span>: <span class="ident">bool</span>, <span class="ident">_is_secondary</span>: <span class="ident">bool</span>,
-                <span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">mark</span>: <span class="kw-2">&amp;</span><span class="ident">Marker</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">ScanError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">scan_tag_uri</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">directive</span>: <span class="ident">bool</span>,
+        <span class="ident">_is_secondary</span>: <span class="ident">bool</span>,
+        <span class="ident">head</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">mark</span>: <span class="kw-2">&amp;</span><span class="ident">Marker</span>,
+    ) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">ScanError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">length</span> <span class="op">=</span> <span class="ident">head</span>.<span class="ident">len</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
 
@@ -2849,7 +2923,7 @@
             <span class="string">&#39;=&#39;</span> <span class="op">|</span> <span class="string">&#39;+&#39;</span> <span class="op">|</span> <span class="string">&#39;$&#39;</span> <span class="op">|</span> <span class="string">&#39;,&#39;</span> <span class="op">|</span> <span class="string">&#39;.&#39;</span> <span class="op">|</span> <span class="string">&#39;!&#39;</span> <span class="op">|</span> <span class="string">&#39;~&#39;</span> <span class="op">|</span> <span class="string">&#39;*&#39;</span> <span class="op">|</span> <span class="string">&#39;\&#39;&#39;</span> <span class="op">|</span> <span class="string">&#39;(&#39;</span> <span class="op">|</span> <span class="string">&#39;)&#39;</span> <span class="op">|</span> <span class="string">&#39;[&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="string">&#39;%&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="ident">c</span> <span class="kw">if</span> <span class="ident">is_alpha</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         } {
             <span class="comment">// Check if it is a URI-escape sequence.</span>
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;%&#39;</span> {
@@ -2864,25 +2938,26 @@
         }
 
         <span class="kw">if</span> <span class="ident">length</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                <span class="string">&quot;while parsing a tag, did not find expected tag URI&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while parsing a tag, did not find expected tag URI&quot;</span>,
+            ));
         }
 
         <span class="prelude-val">Ok</span>(<span class="ident">string</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">scan_uri_escapes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_directive</span>: <span class="ident">bool</span>, <span class="ident">mark</span>: <span class="kw-2">&amp;</span><span class="ident">Marker</span>)
-        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">char</span>, <span class="ident">ScanError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">scan_uri_escapes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_directive</span>: <span class="ident">bool</span>, <span class="ident">mark</span>: <span class="kw-2">&amp;</span><span class="ident">Marker</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">char</span>, <span class="ident">ScanError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">width</span> <span class="op">=</span> <span class="number">0usize</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">code</span> <span class="op">=</span> <span class="number">0u32</span>;
         <span class="kw">loop</span> {
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">3</span>);
 
-            <span class="kw">if</span> <span class="op">!</span>(<span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;%&#39;</span>
-                 <span class="op">&amp;&amp;</span> <span class="ident">is_hex</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>])
-                 <span class="op">&amp;&amp;</span> <span class="ident">is_hex</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>])) {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                    <span class="string">&quot;while parsing a tag, did not find URI escaped octet&quot;</span>));
+            <span class="kw">if</span> <span class="op">!</span>(<span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;%&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">is_hex</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>]) <span class="op">&amp;&amp;</span> <span class="ident">is_hex</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>])) {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="kw-2">*</span><span class="ident">mark</span>,
+                    <span class="string">&quot;while parsing a tag, did not find URI escaped octet&quot;</span>,
+                ));
             }
 
             <span class="kw">let</span> <span class="ident">octet</span> <span class="op">=</span> (<span class="ident">as_hex</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>]) <span class="op">&lt;&lt;</span> <span class="number">4</span>) <span class="op">+</span> <span class="ident">as_hex</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>]);
@@ -2893,15 +2968,19 @@
                     <span class="kw">_</span> <span class="kw">if</span> <span class="ident">octet</span> <span class="op">&amp;</span> <span class="number">0xF0</span> <span class="op">==</span> <span class="number">0xE0</span> <span class="op">=&gt;</span> <span class="number">3</span>,
                     <span class="kw">_</span> <span class="kw">if</span> <span class="ident">octet</span> <span class="op">&amp;</span> <span class="number">0xF8</span> <span class="op">==</span> <span class="number">0xF0</span> <span class="op">=&gt;</span> <span class="number">4</span>,
                     <span class="kw">_</span> <span class="op">=&gt;</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                            <span class="string">&quot;while parsing a tag, found an incorrect leading UTF-8 octet&quot;</span>));
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                            <span class="kw-2">*</span><span class="ident">mark</span>,
+                            <span class="string">&quot;while parsing a tag, found an incorrect leading UTF-8 octet&quot;</span>,
+                        ));
                     }
                 };
                 <span class="ident">code</span> <span class="op">=</span> <span class="ident">octet</span>;
             } <span class="kw">else</span> {
                 <span class="kw">if</span> <span class="ident">octet</span> <span class="op">&amp;</span> <span class="number">0xc0</span> <span class="op">!=</span> <span class="number">0x80</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                            <span class="string">&quot;while parsing a tag, found an incorrect trailing UTF-8 octet&quot;</span>));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                        <span class="kw-2">*</span><span class="ident">mark</span>,
+                        <span class="string">&quot;while parsing a tag, found an incorrect trailing UTF-8 octet&quot;</span>,
+                    ));
                 }
                 <span class="ident">code</span> <span class="op">=</span> (<span class="ident">code</span> <span class="op">&lt;&lt;</span> <span class="number">8</span>) <span class="op">+</span> <span class="ident">octet</span>;
             }
@@ -2918,8 +2997,10 @@
 
         <span class="kw">match</span> <span class="ident">char</span>::<span class="ident">from_u32</span>(<span class="ident">code</span>) {
             <span class="prelude-val">Some</span>(<span class="ident">ch</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">ch</span>),
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="kw-2">*</span><span class="ident">mark</span>,
-                <span class="string">&quot;while parsing a tag, found an invalid UTF-8 codepoint&quot;</span>))
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="kw-2">*</span><span class="ident">mark</span>,
+                <span class="string">&quot;while parsing a tag, found an invalid UTF-8 codepoint&quot;</span>,
+            )),
         }
     }
 
@@ -2934,8 +3015,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">scan_anchor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">alias</span>: <span class="ident">bool</span>)
-        <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Token</span>, <span class="ident">ScanError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">scan_anchor</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">alias</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Token</span>, <span class="ident">ScanError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">string</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
         <span class="kw">let</span> <span class="ident">start_mark</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mark</span>;
 
@@ -2947,12 +3027,11 @@
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
         }
 
-        <span class="kw">if</span> <span class="ident">string</span>.<span class="ident">is_empty</span>()
-            <span class="op">||</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ch</span>() {
-                <span class="ident">c</span> <span class="kw">if</span> <span class="ident">is_blankz</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;:&#39;</span> <span class="op">|</span> <span class="string">&#39;,&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> <span class="op">|</span> <span class="string">&#39;}&#39;</span> <span class="op">|</span> <span class="string">&#39;%&#39;</span> <span class="op">|</span> <span class="string">&#39;@&#39;</span> <span class="op">|</span> <span class="string">&#39;`&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>
-            } {
+        <span class="kw">if</span> <span class="ident">string</span>.<span class="ident">is_empty</span>() <span class="op">||</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ch</span>() {
+            <span class="ident">c</span> <span class="kw">if</span> <span class="ident">is_blankz</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;:&#39;</span> <span class="op">|</span> <span class="string">&#39;,&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> <span class="op">|</span> <span class="string">&#39;}&#39;</span> <span class="op">|</span> <span class="string">&#39;%&#39;</span> <span class="op">|</span> <span class="string">&#39;@&#39;</span> <span class="op">|</span> <span class="string">&#39;`&#39;</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        } {
             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>, <span class="string">&quot;while scanning an anchor or alias, did not find expected alphabetic or numeric character&quot;</span>));
         }
 
@@ -2963,11 +3042,11 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">fetch_flow_collection_start</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tok</span> :<span class="ident">TokenType</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
+    <span class="kw">fn</span> <span class="ident">fetch_flow_collection_start</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tok</span>: <span class="ident">TokenType</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
         <span class="comment">// The indicators &#39;[&#39; and &#39;{&#39; may start a simple key.</span>
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">save_simple_key</span>());
 
-        <span class="self">self</span>.<span class="ident">increase_flow_level</span>();
+        <span class="self">self</span>.<span class="ident">increase_flow_level</span>()<span class="question-mark">?</span>;
 
         <span class="self">self</span>.<span class="ident">allow_simple_key</span>();
 
@@ -2978,7 +3057,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">fetch_flow_collection_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tok</span> :<span class="ident">TokenType</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
+    <span class="kw">fn</span> <span class="ident">fetch_flow_collection_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tok</span>: <span class="ident">TokenType</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">remove_simple_key</span>());
         <span class="self">self</span>.<span class="ident">decrease_flow_level</span>();
 
@@ -2998,13 +3077,18 @@
         <span class="kw">let</span> <span class="ident">start_mark</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mark</span>;
         <span class="self">self</span>.<span class="ident">skip</span>();
 
-        <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">FlowEntry</span>));
+        <span class="self">self</span>.<span class="ident">tokens</span>
+            .<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">FlowEntry</span>));
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">increase_flow_level</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="self">self</span>.<span class="ident">simple_keys</span>.<span class="ident">push</span>(<span class="ident">SimpleKey</span>::<span class="ident">new</span>(<span class="ident">Marker</span>::<span class="ident">new</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>)));
-        <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">+=</span> <span class="number">1</span>;
+    <span class="kw">fn</span> <span class="ident">increase_flow_level</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
+        <span class="self">self</span>.<span class="ident">simple_keys</span>.<span class="ident">push</span>(<span class="ident">SimpleKey</span>::<span class="ident">new</span>(<span class="ident">Marker</span>::<span class="ident">new</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)));
+        <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">flow_level</span>
+            .<span class="ident">checked_add</span>(<span class="number">1</span>)
+            .<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="string">&quot;recursion limit exceeded&quot;</span>))<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(())
     }
     <span class="kw">fn</span> <span class="ident">decrease_flow_level</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">&gt;</span> <span class="number">0</span> {
@@ -3017,8 +3101,10 @@
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="comment">// Check if we are allowed to start a new entry.</span>
             <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">simple_key_allowed</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>,
-                        <span class="string">&quot;block sequence entries are not allowed in this context&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="self">self</span>.<span class="ident">mark</span>,
+                    <span class="string">&quot;block sequence entries are not allowed in this context&quot;</span>,
+                ));
             }
 
             <span class="kw">let</span> <span class="ident">mark</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mark</span>;
@@ -3026,7 +3112,10 @@
             <span class="self">self</span>.<span class="ident">roll_indent</span>(<span class="ident">mark</span>.<span class="ident">col</span>, <span class="prelude-val">None</span>, <span class="ident">TokenType</span>::<span class="ident">BlockSequenceStart</span>, <span class="ident">mark</span>);
         } <span class="kw">else</span> {
             <span class="comment">// - * only allowed in block</span>
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="string">r#&quot;&quot;-&quot; is only valid inside a block&quot;#</span>))
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="self">self</span>.<span class="ident">mark</span>,
+                <span class="string">r#&quot;&quot;-&quot; is only valid inside a block&quot;#</span>,
+            ));
         }
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">remove_simple_key</span>());
         <span class="self">self</span>.<span class="ident">allow_simple_key</span>();
@@ -3034,7 +3123,8 @@
         <span class="kw">let</span> <span class="ident">start_mark</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">mark</span>;
         <span class="self">self</span>.<span class="ident">skip</span>();
 
-        <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">BlockEntry</span>));
+        <span class="self">self</span>.<span class="ident">tokens</span>
+            .<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">BlockEntry</span>));
         <span class="prelude-val">Ok</span>(())
     }
 
@@ -3088,16 +3178,20 @@
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
             <span class="kw">if</span> <span class="ident">is_digit</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;0&#39;</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                            <span class="string">&quot;while scanning a block scalar, found an intendation indicator equal to 0&quot;</span>));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                        <span class="ident">start_mark</span>,
+                        <span class="string">&quot;while scanning a block scalar, found an intendation indicator equal to 0&quot;</span>,
+                    ));
                 }
                 <span class="ident">increment</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">ch</span>() <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">-</span> (<span class="string">&#39;0&#39;</span> <span class="kw">as</span> <span class="ident">usize</span>);
                 <span class="self">self</span>.<span class="ident">skip</span>();
             }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">is_digit</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;0&#39;</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                         <span class="string">&quot;while scanning a block scalar, found an intendation indicator equal to 0&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="ident">start_mark</span>,
+                    <span class="string">&quot;while scanning a block scalar, found an intendation indicator equal to 0&quot;</span>,
+                ));
             }
 
             <span class="ident">increment</span> <span class="op">=</span> (<span class="self">self</span>.<span class="ident">ch</span>() <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">-</span> (<span class="string">&#39;0&#39;</span> <span class="kw">as</span> <span class="ident">usize</span>);
@@ -3130,8 +3224,10 @@
 
         <span class="comment">// Check if we are at the end of the line.</span>
         <span class="kw">if</span> <span class="op">!</span><span class="ident">is_breakz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                    <span class="string">&quot;while scanning a block scalar, did not find expected comment or line break&quot;</span>));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                <span class="ident">start_mark</span>,
+                <span class="string">&quot;while scanning a block scalar, did not find expected comment or line break&quot;</span>,
+            ));
         }
 
         <span class="kw">if</span> <span class="ident">is_break</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
@@ -3140,7 +3236,11 @@
         }
 
         <span class="kw">if</span> <span class="ident">increment</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="ident">indent</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="number">0</span> { (<span class="self">self</span>.<span class="ident">indent</span> <span class="op">+</span> <span class="ident">increment</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="kw">as</span> <span class="ident">usize</span> } <span class="kw">else</span> { <span class="ident">increment</span> }
+            <span class="ident">indent</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="number">0</span> {
+                (<span class="self">self</span>.<span class="ident">indent</span> <span class="op">+</span> <span class="ident">increment</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="kw">as</span> <span class="ident">usize</span>
+            } <span class="kw">else</span> {
+                <span class="ident">increment</span>
+            }
         }
         <span class="comment">// Scan the leading line breaks and determine the indentation level if needed.</span>
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">block_scalar_breaks</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">indent</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">trailing_breaks</span>));
@@ -3152,12 +3252,11 @@
         <span class="kw">while</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">==</span> <span class="ident">indent</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">is_z</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
             <span class="comment">// We are at the beginning of a non-empty line.</span>
             <span class="ident">trailing_blank</span> <span class="op">=</span> <span class="ident">is_blank</span>(<span class="self">self</span>.<span class="ident">ch</span>());
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">literal</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">leading_break</span>.<span class="ident">is_empty</span>()
-                <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">leading_blank</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">trailing_blank</span> {
-                    <span class="kw">if</span> <span class="ident">trailing_breaks</span>.<span class="ident">is_empty</span>() {
-                        <span class="ident">string</span>.<span class="ident">push</span>(<span class="string">&#39; &#39;</span>);
-                    }
-                    <span class="ident">leading_break</span>.<span class="ident">clear</span>();
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">literal</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">leading_break</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">leading_blank</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">trailing_blank</span> {
+                <span class="kw">if</span> <span class="ident">trailing_breaks</span>.<span class="ident">is_empty</span>() {
+                    <span class="ident">string</span>.<span class="ident">push</span>(<span class="string">&#39; &#39;</span>);
+                }
+                <span class="ident">leading_break</span>.<span class="ident">clear</span>();
             } <span class="kw">else</span> {
                 <span class="ident">string</span>.<span class="ident">push_str</span>(<span class="kw-2">&amp;</span><span class="ident">leading_break</span>);
                 <span class="ident">leading_break</span>.<span class="ident">clear</span>();
@@ -3174,7 +3273,9 @@
                 <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
             }
             <span class="comment">// break on EOF</span>
-            <span class="kw">if</span> <span class="ident">is_z</span>(<span class="self">self</span>.<span class="ident">ch</span>()) { <span class="kw">break</span>; }
+            <span class="kw">if</span> <span class="ident">is_z</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
+                <span class="kw">break</span>;
+            }
 
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">2</span>);
             <span class="self">self</span>.<span class="ident">read_break</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">leading_break</span>);
@@ -3193,9 +3294,15 @@
         }
 
         <span class="kw">if</span> <span class="ident">literal</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">Literal</span>, <span class="ident">string</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(
+                <span class="ident">start_mark</span>,
+                <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">Literal</span>, <span class="ident">string</span>),
+            ))
         } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">Foled</span>, <span class="ident">string</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(
+                <span class="ident">start_mark</span>,
+                <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">Foled</span>, <span class="ident">string</span>),
+            ))
         }
     }
 
@@ -3203,10 +3310,9 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_indent</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">loop</span> {
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
-            <span class="kw">while</span> (<span class="kw-2">*</span><span class="ident">indent</span> <span class="op">==</span> <span class="number">0</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">&lt;</span> <span class="kw-2">*</span><span class="ident">indent</span>)
-                <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39; &#39;</span> {
-                    <span class="self">self</span>.<span class="ident">skip</span>();
-                    <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
+            <span class="kw">while</span> (<span class="kw-2">*</span><span class="ident">indent</span> <span class="op">==</span> <span class="number">0</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">&lt;</span> <span class="kw-2">*</span><span class="ident">indent</span>) <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39; &#39;</span> {
+                <span class="self">self</span>.<span class="ident">skip</span>();
+                <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
             }
 
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">&gt;</span> <span class="ident">max_indent</span> {
@@ -3214,8 +3320,7 @@
             }
 
             <span class="comment">// Check for a tab character messing the intendation.</span>
-            <span class="kw">if</span> (<span class="kw-2">*</span><span class="ident">indent</span> <span class="op">==</span> <span class="number">0</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">&lt;</span> <span class="kw-2">*</span><span class="ident">indent</span>)
-                <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;\t&#39;</span> {
+            <span class="kw">if</span> (<span class="kw-2">*</span><span class="ident">indent</span> <span class="op">==</span> <span class="number">0</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">&lt;</span> <span class="kw-2">*</span><span class="ident">indent</span>) <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;\t&#39;</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>,
                         <span class="string">&quot;while scanning a block scalar, found a tab character where an intendation space is expected&quot;</span>));
             }
@@ -3267,21 +3372,24 @@
             <span class="comment">/* Check for a document indicator. */</span>
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">4</span>);
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span>
-                (((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span>
-                (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span>
-                (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>)) <span class="op">||</span>
-                ((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>) <span class="op">&amp;&amp;</span>
-                (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>) <span class="op">&amp;&amp;</span>
-                (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>))) <span class="op">&amp;&amp;</span>
-                <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>]) {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                        <span class="string">&quot;while scanning a quoted scalar, found unexpected document indicator&quot;</span>));
-                }
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">==</span> <span class="number">0</span>
+                <span class="op">&amp;&amp;</span> (((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>))
+                    <span class="op">||</span> ((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>)
+                        <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>)
+                        <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>)))
+                <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>])
+            {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="ident">start_mark</span>,
+                    <span class="string">&quot;while scanning a quoted scalar, found unexpected document indicator&quot;</span>,
+                ));
+            }
 
             <span class="kw">if</span> <span class="ident">is_z</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                        <span class="string">&quot;while scanning a quoted scalar, found unexpected end of stream&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="ident">start_mark</span>,
+                    <span class="string">&quot;while scanning a quoted scalar, found unexpected end of stream&quot;</span>,
+                ));
             }
 
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">2</span>);
@@ -3296,10 +3404,10 @@
                         <span class="ident">string</span>.<span class="ident">push</span>(<span class="string">&#39;\&#39;&#39;</span>);
                         <span class="self">self</span>.<span class="ident">skip</span>();
                         <span class="self">self</span>.<span class="ident">skip</span>();
-                    },
+                    }
                     <span class="comment">// Check for the right quote.</span>
-                    <span class="string">&#39;\&#39;&#39;</span> <span class="kw">if</span> <span class="ident">single</span> <span class="op">=&gt;</span> { <span class="kw">break</span>; },
-                    <span class="string">&#39;&quot;&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">single</span> <span class="op">=&gt;</span> { <span class="kw">break</span>; },
+                    <span class="string">&#39;\&#39;&#39;</span> <span class="kw">if</span> <span class="ident">single</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+                    <span class="string">&#39;&quot;&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">single</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
                     <span class="comment">// Check for an escaped line break.</span>
                     <span class="string">&#39;\\&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">single</span> <span class="op">&amp;&amp;</span> <span class="ident">is_break</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>]) <span class="op">=&gt;</span> {
                         <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">3</span>);
@@ -3336,8 +3444,12 @@
                             <span class="string">&#39;x&#39;</span> <span class="op">=&gt;</span> <span class="ident">code_length</span> <span class="op">=</span> <span class="number">2</span>,
                             <span class="string">&#39;u&#39;</span> <span class="op">=&gt;</span> <span class="ident">code_length</span> <span class="op">=</span> <span class="number">4</span>,
                             <span class="string">&#39;U&#39;</span> <span class="op">=&gt;</span> <span class="ident">code_length</span> <span class="op">=</span> <span class="number">8</span>,
-                            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                                    <span class="string">&quot;while parsing a quoted scalar, found unknown escape character&quot;</span>))
+                            <span class="kw">_</span> <span class="op">=&gt;</span> {
+                                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                                    <span class="ident">start_mark</span>,
+                                    <span class="string">&quot;while parsing a quoted scalar, found unknown escape character&quot;</span>,
+                                ))
+                            }
                         }
                         <span class="self">self</span>.<span class="ident">skip</span>();
                         <span class="self">self</span>.<span class="ident">skip</span>();
@@ -3366,15 +3478,18 @@
                                 <span class="self">self</span>.<span class="ident">skip</span>();
                             }
                         }
-                    },
-                    <span class="ident">c</span> <span class="op">=&gt;</span> { <span class="ident">string</span>.<span class="ident">push</span>(<span class="ident">c</span>); <span class="self">self</span>.<span class="ident">skip</span>(); }
+                    }
+                    <span class="ident">c</span> <span class="op">=&gt;</span> {
+                        <span class="ident">string</span>.<span class="ident">push</span>(<span class="ident">c</span>);
+                        <span class="self">self</span>.<span class="ident">skip</span>();
+                    }
                 }
                 <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">2</span>);
             }
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
             <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ch</span>() {
-                <span class="string">&#39;\&#39;&#39;</span> <span class="kw">if</span> <span class="ident">single</span> <span class="op">=&gt;</span> { <span class="kw">break</span>; },
-                <span class="string">&#39;&quot;&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">single</span> <span class="op">=&gt;</span> { <span class="kw">break</span>; },
+                <span class="string">&#39;\&#39;&#39;</span> <span class="kw">if</span> <span class="ident">single</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+                <span class="string">&#39;&quot;&#39;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">single</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
                 <span class="kw">_</span> <span class="op">=&gt;</span> {}
             }
 
@@ -3427,9 +3542,15 @@
         <span class="self">self</span>.<span class="ident">skip</span>();
 
         <span class="kw">if</span> <span class="ident">single</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">SingleQuoted</span>, <span class="ident">string</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(
+                <span class="ident">start_mark</span>,
+                <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">SingleQuoted</span>, <span class="ident">string</span>),
+            ))
         } <span class="kw">else</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">DoubleQuoted</span>, <span class="ident">string</span>)))
+            <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(
+                <span class="ident">start_mark</span>,
+                <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">DoubleQuoted</span>, <span class="ident">string</span>),
+            ))
         }
     }
 
@@ -3457,28 +3578,30 @@
             <span class="comment">/* Check for a document indicator. */</span>
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">4</span>);
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span>
-                (((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span>
-                 (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span>
-                 (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>)) <span class="op">||</span>
-                    ((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>) <span class="op">&amp;&amp;</span>
-                     (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>) <span class="op">&amp;&amp;</span>
-                     (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>))) <span class="op">&amp;&amp;</span>
-                    <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>]) {
-                        <span class="kw">break</span>;
-                    }
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="op">==</span> <span class="number">0</span>
+                <span class="op">&amp;&amp;</span> (((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;-&#39;</span>))
+                    <span class="op">||</span> ((<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>)
+                        <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>)
+                        <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">2</span>] <span class="op">==</span> <span class="string">&#39;.&#39;</span>)))
+                <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">3</span>])
+            {
+                <span class="kw">break</span>;
+            }
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;#&#39;</span> { <span class="kw">break</span>; }
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;#&#39;</span> {
+                <span class="kw">break</span>;
+            }
             <span class="kw">while</span> <span class="op">!</span><span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;:&#39;</span>
-                    <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                                                  <span class="string">&quot;while scanning a plain scalar, found unexpected &#39;:&#39;&quot;</span>));
-                    }
+                <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;:&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                        <span class="ident">start_mark</span>,
+                        <span class="string">&quot;while scanning a plain scalar, found unexpected &#39;:&#39;&quot;</span>,
+                    ));
+                }
                 <span class="comment">// indicators ends a plain scalar</span>
                 <span class="kw">match</span> <span class="self">self</span>.<span class="ident">ch</span>() {
                     <span class="string">&#39;:&#39;</span> <span class="kw">if</span> <span class="ident">is_blankz</span>(<span class="self">self</span>.<span class="ident">buffer</span>[<span class="number">1</span>]) <span class="op">=&gt;</span> <span class="kw">break</span>,
-                    <span class="string">&#39;,&#39;</span> <span class="op">|</span> <span class="string">&#39;:&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;[&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> <span class="op">|</span><span class="string">&#39;{&#39;</span> <span class="op">|</span><span class="string">&#39;}&#39;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+                    <span class="string">&#39;,&#39;</span> <span class="op">|</span> <span class="string">&#39;:&#39;</span> <span class="op">|</span> <span class="string">&#39;?&#39;</span> <span class="op">|</span> <span class="string">&#39;[&#39;</span> <span class="op">|</span> <span class="string">&#39;]&#39;</span> <span class="op">|</span> <span class="string">&#39;{&#39;</span> <span class="op">|</span> <span class="string">&#39;}&#39;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
                     <span class="kw">_</span> <span class="op">=&gt;</span> {}
                 }
 
@@ -3497,7 +3620,6 @@
                                 <span class="ident">trailing_breaks</span>.<span class="ident">clear</span>();
                             }
                             <span class="ident">leading_break</span>.<span class="ident">clear</span>();
-
                         }
                         <span class="ident">leading_blanks</span> <span class="op">=</span> <span class="bool-val">false</span>;
                     } <span class="kw">else</span> {
@@ -3511,15 +3633,18 @@
                 <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">2</span>);
             }
             <span class="comment">// is the end?</span>
-            <span class="kw">if</span> <span class="op">!</span>(<span class="ident">is_blank</span>(<span class="self">self</span>.<span class="ident">ch</span>()) <span class="op">||</span> <span class="ident">is_break</span>(<span class="self">self</span>.<span class="ident">ch</span>())) { <span class="kw">break</span>; }
+            <span class="kw">if</span> <span class="op">!</span>(<span class="ident">is_blank</span>(<span class="self">self</span>.<span class="ident">ch</span>()) <span class="op">||</span> <span class="ident">is_break</span>(<span class="self">self</span>.<span class="ident">ch</span>())) {
+                <span class="kw">break</span>;
+            }
             <span class="self">self</span>.<span class="ident">lookahead</span>(<span class="number">1</span>);
 
             <span class="kw">while</span> <span class="ident">is_blank</span>(<span class="self">self</span>.<span class="ident">ch</span>()) <span class="op">||</span> <span class="ident">is_break</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
                 <span class="kw">if</span> <span class="ident">is_blank</span>(<span class="self">self</span>.<span class="ident">ch</span>()) {
-                    <span class="kw">if</span> <span class="ident">leading_blanks</span> <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="op">&lt;</span> <span class="ident">indent</span>
-                        <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;\t&#39;</span> {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                                <span class="string">&quot;while scanning a plain scalar, found a tab&quot;</span>));
+                    <span class="kw">if</span> <span class="ident">leading_blanks</span> <span class="op">&amp;&amp;</span> (<span class="self">self</span>.<span class="ident">mark</span>.<span class="ident">col</span> <span class="kw">as</span> <span class="ident">isize</span>) <span class="op">&lt;</span> <span class="ident">indent</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">ch</span>() <span class="op">==</span> <span class="string">&#39;\t&#39;</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                            <span class="ident">start_mark</span>,
+                            <span class="string">&quot;while scanning a plain scalar, found a tab&quot;</span>,
+                        ));
                     }
 
                     <span class="kw">if</span> <span class="ident">leading_blanks</span> {
@@ -3552,7 +3677,10 @@
             <span class="self">self</span>.<span class="ident">allow_simple_key</span>();
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(<span class="ident">start_mark</span>, <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">Plain</span>, <span class="ident">string</span>)))
+        <span class="prelude-val">Ok</span>(<span class="ident">Token</span>(
+            <span class="ident">start_mark</span>,
+            <span class="ident">TokenType</span>::<span class="ident">Scalar</span>(<span class="ident">TScalarStyle</span>::<span class="ident">Plain</span>, <span class="ident">string</span>),
+        ))
     }
 
     <span class="kw">fn</span> <span class="ident">fetch_key</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">ScanResult</span> {
@@ -3560,10 +3688,17 @@
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">==</span> <span class="number">0</span> {
             <span class="comment">// Check if we are allowed to start a new key (not nessesary simple).</span>
             <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">simple_key_allowed</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">mark</span>, <span class="string">&quot;mapping keys are not allowed in this context&quot;</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                    <span class="self">self</span>.<span class="ident">mark</span>,
+                    <span class="string">&quot;mapping keys are not allowed in this context&quot;</span>,
+                ));
             }
-            <span class="self">self</span>.<span class="ident">roll_indent</span>(<span class="ident">start_mark</span>.<span class="ident">col</span>, <span class="prelude-val">None</span>,
-                <span class="ident">TokenType</span>::<span class="ident">BlockMappingStart</span>, <span class="ident">start_mark</span>);
+            <span class="self">self</span>.<span class="ident">roll_indent</span>(
+                <span class="ident">start_mark</span>.<span class="ident">col</span>,
+                <span class="prelude-val">None</span>,
+                <span class="ident">TokenType</span>::<span class="ident">BlockMappingStart</span>,
+                <span class="ident">start_mark</span>,
+            );
         }
 
         <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">remove_simple_key</span>());
@@ -3589,8 +3724,12 @@
             <span class="self">self</span>.<span class="ident">insert_token</span>(<span class="ident">sk</span>.<span class="ident">token_number</span> <span class="op">-</span> <span class="ident">tokens_parsed</span>, <span class="ident">tok</span>);
 
             <span class="comment">// Add the BLOCK-MAPPING-START token if needed.</span>
-            <span class="self">self</span>.<span class="ident">roll_indent</span>(<span class="ident">sk</span>.<span class="ident">mark</span>.<span class="ident">col</span>, <span class="prelude-val">Some</span>(<span class="ident">sk</span>.<span class="ident">token_number</span>),
-                <span class="ident">TokenType</span>::<span class="ident">BlockMappingStart</span>, <span class="ident">start_mark</span>);
+            <span class="self">self</span>.<span class="ident">roll_indent</span>(
+                <span class="ident">sk</span>.<span class="ident">mark</span>.<span class="ident">col</span>,
+                <span class="prelude-val">Some</span>(<span class="ident">sk</span>.<span class="ident">token_number</span>),
+                <span class="ident">TokenType</span>::<span class="ident">BlockMappingStart</span>,
+                <span class="ident">start_mark</span>,
+            );
 
             <span class="self">self</span>.<span class="ident">simple_keys</span>.<span class="ident">last_mut</span>().<span class="ident">unwrap</span>().<span class="ident">possible</span> <span class="op">=</span> <span class="bool-val">false</span>;
             <span class="self">self</span>.<span class="ident">disallow_simple_key</span>();
@@ -3598,12 +3737,18 @@
             <span class="comment">// The &#39;:&#39; indicator follows a complex key.</span>
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">==</span> <span class="number">0</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">simple_key_allowed</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(<span class="ident">start_mark</span>,
-                        <span class="string">&quot;mapping values are not allowed in this context&quot;</span>));
+                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">ScanError</span>::<span class="ident">new</span>(
+                        <span class="ident">start_mark</span>,
+                        <span class="string">&quot;mapping values are not allowed in this context&quot;</span>,
+                    ));
                 }
 
-                <span class="self">self</span>.<span class="ident">roll_indent</span>(<span class="ident">start_mark</span>.<span class="ident">col</span>, <span class="prelude-val">None</span>,
-                    <span class="ident">TokenType</span>::<span class="ident">BlockMappingStart</span>, <span class="ident">start_mark</span>);
+                <span class="self">self</span>.<span class="ident">roll_indent</span>(
+                    <span class="ident">start_mark</span>.<span class="ident">col</span>,
+                    <span class="prelude-val">None</span>,
+                    <span class="ident">TokenType</span>::<span class="ident">BlockMappingStart</span>,
+                    <span class="ident">start_mark</span>,
+                );
             }
 
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">==</span> <span class="number">0</span> {
@@ -3618,8 +3763,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">roll_indent</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">col</span>: <span class="ident">usize</span>, <span class="ident">number</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-                   <span class="ident">tok</span>: <span class="ident">TokenType</span>, <span class="ident">mark</span>: <span class="ident">Marker</span>) {
+    <span class="kw">fn</span> <span class="ident">roll_indent</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">col</span>: <span class="ident">usize</span>, <span class="ident">number</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>, <span class="ident">tok</span>: <span class="ident">TokenType</span>, <span class="ident">mark</span>: <span class="ident">Marker</span>) {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flow_level</span> <span class="op">&gt;</span> <span class="number">0</span> {
             <span class="kw">return</span>;
         }
@@ -3630,7 +3774,7 @@
             <span class="kw">let</span> <span class="ident">tokens_parsed</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tokens_parsed</span>;
             <span class="kw">match</span> <span class="ident">number</span> {
                 <span class="prelude-val">Some</span>(<span class="ident">n</span>) <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">insert_token</span>(<span class="ident">n</span> <span class="op">-</span> <span class="ident">tokens_parsed</span>, <span class="ident">Token</span>(<span class="ident">mark</span>, <span class="ident">tok</span>)),
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">mark</span>, <span class="ident">tok</span>))
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">tokens</span>.<span class="ident">push_back</span>(<span class="ident">Token</span>(<span class="ident">mark</span>, <span class="ident">tok</span>)),
             }
         }
     }
@@ -3670,44 +3814,41 @@
         <span class="ident">last</span>.<span class="ident">possible</span> <span class="op">=</span> <span class="bool-val">false</span>;
         <span class="prelude-val">Ok</span>(())
     }
-
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
-    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
     <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">TokenType</span>::<span class="kw-2">*</span>;
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">next</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span>:<span class="ident">pat</span>) <span class="op">=&gt;</span> {{
-        <span class="kw">let</span> <span class="ident">tok</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="kw">match</span> <span class="ident">tok</span>.<span class="number">1</span> {
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span> <span class="op">=&gt;</span> {},
-            <span class="kw">_</span> <span class="op">=&gt;</span> { <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;unexpected token: {:?}&quot;</span>,
-                    <span class="ident">tok</span>) }
-        }
-    }}
-}
+    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">next</span> {
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span>:<span class="ident">pat</span>) <span class="op">=&gt;</span> {{
+            <span class="kw">let</span> <span class="ident">tok</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
+            <span class="kw">match</span> <span class="ident">tok</span>.<span class="number">1</span> {
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span> <span class="op">=&gt;</span> {}
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;unexpected token: {:?}&quot;</span>, <span class="ident">tok</span>),
+            }
+        }};
+    }
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">next_scalar</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> {{
-        <span class="kw">let</span> <span class="ident">tok</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
-        <span class="kw">match</span> <span class="ident">tok</span>.<span class="number">1</span> {
-            <span class="ident">Scalar</span>(<span class="ident">style</span>, <span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">style</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span>);
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>);
-            },
-            <span class="kw">_</span> <span class="op">=&gt;</span> { <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;unexpected token: {:?}&quot;</span>,
-                    <span class="ident">tok</span>) }
-        }
-    }}
-}
+    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">next_scalar</span> {
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>:<span class="ident">expr</span>) <span class="op">=&gt;</span> {{
+            <span class="kw">let</span> <span class="ident">tok</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>.<span class="ident">next</span>().<span class="ident">unwrap</span>();
+            <span class="kw">match</span> <span class="ident">tok</span>.<span class="number">1</span> {
+                <span class="ident">Scalar</span>(<span class="ident">style</span>, <span class="kw-2">ref</span> <span class="ident">v</span>) <span class="op">=&gt;</span> {
+                    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">style</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">tk</span>);
+                    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">v</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">v</span>);
+                }
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;unexpected token: {:?}&quot;</span>, <span class="ident">tok</span>),
+            }
+        }};
+    }
 
-<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">end</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {{
-        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
-    }}
-}
+    <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">end</span> {
+        (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {{
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">p</span>.<span class="ident">next</span>(), <span class="prelude-val">None</span>);
+        }};
+    }
     <span class="doccomment">/// test cases in libyaml scanner.c</span>
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_empty</span>() {
@@ -3730,8 +3871,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_explicit_scalar</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;---
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;---
 &#39;a scalar&#39;
 ...
 &quot;</span>;
@@ -3746,8 +3886,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_multiple_documents</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 &#39;a scalar&#39;
 ---
 &#39;a scalar&#39;
@@ -3783,8 +3922,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_a_flow_mapping</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 {
     a simple key: a value, # Note that the KEY token is produced.
     ? a complex key: another value,
@@ -3810,8 +3948,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_block_sequences</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 - item 1
 - item 2
 -
@@ -3853,8 +3990,7 @@
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_block_mappings</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 a simple key: a value   # The KEY token is produced here.
 ? a complex key
 : another value
@@ -3901,13 +4037,11 @@ a sequence:
         <span class="macro">next</span><span class="macro">!</span>(<span class="ident">p</span>, <span class="ident">BlockEnd</span>);
         <span class="macro">next</span><span class="macro">!</span>(<span class="ident">p</span>, <span class="ident">StreamEnd</span>);
         <span class="macro">end</span><span class="macro">!</span>(<span class="ident">p</span>);
-
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_no_block_sequence_start</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 key:
 - item 1
 - item 2
@@ -3929,8 +4063,7 @@ key:
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_collections_in_sequence</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 - - item 1
   - item 2
 - key 1: value 1
@@ -3973,8 +4106,7 @@ key:
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_collections_in_mapping</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 ? a sequence
 : - item 1
   - item 2
@@ -4014,8 +4146,7 @@ key:
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_spec_ex7_3</span>() {
-        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span>
-<span class="string">&quot;
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;
 {
     ? foo :,
     : bar,
@@ -4062,69 +4193,5 @@ key:
         <span class="comment">// TODO</span>
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "yaml_rust";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "yaml_rust";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

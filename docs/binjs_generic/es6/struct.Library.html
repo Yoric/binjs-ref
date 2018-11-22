@@ -1,61 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `Library` struct in crate `binjs_generic`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, Library">
-
-    <title>binjs_generic::es6::Library - Rust</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc struct">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        <p class='location'>Struct Library</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.binary_operator">binary_operator</a><a href="#structfield.compound_assignment_operator">compound_assignment_operator</a><a href="#structfield.unary_operator">unary_operator</a><a href="#structfield.update_operator">update_operator</a><a href="#structfield.variable_declaration_kind">variable_declaration_kind</a><a href="#structfield.arguments">arguments</a><a href="#structfield.arrow_expression">arrow_expression</a><a href="#structfield.assignment_target">assignment_target</a><a href="#structfield.assignment_target_pattern">assignment_target_pattern</a><a href="#structfield.assignment_target_property">assignment_target_property</a><a href="#structfield.binding">binding</a><a href="#structfield.binding_pattern">binding_pattern</a><a href="#structfield.binding_property">binding_property</a><a href="#structfield.export_declaration">export_declaration</a><a href="#structfield.expression">expression</a><a href="#structfield.function_declaration">function_declaration</a><a href="#structfield.function_expression">function_expression</a><a href="#structfield.getter">getter</a><a href="#structfield.identifier">identifier</a><a href="#structfield.identifier_name">identifier_name</a><a href="#structfield.import_declaration">import_declaration</a><a href="#structfield.iteration_statement">iteration_statement</a><a href="#structfield.label">label</a><a href="#structfield.literal">literal</a><a href="#structfield.method">method</a><a href="#structfield.method_definition">method_definition</a><a href="#structfield.object_property">object_property</a><a href="#structfield.parameter">parameter</a><a href="#structfield.program">program</a><a href="#structfield.property_name">property_name</a><a href="#structfield.setter">setter</a><a href="#structfield.simple_assignment_target">simple_assignment_target</a><a href="#structfield.statement">statement</a><a href="#structfield.string">string</a><a href="#structfield.array_assignment_target">array_assignment_target</a><a href="#structfield.array_binding">array_binding</a><a href="#structfield.array_expression">array_expression</a><a href="#structfield.asserted_block_scope">asserted_block_scope</a><a href="#structfield.asserted_parameter_scope">asserted_parameter_scope</a><a href="#structfield.asserted_var_scope">asserted_var_scope</a><a href="#structfield.assignment_expression">assignment_expression</a><a href="#structfield.assignment_target_identifier">assignment_target_identifier</a><a href="#structfield.assignment_target_property_identifier">assignment_target_property_identifier</a><a href="#structfield.assignment_target_property_property">assignment_target_property_property</a><a href="#structfield.assignment_target_with_initializer">assignment_target_with_initializer</a><a href="#structfield.await_expression">await_expression</a><a href="#structfield.binary_expression">binary_expression</a><a href="#structfield.binding_identifier">binding_identifier</a><a href="#structfield.binding_property_identifier">binding_property_identifier</a><a href="#structfield.binding_property_property">binding_property_property</a><a href="#structfield.binding_with_initializer">binding_with_initializer</a><a href="#structfield.block">block</a><a href="#structfield.break_statement">break_statement</a><a href="#structfield.call_expression">call_expression</a><a href="#structfield.catch_clause">catch_clause</a><a href="#structfield.class_declaration">class_declaration</a><a href="#structfield.class_element">class_element</a><a href="#structfield.class_expression">class_expression</a><a href="#structfield.compound_assignment_expression">compound_assignment_expression</a><a href="#structfield.computed_member_assignment_target">computed_member_assignment_target</a><a href="#structfield.computed_member_expression">computed_member_expression</a><a href="#structfield.computed_property_name">computed_property_name</a><a href="#structfield.conditional_expression">conditional_expression</a><a href="#structfield.continue_statement">continue_statement</a><a href="#structfield.data_property">data_property</a><a href="#structfield.debugger_statement">debugger_statement</a><a href="#structfield.directive">directive</a><a href="#structfield.do_while_statement">do_while_statement</a><a href="#structfield.eager_arrow_expression">eager_arrow_expression</a><a href="#structfield.eager_function_declaration">eager_function_declaration</a><a href="#structfield.eager_function_expression">eager_function_expression</a><a href="#structfield.eager_getter">eager_getter</a><a href="#structfield.eager_method">eager_method</a><a href="#structfield.eager_setter">eager_setter</a><a href="#structfield.empty_statement">empty_statement</a><a href="#structfield.export">export</a><a href="#structfield.export_all_from">export_all_from</a><a href="#structfield.export_default">export_default</a><a href="#structfield.export_from">export_from</a><a href="#structfield.export_from_specifier">export_from_specifier</a><a href="#structfield.export_local_specifier">export_local_specifier</a><a href="#structfield.export_locals">export_locals</a><a href="#structfield.expression_statement">expression_statement</a><a href="#structfield.for_in_of_binding">for_in_of_binding</a><a href="#structfield.for_in_statement">for_in_statement</a><a href="#structfield.for_of_statement">for_of_statement</a><a href="#structfield.for_statement">for_statement</a><a href="#structfield.formal_parameters">formal_parameters</a><a href="#structfield.function_body">function_body</a><a href="#structfield.identifier_expression">identifier_expression</a><a href="#structfield.if_statement">if_statement</a><a href="#structfield.import">import</a><a href="#structfield.import_namespace">import_namespace</a><a href="#structfield.import_specifier">import_specifier</a><a href="#structfield.labelled_statement">labelled_statement</a><a href="#structfield.literal_boolean_expression">literal_boolean_expression</a><a href="#structfield.literal_infinity_expression">literal_infinity_expression</a><a href="#structfield.literal_null_expression">literal_null_expression</a><a href="#structfield.literal_numeric_expression">literal_numeric_expression</a><a href="#structfield.literal_property_name">literal_property_name</a><a href="#structfield.literal_reg_exp_expression">literal_reg_exp_expression</a><a href="#structfield.literal_string_expression">literal_string_expression</a><a href="#structfield.module">module</a><a href="#structfield.new_expression">new_expression</a><a href="#structfield.new_target_expression">new_target_expression</a><a href="#structfield.object_assignment_target">object_assignment_target</a><a href="#structfield.object_binding">object_binding</a><a href="#structfield.object_expression">object_expression</a><a href="#structfield.return_statement">return_statement</a><a href="#structfield.script">script</a><a href="#structfield.shorthand_property">shorthand_property</a><a href="#structfield.skippable_arrow_expression">skippable_arrow_expression</a><a href="#structfield.skippable_function_declaration">skippable_function_declaration</a><a href="#structfield.skippable_function_expression">skippable_function_expression</a><a href="#structfield.skippable_getter">skippable_getter</a><a href="#structfield.skippable_method">skippable_method</a><a href="#structfield.skippable_setter">skippable_setter</a><a href="#structfield.spread_element">spread_element</a><a href="#structfield.static_member_assignment_target">static_member_assignment_target</a><a href="#structfield.static_member_expression">static_member_expression</a><a href="#structfield.super_">super_</a><a href="#structfield.switch_case">switch_case</a><a href="#structfield.switch_default">switch_default</a><a href="#structfield.switch_statement">switch_statement</a><a href="#structfield.switch_statement_with_default">switch_statement_with_default</a><a href="#structfield.template_element">template_element</a><a href="#structfield.template_expression">template_expression</a><a href="#structfield.this_expression">this_expression</a><a href="#structfield.throw_statement">throw_statement</a><a href="#structfield.try_catch_statement">try_catch_statement</a><a href="#structfield.try_finally_statement">try_finally_statement</a><a href="#structfield.unary_expression">unary_expression</a><a href="#structfield.update_expression">update_expression</a><a href="#structfield.variable_declaration">variable_declaration</a><a href="#structfield.variable_declarator">variable_declarator</a><a href="#structfield.while_statement">while_statement</a><a href="#structfield.with_statement">with_statement</a><a href="#structfield.yield_expression">yield_expression</a><a href="#structfield.yield_star_expression">yield_star_expression</a><a href="#structfield.null">null</a><a href="#structfield.field_offset">field_offset</a><a href="#structfield.field_alternate">field_alternate</a><a href="#structfield.field_arguments">field_arguments</a><a href="#structfield.field_binding">field_binding</a><a href="#structfield.field_body">field_body</a><a href="#structfield.field_body_scope">field_body_scope</a><a href="#structfield.field_callee">field_callee</a><a href="#structfield.field_captured_names">field_captured_names</a><a href="#structfield.field_cases">field_cases</a><a href="#structfield.field_catch_clause">field_catch_clause</a><a href="#structfield.field_consequent">field_consequent</a><a href="#structfield.field_declaration">field_declaration</a><a href="#structfield.field_declarators">field_declarators</a><a href="#structfield.field_default_binding">field_default_binding</a><a href="#structfield.field_default_case">field_default_case</a><a href="#structfield.field_directives">field_directives</a><a href="#structfield.field_discriminant">field_discriminant</a><a href="#structfield.field_elements">field_elements</a><a href="#structfield.field_exported_name">field_exported_name</a><a href="#structfield.field_expression">field_expression</a><a href="#structfield.field_finalizer">field_finalizer</a><a href="#structfield.field_flags">field_flags</a><a href="#structfield.field_has_direct_eval">field_has_direct_eval</a><a href="#structfield.field_init">field_init</a><a href="#structfield.field_is_async">field_is_async</a><a href="#structfield.field_is_generator">field_is_generator</a><a href="#structfield.field_is_prefix">field_is_prefix</a><a href="#structfield.field_is_static">field_is_static</a><a href="#structfield.field_items">field_items</a><a href="#structfield.field_kind">field_kind</a><a href="#structfield.field_label">field_label</a><a href="#structfield.field_left">field_left</a><a href="#structfield.field_lexically_declared_names">field_lexically_declared_names</a><a href="#structfield.field_method">field_method</a><a href="#structfield.field_module_specifier">field_module_specifier</a><a href="#structfield.field_name">field_name</a><a href="#structfield.field_named_exports">field_named_exports</a><a href="#structfield.field_named_imports">field_named_imports</a><a href="#structfield.field_namespace_binding">field_namespace_binding</a><a href="#structfield.field_object">field_object</a><a href="#structfield.field_operand">field_operand</a><a href="#structfield.field_operator">field_operator</a><a href="#structfield.field_param">field_param</a><a href="#structfield.field_parameter_names">field_parameter_names</a><a href="#structfield.field_parameter_scope">field_parameter_scope</a><a href="#structfield.field_params">field_params</a><a href="#structfield.field_pattern">field_pattern</a><a href="#structfield.field_post_default_cases">field_post_default_cases</a><a href="#structfield.field_pre_default_cases">field_pre_default_cases</a><a href="#structfield.field_properties">field_properties</a><a href="#structfield.field_property">field_property</a><a href="#structfield.field_raw_value">field_raw_value</a><a href="#structfield.field_rest">field_rest</a><a href="#structfield.field_right">field_right</a><a href="#structfield.field_scope">field_scope</a><a href="#structfield.field_skipped">field_skipped</a><a href="#structfield.field_statements">field_statements</a><a href="#structfield.field_super_">field_super_</a><a href="#structfield.field_tag">field_tag</a><a href="#structfield.field_test">field_test</a><a href="#structfield.field_update">field_update</a><a href="#structfield.field_value">field_value</a><a href="#structfield.field_var_declared_names">field_var_declared_names</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.annotate">annotate</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Annotator">Annotator</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div></div><p class='location'><a href='../index.html'>binjs_generic</a>::<wbr><a href='index.html'>es6</a></p><script>window.sidebarCurrent = {name: 'Library', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>binjs_generic</a>::<wbr><a href='index.html'>es6</a>::<wbr><a class="struct" href=''>Library</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#7-222' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct Library {
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `Library` struct in crate `binjs_generic`."><meta name="keywords" content="rust, rustlang, rust-lang, Library"><title>binjs_generic::es6::Library - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc struct"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Struct Library</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.asserted_declared_kind">asserted_declared_kind</a><a href="#structfield.binary_operator">binary_operator</a><a href="#structfield.compound_assignment_operator">compound_assignment_operator</a><a href="#structfield.unary_operator">unary_operator</a><a href="#structfield.update_operator">update_operator</a><a href="#structfield.variable_declaration_kind">variable_declaration_kind</a><a href="#structfield.arguments">arguments</a><a href="#structfield.arrow_expression">arrow_expression</a><a href="#structfield.asserted_maybe_positional_parameter_name">asserted_maybe_positional_parameter_name</a><a href="#structfield.assignment_target">assignment_target</a><a href="#structfield.assignment_target_pattern">assignment_target_pattern</a><a href="#structfield.assignment_target_property">assignment_target_property</a><a href="#structfield.binding">binding</a><a href="#structfield.binding_pattern">binding_pattern</a><a href="#structfield.binding_property">binding_property</a><a href="#structfield.export_declaration">export_declaration</a><a href="#structfield.expression">expression</a><a href="#structfield.function_body">function_body</a><a href="#structfield.function_declaration">function_declaration</a><a href="#structfield.function_expression">function_expression</a><a href="#structfield.getter">getter</a><a href="#structfield.identifier">identifier</a><a href="#structfield.identifier_name">identifier_name</a><a href="#structfield.import_declaration">import_declaration</a><a href="#structfield.iteration_statement">iteration_statement</a><a href="#structfield.label">label</a><a href="#structfield.literal">literal</a><a href="#structfield.method">method</a><a href="#structfield.method_definition">method_definition</a><a href="#structfield.object_property">object_property</a><a href="#structfield.parameter">parameter</a><a href="#structfield.program">program</a><a href="#structfield.property_key">property_key</a><a href="#structfield.property_name">property_name</a><a href="#structfield.setter">setter</a><a href="#structfield.simple_assignment_target">simple_assignment_target</a><a href="#structfield.statement">statement</a><a href="#structfield.string">string</a><a href="#structfield.array_assignment_target">array_assignment_target</a><a href="#structfield.array_binding">array_binding</a><a href="#structfield.array_expression">array_expression</a><a href="#structfield.arrow_expression_contents_with_expression">arrow_expression_contents_with_expression</a><a href="#structfield.arrow_expression_contents_with_function_body">arrow_expression_contents_with_function_body</a><a href="#structfield.asserted_block_scope">asserted_block_scope</a><a href="#structfield.asserted_bound_name">asserted_bound_name</a><a href="#structfield.asserted_bound_names_scope">asserted_bound_names_scope</a><a href="#structfield.asserted_declared_name">asserted_declared_name</a><a href="#structfield.asserted_parameter_name">asserted_parameter_name</a><a href="#structfield.asserted_parameter_scope">asserted_parameter_scope</a><a href="#structfield.asserted_positional_parameter_name">asserted_positional_parameter_name</a><a href="#structfield.asserted_rest_parameter_name">asserted_rest_parameter_name</a><a href="#structfield.asserted_script_global_scope">asserted_script_global_scope</a><a href="#structfield.asserted_var_scope">asserted_var_scope</a><a href="#structfield.assignment_expression">assignment_expression</a><a href="#structfield.assignment_target_identifier">assignment_target_identifier</a><a href="#structfield.assignment_target_property_identifier">assignment_target_property_identifier</a><a href="#structfield.assignment_target_property_property">assignment_target_property_property</a><a href="#structfield.assignment_target_with_initializer">assignment_target_with_initializer</a><a href="#structfield.await_expression">await_expression</a><a href="#structfield.binary_expression">binary_expression</a><a href="#structfield.binding_identifier">binding_identifier</a><a href="#structfield.binding_property_identifier">binding_property_identifier</a><a href="#structfield.binding_property_property">binding_property_property</a><a href="#structfield.binding_with_initializer">binding_with_initializer</a><a href="#structfield.block">block</a><a href="#structfield.break_statement">break_statement</a><a href="#structfield.call_expression">call_expression</a><a href="#structfield.catch_clause">catch_clause</a><a href="#structfield.class_declaration">class_declaration</a><a href="#structfield.class_element">class_element</a><a href="#structfield.class_expression">class_expression</a><a href="#structfield.compound_assignment_expression">compound_assignment_expression</a><a href="#structfield.computed_member_assignment_target">computed_member_assignment_target</a><a href="#structfield.computed_member_expression">computed_member_expression</a><a href="#structfield.computed_property_name">computed_property_name</a><a href="#structfield.conditional_expression">conditional_expression</a><a href="#structfield.continue_statement">continue_statement</a><a href="#structfield.data_property">data_property</a><a href="#structfield.debugger_statement">debugger_statement</a><a href="#structfield.directive">directive</a><a href="#structfield.do_while_statement">do_while_statement</a><a href="#structfield.eager_arrow_expression_with_expression">eager_arrow_expression_with_expression</a><a href="#structfield.eager_arrow_expression_with_function_body">eager_arrow_expression_with_function_body</a><a href="#structfield.eager_function_declaration">eager_function_declaration</a><a href="#structfield.eager_function_expression">eager_function_expression</a><a href="#structfield.eager_getter">eager_getter</a><a href="#structfield.eager_method">eager_method</a><a href="#structfield.eager_setter">eager_setter</a><a href="#structfield.empty_statement">empty_statement</a><a href="#structfield.export">export</a><a href="#structfield.export_all_from">export_all_from</a><a href="#structfield.export_default">export_default</a><a href="#structfield.export_from">export_from</a><a href="#structfield.export_from_specifier">export_from_specifier</a><a href="#structfield.export_local_specifier">export_local_specifier</a><a href="#structfield.export_locals">export_locals</a><a href="#structfield.expression_statement">expression_statement</a><a href="#structfield.for_in_of_binding">for_in_of_binding</a><a href="#structfield.for_in_statement">for_in_statement</a><a href="#structfield.for_of_statement">for_of_statement</a><a href="#structfield.for_statement">for_statement</a><a href="#structfield.formal_parameters">formal_parameters</a><a href="#structfield.function_expression_contents">function_expression_contents</a><a href="#structfield.function_or_method_contents">function_or_method_contents</a><a href="#structfield.getter_contents">getter_contents</a><a href="#structfield.identifier_expression">identifier_expression</a><a href="#structfield.if_statement">if_statement</a><a href="#structfield.import">import</a><a href="#structfield.import_namespace">import_namespace</a><a href="#structfield.import_specifier">import_specifier</a><a href="#structfield.labelled_statement">labelled_statement</a><a href="#structfield.lazy_arrow_expression_with_expression">lazy_arrow_expression_with_expression</a><a href="#structfield.lazy_arrow_expression_with_function_body">lazy_arrow_expression_with_function_body</a><a href="#structfield.lazy_function_declaration">lazy_function_declaration</a><a href="#structfield.lazy_function_expression">lazy_function_expression</a><a href="#structfield.lazy_getter">lazy_getter</a><a href="#structfield.lazy_method">lazy_method</a><a href="#structfield.lazy_setter">lazy_setter</a><a href="#structfield.literal_boolean_expression">literal_boolean_expression</a><a href="#structfield.literal_infinity_expression">literal_infinity_expression</a><a href="#structfield.literal_null_expression">literal_null_expression</a><a href="#structfield.literal_numeric_expression">literal_numeric_expression</a><a href="#structfield.literal_property_name">literal_property_name</a><a href="#structfield.literal_reg_exp_expression">literal_reg_exp_expression</a><a href="#structfield.literal_string_expression">literal_string_expression</a><a href="#structfield.module">module</a><a href="#structfield.new_expression">new_expression</a><a href="#structfield.new_target_expression">new_target_expression</a><a href="#structfield.object_assignment_target">object_assignment_target</a><a href="#structfield.object_binding">object_binding</a><a href="#structfield.object_expression">object_expression</a><a href="#structfield.return_statement">return_statement</a><a href="#structfield.script">script</a><a href="#structfield.setter_contents">setter_contents</a><a href="#structfield.shorthand_property">shorthand_property</a><a href="#structfield.spread_element">spread_element</a><a href="#structfield.static_member_assignment_target">static_member_assignment_target</a><a href="#structfield.static_member_expression">static_member_expression</a><a href="#structfield.super_">super_</a><a href="#structfield.switch_case">switch_case</a><a href="#structfield.switch_default">switch_default</a><a href="#structfield.switch_statement">switch_statement</a><a href="#structfield.switch_statement_with_default">switch_statement_with_default</a><a href="#structfield.template_element">template_element</a><a href="#structfield.template_expression">template_expression</a><a href="#structfield.this_expression">this_expression</a><a href="#structfield.throw_statement">throw_statement</a><a href="#structfield.try_catch_statement">try_catch_statement</a><a href="#structfield.try_finally_statement">try_finally_statement</a><a href="#structfield.unary_expression">unary_expression</a><a href="#structfield.update_expression">update_expression</a><a href="#structfield.variable_declaration">variable_declaration</a><a href="#structfield.variable_declarator">variable_declarator</a><a href="#structfield.while_statement">while_statement</a><a href="#structfield.with_statement">with_statement</a><a href="#structfield.yield_expression">yield_expression</a><a href="#structfield.yield_star_expression">yield_star_expression</a><a href="#structfield.null">null</a><a href="#structfield.field_alternate">field_alternate</a><a href="#structfield.field_arguments">field_arguments</a><a href="#structfield.field_binding">field_binding</a><a href="#structfield.field_binding_scope">field_binding_scope</a><a href="#structfield.field_body">field_body</a><a href="#structfield.field_body_scope">field_body_scope</a><a href="#structfield.field_bound_names">field_bound_names</a><a href="#structfield.field_callee">field_callee</a><a href="#structfield.field_cases">field_cases</a><a href="#structfield.field_catch_clause">field_catch_clause</a><a href="#structfield.field_consequent">field_consequent</a><a href="#structfield.field_contents">field_contents</a><a href="#structfield.field_contents_skip">field_contents_skip</a><a href="#structfield.field_declaration">field_declaration</a><a href="#structfield.field_declarators">field_declarators</a><a href="#structfield.field_declared_names">field_declared_names</a><a href="#structfield.field_default_binding">field_default_binding</a><a href="#structfield.field_default_case">field_default_case</a><a href="#structfield.field_directives">field_directives</a><a href="#structfield.field_discriminant">field_discriminant</a><a href="#structfield.field_elements">field_elements</a><a href="#structfield.field_exported_name">field_exported_name</a><a href="#structfield.field_expression">field_expression</a><a href="#structfield.field_finalizer">field_finalizer</a><a href="#structfield.field_flags">field_flags</a><a href="#structfield.field_has_direct_eval">field_has_direct_eval</a><a href="#structfield.field_index">field_index</a><a href="#structfield.field_init">field_init</a><a href="#structfield.field_is_async">field_is_async</a><a href="#structfield.field_is_captured">field_is_captured</a><a href="#structfield.field_is_function_name_captured">field_is_function_name_captured</a><a href="#structfield.field_is_generator">field_is_generator</a><a href="#structfield.field_is_prefix">field_is_prefix</a><a href="#structfield.field_is_simple_parameter_list">field_is_simple_parameter_list</a><a href="#structfield.field_is_static">field_is_static</a><a href="#structfield.field_is_this_captured">field_is_this_captured</a><a href="#structfield.field_items">field_items</a><a href="#structfield.field_kind">field_kind</a><a href="#structfield.field_label">field_label</a><a href="#structfield.field_left">field_left</a><a href="#structfield.field_length">field_length</a><a href="#structfield.field_method">field_method</a><a href="#structfield.field_module_specifier">field_module_specifier</a><a href="#structfield.field_name">field_name</a><a href="#structfield.field_named_exports">field_named_exports</a><a href="#structfield.field_named_imports">field_named_imports</a><a href="#structfield.field_namespace_binding">field_namespace_binding</a><a href="#structfield.field_object">field_object</a><a href="#structfield.field_operand">field_operand</a><a href="#structfield.field_operator">field_operator</a><a href="#structfield.field_param">field_param</a><a href="#structfield.field_param_names">field_param_names</a><a href="#structfield.field_parameter_scope">field_parameter_scope</a><a href="#structfield.field_params">field_params</a><a href="#structfield.field_pattern">field_pattern</a><a href="#structfield.field_post_default_cases">field_post_default_cases</a><a href="#structfield.field_pre_default_cases">field_pre_default_cases</a><a href="#structfield.field_properties">field_properties</a><a href="#structfield.field_property">field_property</a><a href="#structfield.field_raw_value">field_raw_value</a><a href="#structfield.field_rest">field_rest</a><a href="#structfield.field_right">field_right</a><a href="#structfield.field_scope">field_scope</a><a href="#structfield.field_statements">field_statements</a><a href="#structfield.field_super_">field_super_</a><a href="#structfield.field_tag">field_tag</a><a href="#structfield.field_test">field_test</a><a href="#structfield.field_update">field_update</a><a href="#structfield.field_value">field_value</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.annotate">annotate</a><a href="#method.lazify">lazify</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Annotator">Annotator</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">!Send</a><a href="#impl-Sync">!Sync</a></div><a class="sidebar-title" href="#blanket-implementations">Blanket Implementations</a><div class="sidebar-links"><a href="#impl-From">From</a><a href="#impl-Into">Into</a><a href="#impl-TryFrom">TryFrom</a><a href="#impl-Borrow">Borrow</a><a href="#impl-TryInto">TryInto</a><a href="#impl-BorrowMut">BorrowMut</a><a href="#impl-Any">Any</a></div></div><p class='location'><a href='../index.html'>binjs_generic</a>::<wbr><a href='index.html'>es6</a></p><script>window.sidebarCurrent = {name: 'Library', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#7-246' title='goto source code'>[src]</a></span><span class='in-band'>Struct <a href='../index.html'>binjs_generic</a>::<wbr><a href='index.html'>es6</a>::<wbr><a class="struct" href=''>Library</a></span></h1><div class="docblock type-decl hidden-by-usual-hider"><pre class='rust struct'>pub struct Library {
+    pub asserted_declared_kind: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub binary_operator: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub compound_assignment_operator: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub unary_operator: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -63,6 +7,7 @@
     pub variable_declaration_kind: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub arguments: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub arrow_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_maybe_positional_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub assignment_target: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub assignment_target_pattern: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub assignment_target_property: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -71,6 +16,7 @@
     pub binding_property: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub export_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub function_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub function_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub getter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -85,6 +31,7 @@
     pub object_property: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub parameter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub program: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub property_key: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub property_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub setter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub simple_assignment_target: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -93,8 +40,17 @@
     pub array_assignment_target: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub array_binding: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub array_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub arrow_expression_contents_with_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub arrow_expression_contents_with_function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub asserted_block_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_bound_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_bound_names_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_declared_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub asserted_parameter_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_positional_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_rest_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub asserted_script_global_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub asserted_var_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub assignment_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub assignment_target_identifier: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -124,7 +80,8 @@
     pub debugger_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub directive: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub do_while_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub eager_arrow_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub eager_arrow_expression_with_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub eager_arrow_expression_with_function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub eager_function_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub eager_function_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub eager_getter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -144,13 +101,22 @@
     pub for_of_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub for_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub formal_parameters: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub function_expression_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub function_or_method_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub getter_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub identifier_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub if_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub import: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub import_namespace: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub import_specifier: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub labelled_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_arrow_expression_with_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_arrow_expression_with_function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_function_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_function_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_getter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_method: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub lazy_setter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub literal_boolean_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub literal_infinity_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub literal_null_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -166,13 +132,8 @@
     pub object_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub return_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub script: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
+    pub setter_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub shorthand_property: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub skippable_arrow_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub skippable_function_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub skippable_function_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub skippable_getter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub skippable_method: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub skippable_setter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub spread_element: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub static_member_assignment_target: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub static_member_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
@@ -196,19 +157,22 @@
     pub yield_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub yield_star_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
     pub null: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a>,
-    pub field_offset: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_alternate: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_arguments: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_binding: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_binding_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_body: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_body_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_bound_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_callee: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
-    pub field_captured_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_cases: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_catch_clause: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_consequent: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_contents: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_contents_skip: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_declaration: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_declarators: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_declared_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_default_binding: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_default_case: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_directives: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
@@ -219,16 +183,21 @@
     pub field_finalizer: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_flags: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_has_direct_eval: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_index: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_init: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_is_async: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_is_captured: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_is_function_name_captured: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_is_generator: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_is_prefix: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_is_simple_parameter_list: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_is_static: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_is_this_captured: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_items: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_kind: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_label: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_left: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
-    pub field_lexically_declared_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_length: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_method: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_module_specifier: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_name: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
@@ -239,7 +208,7 @@
     pub field_operand: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_operator: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_param: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
-    pub field_parameter_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
+    pub field_param_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_parameter_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_params: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_pattern: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
@@ -251,16 +220,18 @@
     pub field_rest: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_right: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
-    pub field_skipped: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_statements: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_super_: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_tag: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_test: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_update: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
     pub field_value: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
-    pub field_var_declared_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a>,
 }</pre></div><h2 id='fields' class='fields small-section-header'>
-                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.binary_operator" class="structfield small-section-header">
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.asserted_declared_kind" class="structfield small-section-header">
+                           <a href="#structfield.asserted_declared_kind" class="anchor field"></a>
+                           <span id="asserted_declared_kind.v" class='invisible'>
+                           <code>asserted_declared_kind: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.binary_operator" class="structfield small-section-header">
                            <a href="#structfield.binary_operator" class="anchor field"></a>
                            <span id="binary_operator.v" class='invisible'>
                            <code>binary_operator: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
@@ -288,6 +259,10 @@
                            <a href="#structfield.arrow_expression" class="anchor field"></a>
                            <span id="arrow_expression.v" class='invisible'>
                            <code>arrow_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_maybe_positional_parameter_name" class="structfield small-section-header">
+                           <a href="#structfield.asserted_maybe_positional_parameter_name" class="anchor field"></a>
+                           <span id="asserted_maybe_positional_parameter_name.v" class='invisible'>
+                           <code>asserted_maybe_positional_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.assignment_target" class="structfield small-section-header">
                            <a href="#structfield.assignment_target" class="anchor field"></a>
                            <span id="assignment_target.v" class='invisible'>
@@ -320,6 +295,10 @@
                            <a href="#structfield.expression" class="anchor field"></a>
                            <span id="expression.v" class='invisible'>
                            <code>expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.function_body" class="structfield small-section-header">
+                           <a href="#structfield.function_body" class="anchor field"></a>
+                           <span id="function_body.v" class='invisible'>
+                           <code>function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.function_declaration" class="structfield small-section-header">
                            <a href="#structfield.function_declaration" class="anchor field"></a>
                            <span id="function_declaration.v" class='invisible'>
@@ -376,6 +355,10 @@
                            <a href="#structfield.program" class="anchor field"></a>
                            <span id="program.v" class='invisible'>
                            <code>program: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.property_key" class="structfield small-section-header">
+                           <a href="#structfield.property_key" class="anchor field"></a>
+                           <span id="property_key.v" class='invisible'>
+                           <code>property_key: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.property_name" class="structfield small-section-header">
                            <a href="#structfield.property_name" class="anchor field"></a>
                            <span id="property_name.v" class='invisible'>
@@ -408,14 +391,50 @@
                            <a href="#structfield.array_expression" class="anchor field"></a>
                            <span id="array_expression.v" class='invisible'>
                            <code>array_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.arrow_expression_contents_with_expression" class="structfield small-section-header">
+                           <a href="#structfield.arrow_expression_contents_with_expression" class="anchor field"></a>
+                           <span id="arrow_expression_contents_with_expression.v" class='invisible'>
+                           <code>arrow_expression_contents_with_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.arrow_expression_contents_with_function_body" class="structfield small-section-header">
+                           <a href="#structfield.arrow_expression_contents_with_function_body" class="anchor field"></a>
+                           <span id="arrow_expression_contents_with_function_body.v" class='invisible'>
+                           <code>arrow_expression_contents_with_function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.asserted_block_scope" class="structfield small-section-header">
                            <a href="#structfield.asserted_block_scope" class="anchor field"></a>
                            <span id="asserted_block_scope.v" class='invisible'>
                            <code>asserted_block_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_bound_name" class="structfield small-section-header">
+                           <a href="#structfield.asserted_bound_name" class="anchor field"></a>
+                           <span id="asserted_bound_name.v" class='invisible'>
+                           <code>asserted_bound_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_bound_names_scope" class="structfield small-section-header">
+                           <a href="#structfield.asserted_bound_names_scope" class="anchor field"></a>
+                           <span id="asserted_bound_names_scope.v" class='invisible'>
+                           <code>asserted_bound_names_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_declared_name" class="structfield small-section-header">
+                           <a href="#structfield.asserted_declared_name" class="anchor field"></a>
+                           <span id="asserted_declared_name.v" class='invisible'>
+                           <code>asserted_declared_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_parameter_name" class="structfield small-section-header">
+                           <a href="#structfield.asserted_parameter_name" class="anchor field"></a>
+                           <span id="asserted_parameter_name.v" class='invisible'>
+                           <code>asserted_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.asserted_parameter_scope" class="structfield small-section-header">
                            <a href="#structfield.asserted_parameter_scope" class="anchor field"></a>
                            <span id="asserted_parameter_scope.v" class='invisible'>
                            <code>asserted_parameter_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_positional_parameter_name" class="structfield small-section-header">
+                           <a href="#structfield.asserted_positional_parameter_name" class="anchor field"></a>
+                           <span id="asserted_positional_parameter_name.v" class='invisible'>
+                           <code>asserted_positional_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_rest_parameter_name" class="structfield small-section-header">
+                           <a href="#structfield.asserted_rest_parameter_name" class="anchor field"></a>
+                           <span id="asserted_rest_parameter_name.v" class='invisible'>
+                           <code>asserted_rest_parameter_name: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.asserted_script_global_scope" class="structfield small-section-header">
+                           <a href="#structfield.asserted_script_global_scope" class="anchor field"></a>
+                           <span id="asserted_script_global_scope.v" class='invisible'>
+                           <code>asserted_script_global_scope: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.asserted_var_scope" class="structfield small-section-header">
                            <a href="#structfield.asserted_var_scope" class="anchor field"></a>
                            <span id="asserted_var_scope.v" class='invisible'>
@@ -532,10 +551,14 @@
                            <a href="#structfield.do_while_statement" class="anchor field"></a>
                            <span id="do_while_statement.v" class='invisible'>
                            <code>do_while_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.eager_arrow_expression" class="structfield small-section-header">
-                           <a href="#structfield.eager_arrow_expression" class="anchor field"></a>
-                           <span id="eager_arrow_expression.v" class='invisible'>
-                           <code>eager_arrow_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.eager_arrow_expression_with_expression" class="structfield small-section-header">
+                           <a href="#structfield.eager_arrow_expression_with_expression" class="anchor field"></a>
+                           <span id="eager_arrow_expression_with_expression.v" class='invisible'>
+                           <code>eager_arrow_expression_with_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.eager_arrow_expression_with_function_body" class="structfield small-section-header">
+                           <a href="#structfield.eager_arrow_expression_with_function_body" class="anchor field"></a>
+                           <span id="eager_arrow_expression_with_function_body.v" class='invisible'>
+                           <code>eager_arrow_expression_with_function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.eager_function_declaration" class="structfield small-section-header">
                            <a href="#structfield.eager_function_declaration" class="anchor field"></a>
                            <span id="eager_function_declaration.v" class='invisible'>
@@ -612,10 +635,18 @@
                            <a href="#structfield.formal_parameters" class="anchor field"></a>
                            <span id="formal_parameters.v" class='invisible'>
                            <code>formal_parameters: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.function_body" class="structfield small-section-header">
-                           <a href="#structfield.function_body" class="anchor field"></a>
-                           <span id="function_body.v" class='invisible'>
-                           <code>function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.function_expression_contents" class="structfield small-section-header">
+                           <a href="#structfield.function_expression_contents" class="anchor field"></a>
+                           <span id="function_expression_contents.v" class='invisible'>
+                           <code>function_expression_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.function_or_method_contents" class="structfield small-section-header">
+                           <a href="#structfield.function_or_method_contents" class="anchor field"></a>
+                           <span id="function_or_method_contents.v" class='invisible'>
+                           <code>function_or_method_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.getter_contents" class="structfield small-section-header">
+                           <a href="#structfield.getter_contents" class="anchor field"></a>
+                           <span id="getter_contents.v" class='invisible'>
+                           <code>getter_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.identifier_expression" class="structfield small-section-header">
                            <a href="#structfield.identifier_expression" class="anchor field"></a>
                            <span id="identifier_expression.v" class='invisible'>
@@ -640,6 +671,34 @@
                            <a href="#structfield.labelled_statement" class="anchor field"></a>
                            <span id="labelled_statement.v" class='invisible'>
                            <code>labelled_statement: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_arrow_expression_with_expression" class="structfield small-section-header">
+                           <a href="#structfield.lazy_arrow_expression_with_expression" class="anchor field"></a>
+                           <span id="lazy_arrow_expression_with_expression.v" class='invisible'>
+                           <code>lazy_arrow_expression_with_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_arrow_expression_with_function_body" class="structfield small-section-header">
+                           <a href="#structfield.lazy_arrow_expression_with_function_body" class="anchor field"></a>
+                           <span id="lazy_arrow_expression_with_function_body.v" class='invisible'>
+                           <code>lazy_arrow_expression_with_function_body: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_function_declaration" class="structfield small-section-header">
+                           <a href="#structfield.lazy_function_declaration" class="anchor field"></a>
+                           <span id="lazy_function_declaration.v" class='invisible'>
+                           <code>lazy_function_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_function_expression" class="structfield small-section-header">
+                           <a href="#structfield.lazy_function_expression" class="anchor field"></a>
+                           <span id="lazy_function_expression.v" class='invisible'>
+                           <code>lazy_function_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_getter" class="structfield small-section-header">
+                           <a href="#structfield.lazy_getter" class="anchor field"></a>
+                           <span id="lazy_getter.v" class='invisible'>
+                           <code>lazy_getter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_method" class="structfield small-section-header">
+                           <a href="#structfield.lazy_method" class="anchor field"></a>
+                           <span id="lazy_method.v" class='invisible'>
+                           <code>lazy_method: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.lazy_setter" class="structfield small-section-header">
+                           <a href="#structfield.lazy_setter" class="anchor field"></a>
+                           <span id="lazy_setter.v" class='invisible'>
+                           <code>lazy_setter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.literal_boolean_expression" class="structfield small-section-header">
                            <a href="#structfield.literal_boolean_expression" class="anchor field"></a>
                            <span id="literal_boolean_expression.v" class='invisible'>
@@ -700,34 +759,14 @@
                            <a href="#structfield.script" class="anchor field"></a>
                            <span id="script.v" class='invisible'>
                            <code>script: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
+                           </span></span><span id="structfield.setter_contents" class="structfield small-section-header">
+                           <a href="#structfield.setter_contents" class="anchor field"></a>
+                           <span id="setter_contents.v" class='invisible'>
+                           <code>setter_contents: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.shorthand_property" class="structfield small-section-header">
                            <a href="#structfield.shorthand_property" class="anchor field"></a>
                            <span id="shorthand_property.v" class='invisible'>
                            <code>shorthand_property: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.skippable_arrow_expression" class="structfield small-section-header">
-                           <a href="#structfield.skippable_arrow_expression" class="anchor field"></a>
-                           <span id="skippable_arrow_expression.v" class='invisible'>
-                           <code>skippable_arrow_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.skippable_function_declaration" class="structfield small-section-header">
-                           <a href="#structfield.skippable_function_declaration" class="anchor field"></a>
-                           <span id="skippable_function_declaration.v" class='invisible'>
-                           <code>skippable_function_declaration: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.skippable_function_expression" class="structfield small-section-header">
-                           <a href="#structfield.skippable_function_expression" class="anchor field"></a>
-                           <span id="skippable_function_expression.v" class='invisible'>
-                           <code>skippable_function_expression: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.skippable_getter" class="structfield small-section-header">
-                           <a href="#structfield.skippable_getter" class="anchor field"></a>
-                           <span id="skippable_getter.v" class='invisible'>
-                           <code>skippable_getter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.skippable_method" class="structfield small-section-header">
-                           <a href="#structfield.skippable_method" class="anchor field"></a>
-                           <span id="skippable_method.v" class='invisible'>
-                           <code>skippable_method: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.skippable_setter" class="structfield small-section-header">
-                           <a href="#structfield.skippable_setter" class="anchor field"></a>
-                           <span id="skippable_setter.v" class='invisible'>
-                           <code>skippable_setter: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
                            </span></span><span id="structfield.spread_element" class="structfield small-section-header">
                            <a href="#structfield.spread_element" class="anchor field"></a>
                            <span id="spread_element.v" class='invisible'>
@@ -820,10 +859,6 @@
                            <a href="#structfield.null" class="anchor field"></a>
                            <span id="null.v" class='invisible'>
                            <code>null: <a class="struct" href="../../binjs_meta/spec/struct.NodeName.html" title="struct binjs_meta::spec::NodeName">NodeName</a></code>
-                           </span></span><span id="structfield.field_offset" class="structfield small-section-header">
-                           <a href="#structfield.field_offset" class="anchor field"></a>
-                           <span id="field_offset.v" class='invisible'>
-                           <code>field_offset: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_alternate" class="structfield small-section-header">
                            <a href="#structfield.field_alternate" class="anchor field"></a>
                            <span id="field_alternate.v" class='invisible'>
@@ -836,6 +871,10 @@
                            <a href="#structfield.field_binding" class="anchor field"></a>
                            <span id="field_binding.v" class='invisible'>
                            <code>field_binding: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_binding_scope" class="structfield small-section-header">
+                           <a href="#structfield.field_binding_scope" class="anchor field"></a>
+                           <span id="field_binding_scope.v" class='invisible'>
+                           <code>field_binding_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_body" class="structfield small-section-header">
                            <a href="#structfield.field_body" class="anchor field"></a>
                            <span id="field_body.v" class='invisible'>
@@ -844,14 +883,14 @@
                            <a href="#structfield.field_body_scope" class="anchor field"></a>
                            <span id="field_body_scope.v" class='invisible'>
                            <code>field_body_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_bound_names" class="structfield small-section-header">
+                           <a href="#structfield.field_bound_names" class="anchor field"></a>
+                           <span id="field_bound_names.v" class='invisible'>
+                           <code>field_bound_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_callee" class="structfield small-section-header">
                            <a href="#structfield.field_callee" class="anchor field"></a>
                            <span id="field_callee.v" class='invisible'>
                            <code>field_callee: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
-                           </span></span><span id="structfield.field_captured_names" class="structfield small-section-header">
-                           <a href="#structfield.field_captured_names" class="anchor field"></a>
-                           <span id="field_captured_names.v" class='invisible'>
-                           <code>field_captured_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_cases" class="structfield small-section-header">
                            <a href="#structfield.field_cases" class="anchor field"></a>
                            <span id="field_cases.v" class='invisible'>
@@ -864,6 +903,14 @@
                            <a href="#structfield.field_consequent" class="anchor field"></a>
                            <span id="field_consequent.v" class='invisible'>
                            <code>field_consequent: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_contents" class="structfield small-section-header">
+                           <a href="#structfield.field_contents" class="anchor field"></a>
+                           <span id="field_contents.v" class='invisible'>
+                           <code>field_contents: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_contents_skip" class="structfield small-section-header">
+                           <a href="#structfield.field_contents_skip" class="anchor field"></a>
+                           <span id="field_contents_skip.v" class='invisible'>
+                           <code>field_contents_skip: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_declaration" class="structfield small-section-header">
                            <a href="#structfield.field_declaration" class="anchor field"></a>
                            <span id="field_declaration.v" class='invisible'>
@@ -872,6 +919,10 @@
                            <a href="#structfield.field_declarators" class="anchor field"></a>
                            <span id="field_declarators.v" class='invisible'>
                            <code>field_declarators: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_declared_names" class="structfield small-section-header">
+                           <a href="#structfield.field_declared_names" class="anchor field"></a>
+                           <span id="field_declared_names.v" class='invisible'>
+                           <code>field_declared_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_default_binding" class="structfield small-section-header">
                            <a href="#structfield.field_default_binding" class="anchor field"></a>
                            <span id="field_default_binding.v" class='invisible'>
@@ -912,6 +963,10 @@
                            <a href="#structfield.field_has_direct_eval" class="anchor field"></a>
                            <span id="field_has_direct_eval.v" class='invisible'>
                            <code>field_has_direct_eval: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_index" class="structfield small-section-header">
+                           <a href="#structfield.field_index" class="anchor field"></a>
+                           <span id="field_index.v" class='invisible'>
+                           <code>field_index: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_init" class="structfield small-section-header">
                            <a href="#structfield.field_init" class="anchor field"></a>
                            <span id="field_init.v" class='invisible'>
@@ -920,6 +975,14 @@
                            <a href="#structfield.field_is_async" class="anchor field"></a>
                            <span id="field_is_async.v" class='invisible'>
                            <code>field_is_async: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_is_captured" class="structfield small-section-header">
+                           <a href="#structfield.field_is_captured" class="anchor field"></a>
+                           <span id="field_is_captured.v" class='invisible'>
+                           <code>field_is_captured: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_is_function_name_captured" class="structfield small-section-header">
+                           <a href="#structfield.field_is_function_name_captured" class="anchor field"></a>
+                           <span id="field_is_function_name_captured.v" class='invisible'>
+                           <code>field_is_function_name_captured: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_is_generator" class="structfield small-section-header">
                            <a href="#structfield.field_is_generator" class="anchor field"></a>
                            <span id="field_is_generator.v" class='invisible'>
@@ -928,10 +991,18 @@
                            <a href="#structfield.field_is_prefix" class="anchor field"></a>
                            <span id="field_is_prefix.v" class='invisible'>
                            <code>field_is_prefix: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_is_simple_parameter_list" class="structfield small-section-header">
+                           <a href="#structfield.field_is_simple_parameter_list" class="anchor field"></a>
+                           <span id="field_is_simple_parameter_list.v" class='invisible'>
+                           <code>field_is_simple_parameter_list: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_is_static" class="structfield small-section-header">
                            <a href="#structfield.field_is_static" class="anchor field"></a>
                            <span id="field_is_static.v" class='invisible'>
                            <code>field_is_static: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_is_this_captured" class="structfield small-section-header">
+                           <a href="#structfield.field_is_this_captured" class="anchor field"></a>
+                           <span id="field_is_this_captured.v" class='invisible'>
+                           <code>field_is_this_captured: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_items" class="structfield small-section-header">
                            <a href="#structfield.field_items" class="anchor field"></a>
                            <span id="field_items.v" class='invisible'>
@@ -948,10 +1019,10 @@
                            <a href="#structfield.field_left" class="anchor field"></a>
                            <span id="field_left.v" class='invisible'>
                            <code>field_left: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
-                           </span></span><span id="structfield.field_lexically_declared_names" class="structfield small-section-header">
-                           <a href="#structfield.field_lexically_declared_names" class="anchor field"></a>
-                           <span id="field_lexically_declared_names.v" class='invisible'>
-                           <code>field_lexically_declared_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_length" class="structfield small-section-header">
+                           <a href="#structfield.field_length" class="anchor field"></a>
+                           <span id="field_length.v" class='invisible'>
+                           <code>field_length: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_method" class="structfield small-section-header">
                            <a href="#structfield.field_method" class="anchor field"></a>
                            <span id="field_method.v" class='invisible'>
@@ -992,10 +1063,10 @@
                            <a href="#structfield.field_param" class="anchor field"></a>
                            <span id="field_param.v" class='invisible'>
                            <code>field_param: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
-                           </span></span><span id="structfield.field_parameter_names" class="structfield small-section-header">
-                           <a href="#structfield.field_parameter_names" class="anchor field"></a>
-                           <span id="field_parameter_names.v" class='invisible'>
-                           <code>field_parameter_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
+                           </span></span><span id="structfield.field_param_names" class="structfield small-section-header">
+                           <a href="#structfield.field_param_names" class="anchor field"></a>
+                           <span id="field_param_names.v" class='invisible'>
+                           <code>field_param_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_parameter_scope" class="structfield small-section-header">
                            <a href="#structfield.field_parameter_scope" class="anchor field"></a>
                            <span id="field_parameter_scope.v" class='invisible'>
@@ -1040,10 +1111,6 @@
                            <a href="#structfield.field_scope" class="anchor field"></a>
                            <span id="field_scope.v" class='invisible'>
                            <code>field_scope: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
-                           </span></span><span id="structfield.field_skipped" class="structfield small-section-header">
-                           <a href="#structfield.field_skipped" class="anchor field"></a>
-                           <span id="field_skipped.v" class='invisible'>
-                           <code>field_skipped: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
                            </span></span><span id="structfield.field_statements" class="structfield small-section-header">
                            <a href="#structfield.field_statements" class="anchor field"></a>
                            <span id="field_statements.v" class='invisible'>
@@ -1068,86 +1135,17 @@
                            <a href="#structfield.field_value" class="anchor field"></a>
                            <span id="field_value.v" class='invisible'>
                            <code>field_value: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
-                           </span></span><span id="structfield.field_var_declared_names" class="structfield small-section-header">
-                           <a href="#structfield.field_var_declared_names" class="anchor field"></a>
-                           <span id="field_var_declared_names.v" class='invisible'>
-                           <code>field_var_declared_names: <a class="struct" href="../../binjs_meta/spec/struct.FieldName.html" title="struct binjs_meta::spec::FieldName">FieldName</a></code>
-                           </span></span>
-                    <h2 id='methods' class='small-section-header'>
-                      Methods<a href='#methods' class='anchor'></a>
-                    </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#223-1856' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.new' class='fnname'>new</a>(builder: &amp;mut <a class="struct" href="../../binjs_meta/spec/struct.SpecBuilder.html" title="struct binjs_meta::spec::SpecBuilder">SpecBuilder</a>) -&gt; Self</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#224-1854' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4></div><h3 id='impl-1' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-1' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#1858-1865' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.annotate' class="method"><span id='annotate.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.annotate' class='fnname'>annotate</a>(&amp;self, ast: &amp;mut <a class="enum" href="../../json/value/enum.JsonValue.html" title="enum json::value::JsonValue">JSON</a>)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#1860-1864' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Insert scope annotations in the scope.</p>
-</div></div>
-                <h2 id='implementations' class='small-section-header'>
-                  Trait Implementations<a href='#implementations' class='anchor'></a>
-                </h2>
-                <div id='implementations-list'><h3 id='impl-Annotator' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="../../binjs_generic/annotate/trait.Annotator.html" title="trait binjs_generic::annotate::Annotator">Annotator</a> for <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-Annotator' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#1867-1871' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.annotate-1' class="method"><span id='annotate.v-1' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='../../binjs_generic/annotate/trait.Annotator.html#method.annotate' class='fnname'>annotate</a>(&amp;self, ast: &amp;mut <a class="enum" href="../../json/value/enum.JsonValue.html" title="enum json::value::JsonValue">JSON</a>)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-a435890c0cc462aa/out/es6.rs.html#1868-1870' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4></div></div>
-                <h2 id='synthetic-implementations' class='small-section-header'>
-                  Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a>
-                </h2>
-                <div id='synthetic-implementations-list'>
-            <h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div></section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "binjs_generic";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+                           </span></span><h2 id='methods' class='small-section-header'>Methods<a href='#methods' class='anchor'></a></h2><h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#247-2206' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.new' class='fnname'>new</a>(builder: &amp;mut <a class="struct" href="../../binjs_meta/spec/struct.SpecBuilder.html" title="struct binjs_meta::spec::SpecBuilder">SpecBuilder</a>) -&gt; Self</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#248-2204' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4></div><h3 id='impl-1' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-1' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#2208-2220' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.annotate' class="method"><span id='annotate.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.annotate' class='fnname'>annotate</a>(&amp;self, ast: &amp;mut <a class="enum" href="../../json/value/enum.JsonValue.html" title="enum json::value::JsonValue">JSON</a>)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#2210-2214' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Insert scope annotations in the scope.</p>
+</div><h4 id='method.lazify' class="method"><span id='lazify.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.lazify' class='fnname'>lazify</a>(&amp;self, level: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>, ast: &amp;mut <a class="enum" href="../../json/value/enum.JsonValue.html" title="enum json::value::JsonValue">JSON</a>)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#2215-2219' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4></div><h2 id='implementations' class='small-section-header'>Trait Implementations<a href='#implementations' class='anchor'></a></h2><div id='implementations-list'><h3 id='impl-Annotator' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="trait" href="../../binjs_generic/annotate/trait.Annotator.html" title="trait binjs_generic::annotate::Annotator">Annotator</a> for <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-Annotator' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#2222-2226' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.annotate-1' class="method hidden"><span id='annotate.v-1' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='../../binjs_generic/annotate/trait.Annotator.html#method.annotate' class='fnname'>annotate</a>(&amp;self, ast: &amp;mut <a class="enum" href="../../json/value/enum.JsonValue.html" title="enum json::value::JsonValue">JSON</a>)</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/binjs_generic/Volumes/Code/dteller/binjs/target/debug/build/binjs_generic-183e68ca1b0a469a/out/es6.rs.html#2223-2225' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4></div></div><h2 id='synthetic-implementations' class='small-section-header'>Auto Trait Implementations<a href='#synthetic-implementations' class='anchor'></a></h2><div id='synthetic-implementations-list'><h3 id='impl-Send' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> for <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-Send' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div><h3 id='impl-Sync' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl !<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sync.html" title="trait core::marker::Sync">Sync</a> for <a class="struct" href="../../binjs_generic/es6/struct.Library.html" title="struct binjs_generic::es6::Library">Library</a></code><a href='#impl-Sync' class='anchor'></a></span></td><td><span class='out-of-band'></span></td></tr></tbody></table></h3><div class='impl-items'></div></div><h2 id='blanket-implementations' class='small-section-header'>Blanket Implementations<a href='#blanket-implementations' class='anchor'></a></h2><div id='blanket-implementations-list'><h3 id='impl-From' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a> for T</code><a href='#impl-From' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#462-464' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.from' class="method hidden"><span id='from.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.From.html#tymethod.from' class='fnname'>from</a>(t: T) -&gt; T</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#463' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock hidden'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-Into' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.Into.html" title="trait core::convert::Into">Into</a> for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;T&gt;,&nbsp;</span></code><a href='#impl-Into' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#453-458' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.into' class="method hidden"><span id='into.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html#tymethod.into' class='fnname'>into</a>(self) -&gt; U</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#455-457' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock hidden'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-TryFrom' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a> for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.From.html" title="trait core::convert::From">From</a>&lt;U&gt;,&nbsp;</span></code><a href='#impl-TryFrom' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#481-487' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='associatedtype.Error' class="type"><span id='Error.t' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error' class="type">Error</a> = <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.never.html">!</a></code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>try_from</code>)</div></div><div class='docblock'><p>The type returned in the event of a conversion error.</p>
+</div><h4 id='method.try_from' class="method hidden"><span id='try_from.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#tymethod.try_from' class='fnname'>try_from</a>(value: U) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;T, &lt;T as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;U&gt;&gt;::<a class="type" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#484-486' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='stability hidden'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>try_from</code>)</div></div><div class='docblock hidden'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-Borrow' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/borrow/trait.Borrow.html" title="trait core::borrow::Borrow">Borrow</a> for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: ?<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,&nbsp;</span></code><a href='#impl-Borrow' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/borrow.rs.html#219-221' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.borrow' class="method hidden"><span id='borrow.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/borrow/trait.Borrow.html#tymethod.borrow' class='fnname'>borrow</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>T</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/borrow.rs.html#220' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock hidden'><p>Immutably borrows from an owned value. <a href="https://doc.rust-lang.org/nightly/core/borrow/trait.Borrow.html#tymethod.borrow">Read more</a></p>
+</div></div><h3 id='impl-TryInto' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T, U&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html" title="trait core::convert::TryInto">TryInto</a> for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;U: <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;,&nbsp;</span></code><a href='#impl-TryInto' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#469-476' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='associatedtype.Error-1' class="type"><span id='Error.t-1' class='invisible'><code>type <a href='https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#associatedtype.Error' class="type">Error</a> = &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="type" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a></code></span></h4>
+<div class='stability'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>try_from</code>)</div></div><div class='docblock'><p>The type returned in the event of a conversion error.</p>
+</div><h4 id='method.try_into' class="method hidden"><span id='try_into.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/convert/trait.TryInto.html#tymethod.try_into' class='fnname'>try_into</a>(self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;U, &lt;U as <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html" title="trait core::convert::TryFrom">TryFrom</a>&lt;T&gt;&gt;::<a class="type" href="https://doc.rust-lang.org/nightly/core/convert/trait.TryFrom.html#associatedtype.Error" title="type core::convert::TryFrom::Error">Error</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/convert.rs.html#473-475' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='stability hidden'><div class='stab unstable'><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>try_from</code>)</div></div><div class='docblock hidden'><p>Performs the conversion.</p>
+</div></div><h3 id='impl-BorrowMut' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/borrow/trait.BorrowMut.html" title="trait core::borrow::BorrowMut">BorrowMut</a> for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: ?<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,&nbsp;</span></code><a href='#impl-BorrowMut' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/borrow.rs.html#224-226' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.borrow_mut' class="method hidden"><span id='borrow_mut.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/borrow/trait.BorrowMut.html#tymethod.borrow_mut' class='fnname'>borrow_mut</a>(&amp;mut self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>T</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/borrow.rs.html#225' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock hidden'><p>Mutably borrows from an owned value. <a href="https://doc.rust-lang.org/nightly/core/borrow/trait.BorrowMut.html#tymethod.borrow_mut">Read more</a></p>
+</div></div><h3 id='impl-Any' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl&lt;T&gt; <a class="trait" href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html" title="trait core::any::Any">Any</a> for T <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;T: 'static + ?<a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Sized.html" title="trait core::marker::Sized">Sized</a>,&nbsp;</span></code><a href='#impl-Any' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/any.rs.html#114-116' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.get_type_id' class="method hidden"><span id='get_type_id.v' class='invisible'><table class='table-display'><tbody><tr><td><code>fn <a href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html#tymethod.get_type_id' class='fnname'>get_type_id</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/core/any/struct.TypeId.html" title="struct core::any::TypeId">TypeId</a></code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/any.rs.html#115' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='stability hidden'><div class='stab unstable'><details><summary><span class=microscope>🔬</span> This is a nightly-only experimental API.  (<code>get_type_id</code>)</summary><p>this method will likely be replaced by an associated static</p>
+</details></div></div><div class='docblock hidden'><p>Gets the <code>TypeId</code> of <code>self</code>. <a href="https://doc.rust-lang.org/nightly/core/any/trait.Any.html#tymethod.get_type_id">Read more</a></p>
+</div></div></div></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "binjs_generic";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Decoder","An entropy decoder, based on the Opus bit-level entropy coding."]]});

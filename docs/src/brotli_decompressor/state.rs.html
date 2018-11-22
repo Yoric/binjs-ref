@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-decompressor-1.2.1/src/state.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>state.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-decompressor-2.1.0/src/state.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>state.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -506,7 +449,131 @@
 <span id="449">449</span>
 <span id="450">450</span>
 <span id="451">451</span>
-</pre><pre class="rust ">
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_camel_case_types</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_snake_case</span>)]</span>
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">non_upper_case_globals</span>)]</span>
@@ -514,6 +581,7 @@
 
 <span class="kw">use</span> <span class="ident">alloc</span>;
 <span class="kw">use</span> <span class="ident">core</span>;
+<span class="kw">use</span> <span class="ident">context</span>::<span class="ident">kContextLookup</span>;
 <span class="kw">use</span> <span class="ident">bit_reader</span>::{<span class="ident">BrotliBitReader</span>, <span class="ident">BrotliGetAvailableBits</span>, <span class="ident">BrotliInitBitReader</span>};
 <span class="kw">use</span> <span class="ident">huffman</span>::{<span class="ident">BROTLI_HUFFMAN_MAX_CODE_LENGTH</span>, <span class="ident">BROTLI_HUFFMAN_MAX_CODE_LENGTHS_SIZE</span>,
               <span class="ident">BROTLI_HUFFMAN_MAX_TABLE_SIZE</span>, <span class="ident">HuffmanCode</span>, <span class="ident">HuffmanTreeGroup</span>};
@@ -525,9 +593,58 @@
   <span class="ident">INSERT_COPY</span>,
   <span class="ident">DISTANCE</span>,
 }
+<span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>,<span class="ident">Copy</span>)]</span>
+<span class="attribute">#[<span class="ident">no_mangle</span>]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BrotliDecoderErrorCode</span>{
+  <span class="ident">BROTLI_DECODER_NO_ERROR</span> <span class="op">=</span> <span class="number">0</span>,
+  <span class="comment">/* Same as BrotliDecoderResult values */</span>
+  <span class="ident">BROTLI_DECODER_SUCCESS</span> <span class="op">=</span> <span class="number">1</span>,
+  <span class="ident">BROTLI_DECODER_NEEDS_MORE_INPUT</span> <span class="op">=</span> <span class="number">2</span>,
+  <span class="ident">BROTLI_DECODER_NEEDS_MORE_OUTPUT</span> <span class="op">=</span> <span class="number">3</span>,
+
+  <span class="comment">/* Errors caused by invalid input */</span>
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_NIBBLE</span> <span class="op">=</span> <span class="op">-</span><span class="number">1</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_RESERVED</span> <span class="op">=</span> <span class="op">-</span><span class="number">2</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_META_NIBBLE</span> <span class="op">=</span> <span class="op">-</span><span class="number">3</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET</span> <span class="op">=</span> <span class="op">-</span><span class="number">4</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_SAME</span> <span class="op">=</span> <span class="op">-</span><span class="number">5</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_CL_SPACE</span> <span class="op">=</span> <span class="op">-</span><span class="number">6</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_HUFFMAN_SPACE</span> <span class="op">=</span> <span class="op">-</span><span class="number">7</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_CONTEXT_MAP_REPEAT</span> <span class="op">=</span> <span class="op">-</span><span class="number">8</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_1</span> <span class="op">=</span> <span class="op">-</span><span class="number">9</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_2</span> <span class="op">=</span> <span class="op">-</span><span class="number">10</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_TRANSFORM</span> <span class="op">=</span> <span class="op">-</span><span class="number">11</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_DICTIONARY</span> <span class="op">=</span> <span class="op">-</span><span class="number">12</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_WINDOW_BITS</span> <span class="op">=</span> <span class="op">-</span><span class="number">13</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_PADDING_1</span> <span class="op">=</span> <span class="op">-</span><span class="number">14</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_PADDING_2</span> <span class="op">=</span> <span class="op">-</span><span class="number">15</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_FORMAT_DISTANCE</span> <span class="op">=</span> <span class="op">-</span><span class="number">16</span>,
+
+  <span class="comment">/* -17..-18 codes are reserved */</span>
+
+  <span class="ident">BROTLI_DECODER_ERROR_DICTIONARY_NOT_SET</span> <span class="op">=</span> <span class="op">-</span><span class="number">19</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_INVALID_ARGUMENTS</span> <span class="op">=</span> <span class="op">-</span><span class="number">20</span>,
+
+  <span class="comment">/* Memory allocation problems */</span>
+  <span class="ident">BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MODES</span> <span class="op">=</span> <span class="op">-</span><span class="number">21</span>,
+  <span class="comment">/* Literal = insert and distance trees together */</span>
+  <span class="ident">BROTLI_DECODER_ERROR_ALLOC_TREE_GROUPS</span> <span class="op">=</span> <span class="op">-</span><span class="number">22</span>,
+  <span class="comment">/* -23..-24 codes are reserved for distinct tree groups */</span>
+  <span class="ident">BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MAP</span> <span class="op">=</span> <span class="op">-</span><span class="number">25</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_1</span> <span class="op">=</span> <span class="op">-</span><span class="number">26</span>,
+  <span class="ident">BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_2</span> <span class="op">=</span> <span class="op">-</span><span class="number">27</span>,
+  <span class="comment">/* -28..-29 codes are reserved for dynamic ring-buffer allocation */</span>
+  <span class="ident">BROTLI_DECODER_ERROR_ALLOC_BLOCK_TYPE_TREES</span> <span class="op">=</span> <span class="op">-</span><span class="number">30</span>,
+
+  <span class="comment">/* &quot;Impossible&quot; states */</span>
+  <span class="ident">BROTLI_DECODER_ERROR_UNREACHABLE</span> <span class="op">=</span> <span class="op">-</span><span class="number">31</span>,
+}
 
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BrotliRunningState</span> {
   <span class="ident">BROTLI_STATE_UNINITED</span>,
+  <span class="ident">BROTLI_STATE_LARGE_WINDOW_BITS</span>,
+  <span class="ident">BROTLI_STATE_INITIALIZE</span>,
   <span class="ident">BROTLI_STATE_METABLOCK_BEGIN</span>,
   <span class="ident">BROTLI_STATE_METABLOCK_HEADER</span>,
   <span class="ident">BROTLI_STATE_METABLOCK_HEADER_2</span>,
@@ -638,8 +755,7 @@
   <span class="kw">pub</span> <span class="ident">ringbuffer</span>: <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>,
   <span class="comment">// pub ringbuffer_end : usize,</span>
   <span class="kw">pub</span> <span class="ident">htree_command_index</span>: <span class="ident">u16</span>,
-  <span class="kw">pub</span> <span class="ident">context_lookup1</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>],
-  <span class="kw">pub</span> <span class="ident">context_lookup2</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>],
+  <span class="kw">pub</span> <span class="ident">context_lookup</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>;<span class="number">512</span>],
   <span class="kw">pub</span> <span class="ident">context_map_slice_index</span>: <span class="ident">usize</span>,
   <span class="kw">pub</span> <span class="ident">dist_context_map_slice_index</span>: <span class="ident">usize</span>,
 
@@ -653,6 +769,8 @@
   <span class="comment">// This is true if the literal context map histogram type always matches the</span>
   <span class="comment">// block type. It is then not needed to keep the context (faster decoding).</span>
   <span class="kw">pub</span> <span class="ident">trivial_literal_context</span>: <span class="ident">i32</span>,
+  <span class="comment">// Distance context is actual after command is decoded and before distance</span>
+  <span class="comment">// is computed. After distance computation it is used as a temporary variable</span>
   <span class="kw">pub</span> <span class="ident">distance_context</span>: <span class="ident">i32</span>,
   <span class="kw">pub</span> <span class="ident">meta_block_remaining_len</span>: <span class="ident">i32</span>,
   <span class="kw">pub</span> <span class="ident">block_type_length_state</span>: <span class="ident">BlockTypeAndLengthState</span><span class="op">&lt;</span><span class="ident">AllocHC</span><span class="op">&gt;</span>,
@@ -664,6 +782,9 @@
   <span class="comment">// NOT NEEDED? the index below seems to supersede it pub literal_htree : AllocHC::AllocatedMemory,</span>
   <span class="kw">pub</span> <span class="ident">literal_htree_index</span>: <span class="ident">u8</span>,
   <span class="kw">pub</span> <span class="ident">dist_htree_index</span>: <span class="ident">u8</span>,
+  <span class="kw">pub</span> <span class="ident">large_window</span>: <span class="ident">bool</span>,
+  <span class="kw">pub</span> <span class="ident">should_wrap_ringbuffer</span>: <span class="ident">bool</span>,
+  <span class="kw">pub</span> <span class="ident">error_code</span>: <span class="ident">BrotliDecoderErrorCode</span>,
   <span class="kw">pub</span> <span class="ident">repeat_code_len</span>: <span class="ident">u32</span>,
   <span class="kw">pub</span> <span class="ident">prev_code_len</span>: <span class="ident">u32</span>,
 
@@ -704,7 +825,7 @@
 
   <span class="comment">// For InverseMoveToFrontTransform</span>
   <span class="kw">pub</span> <span class="ident">mtf_upper_bound</span>: <span class="ident">u32</span>,
-  <span class="kw">pub</span> <span class="ident">mtf</span>: [<span class="ident">u8</span>; <span class="number">256</span>],
+  <span class="kw">pub</span> <span class="ident">mtf_or_error_string</span>: <span class="prelude-ty">Result</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">256</span>], [<span class="ident">u8</span>; <span class="number">256</span>]<span class="op">&gt;</span>,
 
   <span class="comment">// For custom dictionaries</span>
   <span class="kw">pub</span> <span class="ident">custom_dict</span>: <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>,
@@ -749,8 +870,7 @@
             <span class="ident">dist_rb</span> : [<span class="number">16</span>, <span class="number">15</span>, <span class="number">11</span>, <span class="number">4</span>],
             <span class="ident">ringbuffer</span> : <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>(),
             <span class="ident">htree_command_index</span> : <span class="number">0</span>,
-            <span class="ident">context_lookup1</span> : <span class="kw-2">&amp;</span>[],
-            <span class="ident">context_lookup2</span> : <span class="kw-2">&amp;</span>[],
+            <span class="ident">context_lookup</span> : <span class="kw-2">&amp;</span><span class="ident">kContextLookup</span>[<span class="number">0</span>],
             <span class="ident">context_map_slice_index</span> : <span class="number">0</span>,
             <span class="ident">dist_context_map_slice_index</span> : <span class="number">0</span>,
             <span class="ident">sub_loop_counter</span> : <span class="number">0</span>,
@@ -806,7 +926,7 @@
 
            <span class="comment">/* For InverseMoveToFrontTransform */</span>
            <span class="ident">mtf_upper_bound</span> : <span class="number">255</span>,
-           <span class="ident">mtf</span> : [<span class="number">0</span>; <span class="number">256</span>],
+           <span class="ident">mtf_or_error_string</span> : <span class="prelude-val">Ok</span>([<span class="number">0</span>; <span class="number">256</span>]),
 
            <span class="comment">/* For custom dictionaries */</span>
            <span class="ident">custom_dict</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">custom_dict</span>,
@@ -826,7 +946,9 @@
            <span class="ident">is_metadata</span> : <span class="number">0</span>,
            <span class="ident">size_nibbles</span> : <span class="number">0</span>,
            <span class="ident">window_bits</span> : <span class="number">0</span>,
-
+           <span class="ident">large_window</span>: <span class="bool-val">false</span>,
+           <span class="ident">should_wrap_ringbuffer</span>: <span class="bool-val">false</span>,
+           <span class="ident">error_code</span>: <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_SUCCESS</span>,
            <span class="ident">num_literal_htrees</span> : <span class="number">0</span>,
            <span class="ident">context_map</span> : <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>(),
            <span class="ident">context_modes</span> : <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>(),
@@ -842,6 +964,7 @@
            <span class="ident">alloc_u32</span> : <span class="ident">AllocU32</span>,
            <span class="ident">alloc_hc</span> : <span class="ident">AllocHC</span>) <span class="op">-&gt;</span> <span class="self">Self</span>{
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retval</span> <span class="op">=</span> <span class="macro">make_brotli_state</span><span class="macro">!</span>(<span class="ident">alloc_u8</span>, <span class="ident">alloc_u32</span>, <span class="ident">alloc_hc</span>, <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>(), <span class="number">0</span>);
+        <span class="ident">retval</span>.<span class="ident">large_window</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="ident">retval</span>.<span class="ident">context_map_table</span> <span class="op">=</span> <span class="ident">retval</span>.<span class="ident">alloc_hc</span>.<span class="ident">alloc_cell</span>(
           <span class="ident">BROTLI_HUFFMAN_MAX_TABLE_SIZE</span> <span class="kw">as</span> <span class="ident">usize</span>);
         <span class="ident">BrotliInitBitReader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">retval</span>.<span class="ident">br</span>);
@@ -855,14 +978,25 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retval</span> <span class="op">=</span> <span class="macro">make_brotli_state</span><span class="macro">!</span>(<span class="ident">alloc_u8</span>, <span class="ident">alloc_u32</span>, <span class="ident">alloc_hc</span>, <span class="ident">custom_dict</span>, <span class="ident">custom_dict_len</span>);
         <span class="ident">retval</span>.<span class="ident">context_map_table</span> <span class="op">=</span> <span class="ident">retval</span>.<span class="ident">alloc_hc</span>.<span class="ident">alloc_cell</span>(
           <span class="ident">BROTLI_HUFFMAN_MAX_TABLE_SIZE</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="ident">retval</span>.<span class="ident">large_window</span> <span class="op">=</span>  <span class="bool-val">true</span>;
+        <span class="ident">BrotliInitBitReader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">retval</span>.<span class="ident">br</span>);
+        <span class="ident">retval</span>
+    }
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new_strict</span>(<span class="ident">alloc_u8</span> : <span class="ident">AllocU8</span>,
+           <span class="ident">alloc_u32</span> : <span class="ident">AllocU32</span>,
+           <span class="ident">alloc_hc</span> : <span class="ident">AllocHC</span>) <span class="op">-&gt;</span> <span class="self">Self</span>{
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">retval</span> <span class="op">=</span> <span class="macro">make_brotli_state</span><span class="macro">!</span>(<span class="ident">alloc_u8</span>, <span class="ident">alloc_u32</span>, <span class="ident">alloc_hc</span>, <span class="ident">AllocU8</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>(), <span class="number">0</span>);
+        <span class="ident">retval</span>.<span class="ident">context_map_table</span> <span class="op">=</span> <span class="ident">retval</span>.<span class="ident">alloc_hc</span>.<span class="ident">alloc_cell</span>(
+          <span class="ident">BROTLI_HUFFMAN_MAX_TABLE_SIZE</span> <span class="kw">as</span> <span class="ident">usize</span>);
+        <span class="ident">retval</span>.<span class="ident">large_window</span> <span class="op">=</span>  <span class="bool-val">false</span>;
         <span class="ident">BrotliInitBitReader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">retval</span>.<span class="ident">br</span>);
         <span class="ident">retval</span>
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliStateMetablockBegin</span>(<span class="self">self</span> : <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) {
         <span class="self">self</span>.<span class="ident">meta_block_remaining_len</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">block_length</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;&lt;</span> <span class="number">28</span>;
-        <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">block_length</span>[<span class="number">1</span>] <span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;&lt;</span> <span class="number">28</span>;
-        <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">block_length</span>[<span class="number">2</span>] <span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;&lt;</span> <span class="number">28</span>;
+        <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">block_length</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;&lt;</span> <span class="number">24</span>;
+        <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">block_length</span>[<span class="number">1</span>] <span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;&lt;</span> <span class="number">24</span>;
+        <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">block_length</span>[<span class="number">2</span>] <span class="op">=</span> <span class="number">1u32</span> <span class="op">&lt;&lt;</span> <span class="number">24</span>;
         <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">num_block_types</span>[<span class="number">0</span>] <span class="op">=</span> <span class="number">1</span>;
         <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">num_block_types</span>[<span class="number">1</span>] <span class="op">=</span> <span class="number">1</span>;
         <span class="self">self</span>.<span class="ident">block_type_length_state</span>.<span class="ident">num_block_types</span>[<span class="number">2</span>] <span class="op">=</span> <span class="number">1</span>;
@@ -882,8 +1016,7 @@
         <span class="self">self</span>.<span class="ident">literal_htree_index</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="self">self</span>.<span class="ident">dist_context_map_slice_index</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="self">self</span>.<span class="ident">dist_htree_index</span> <span class="op">=</span> <span class="number">0</span>;
-        <span class="self">self</span>.<span class="ident">context_lookup1</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[];
-        <span class="self">self</span>.<span class="ident">context_lookup2</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[];
+        <span class="self">self</span>.<span class="ident">context_lookup</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">kContextLookup</span>[<span class="number">0</span>];
         <span class="self">self</span>.<span class="ident">literal_hgroup</span>.<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_u32</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_hc</span>);
         <span class="self">self</span>.<span class="ident">insert_copy_hgroup</span>.<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_u32</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_hc</span>);
         <span class="self">self</span>.<span class="ident">distance_hgroup</span>.<span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_u32</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_hc</span>);
@@ -934,17 +1067,17 @@
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliHuffmanTreeGroupInit</span>(<span class="self">self</span> :<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>, <span class="ident">group</span> : <span class="ident">WhichTreeGroup</span>,
-                                      <span class="ident">alphabet_size</span> : <span class="ident">u16</span>, <span class="ident">ntrees</span> : <span class="ident">u16</span>) {
+                                      <span class="ident">alphabet_size</span> : <span class="ident">u16</span>, <span class="ident">max_symbol</span>: <span class="ident">u16</span>, <span class="ident">ntrees</span> : <span class="ident">u16</span>) {
         <span class="kw">match</span> <span class="ident">group</span> {
             <span class="ident">WhichTreeGroup</span>::<span class="ident">LITERAL</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">literal_hgroup</span>.<span class="ident">init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_u32</span>,
                                                                 <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_hc</span>,
-                                                                <span class="ident">alphabet_size</span>, <span class="ident">ntrees</span>),
+                                                                <span class="ident">alphabet_size</span>, <span class="ident">max_symbol</span>, <span class="ident">ntrees</span>),
             <span class="ident">WhichTreeGroup</span>::<span class="ident">INSERT_COPY</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">insert_copy_hgroup</span>.<span class="ident">init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_u32</span>,
                                                                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_hc</span>,
-                                                                        <span class="ident">alphabet_size</span>, <span class="ident">ntrees</span>),
+                                                                        <span class="ident">alphabet_size</span>, <span class="ident">max_symbol</span>, <span class="ident">ntrees</span>),
             <span class="ident">WhichTreeGroup</span>::<span class="ident">DISTANCE</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">distance_hgroup</span>.<span class="ident">init</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_u32</span>,
                                                                   <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">alloc_hc</span>,
-                                                                  <span class="ident">alphabet_size</span>, <span class="ident">ntrees</span>),
+                                                                  <span class="ident">alphabet_size</span>, <span class="ident">max_symbol</span>, <span class="ident">ntrees</span>),
         }
     }
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliHuffmanTreeGroupRelease</span>(<span class="self">self</span> :<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>, <span class="ident">group</span> : <span class="ident">WhichTreeGroup</span>) {
@@ -958,69 +1091,63 @@
         }
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
 
-    <section class="footer"></section>
+<span class="kw">impl</span> <span class="op">&lt;</span><span class="lifetime">&#39;brotli_state</span>,
+      <span class="ident">AllocU8</span> : <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+      <span class="ident">AllocU32</span> : <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
+      <span class="ident">AllocHC</span> : <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">HuffmanCode</span><span class="op">&gt;</span> <span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">BrotliState</span><span class="op">&lt;</span><span class="ident">AllocU8</span>, <span class="ident">AllocU32</span>, <span class="ident">AllocHC</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="self">self</span>.<span class="ident">BrotliStateCleanup</span>();
+    }
+}
 
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
 
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
 
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliDecoderErrorStr</span>(<span class="ident">c</span>: <span class="ident">BrotliDecoderErrorCode</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> {
+  <span class="kw">match</span> <span class="ident">c</span> {
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_NO_ERROR</span> <span class="op">=&gt;</span> <span class="string">&quot;NO_ERROR\0&quot;</span>,
+  <span class="comment">/* Same as BrotliDecoderResult values */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_SUCCESS</span> <span class="op">=&gt;</span> <span class="string">&quot;SUCCESS\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_NEEDS_MORE_INPUT</span> <span class="op">=&gt;</span> <span class="string">&quot;NEEDS_MORE_INPUT\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_NEEDS_MORE_OUTPUT</span> <span class="op">=&gt;</span> <span class="string">&quot;NEEDS_MORE_OUTPUT\0&quot;</span>,
 
-            <div class="infos">
-                <h2>Search Tricks</h2>
+  <span class="comment">/* Errors caused by invalid input */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_NIBBLE</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_EXUBERANT_NIBBLE\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_RESERVED</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_RESERVED\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_EXUBERANT_META_NIBBLE</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_EXUBERANT_META_NIBBLE\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_SIMPLE_HUFFMAN_ALPHABET\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_SIMPLE_HUFFMAN_SAME</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_SIMPLE_HUFFMAN_SAME\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_CL_SPACE</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_FL_SPACE\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_HUFFMAN_SPACE</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_HUFFMAN_SPACE\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_CONTEXT_MAP_REPEAT</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_CONTEXT_MAP_REPEAT\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_1</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_BLOCK_LENGTH_1\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_BLOCK_LENGTH_2</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_BLOCK_LENGTH_2\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_TRANSFORM</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_FORMAT_TRANSFORM\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_DICTIONARY</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_DICTIONARY\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_WINDOW_BITS</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_WINDOW_BITS\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_PADDING_1</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_PADDING_1\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_PADDING_2</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_PADDING_2\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_FORMAT_DISTANCE</span> <span class="op">=&gt;</span><span class="string">&quot;ERROR_FORMAT_DISTANCE\0&quot;</span>,
 
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
+  <span class="comment">/* -17..-18 codes are reserved */</span>
 
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_DICTIONARY_NOT_SET</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_DICTIONARY_NOT_SET\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_INVALID_ARGUMENTS</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_INVALID_ARGUMENTS\0&quot;</span>,
 
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
+  <span class="comment">/* Memory allocation problems */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MODES</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_ALLOC_CONTEXT_MODES\0&quot;</span>,
+  <span class="comment">/* Literal =&gt; insert and distance trees together */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_ALLOC_TREE_GROUPS</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_ALLOC_TREE_GROUPS\0&quot;</span>,
+  <span class="comment">/* -23..-24 codes are reserved for distinct tree groups */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_ALLOC_CONTEXT_MAP</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_ALLOC_CONTEXT_MAP\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_1</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_ALLOC_RING_BUFFER_1\0&quot;</span>,
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_ALLOC_RING_BUFFER_2</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_ALLOC_RING_BUFFER_2\0&quot;</span>,
+  <span class="comment">/* -28..-29 codes are reserved for dynamic ring-buffer allocation */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_ALLOC_BLOCK_TYPE_TREES</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_ALLOC_BLOCK_TYPE_TREES\0&quot;</span>,
 
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "brotli_decompressor";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+  <span class="comment">/* &quot;Impossible&quot; states */</span>
+  <span class="ident">BrotliDecoderErrorCode</span>::<span class="ident">BROTLI_DECODER_ERROR_UNREACHABLE</span> <span class="op">=&gt;</span> <span class="string">&quot;ERROR_UNREACHABLE\0&quot;</span>,
+  }
+}
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "brotli_decompressor";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["LazifierVisitor","A visitor in charge of rewriting an AST to introduce laziness."],["LevelGuard","Keep track of the number of nested levels of functions/methods/... we have crossed."]]});

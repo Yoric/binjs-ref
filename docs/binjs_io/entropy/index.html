@@ -1,0 +1,94 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `entropy` mod in crate `binjs_io`."><meta name="keywords" content="rust, rustlang, rust-lang, entropy"><title>binjs_io::entropy - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Module entropy</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li></ul></div><p class='location'><a href='../index.html'>binjs_io</a></p><script>window.sidebarCurrent = {name: 'entropy', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/binjs_io/entropy/mod.rs.html#1-161' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../index.html'>binjs_io</a>::<wbr><a class="mod" href=''>entropy</a></span></h1><div class='docblock'><p>An encoding using entropy coding.
+A format in which we adopt an arithmetic encoding per nature.</p>
+<h1 id="overview" class="section-header"><a href="#overview">Overview</a></h1>
+<p>The general idea of arithmetic coding is that we can achieve a high
+density of information by encoding a sequence of symbols as a single
+rational number in [0, 1), with the actual number being determined
+from the probability of encountering each successive symbol in a
+given context.</p>
+<p>For instance, consider <code>BinaryOperation(op, left, right)</code> in a context C.
+For this example, let's assume that we are starting from the full segment
+[0, 1). In context C, we may encounter a number of subtrees labelled S_1,
+S_2, ..., S_n with probabilities p(C, S_1), p(C, S_2), ..., p(C, S_n).
+For simplicity, let's assume that label <code>BinaryOperation</code> is S_1
+(so, with probability p(C, S_1))
+Any number in [0, p(C, S_1)) may be used to represent <code>BinaryOperation</code>.</p>
+<p>Now, we proceed to encode <code>op</code> in a context C + <code>BinaryOperation</code>. Again,
+we have a number of possible values for <code>op</code>: op_1, ... op_n'. If <code>op</code>
+is <code>op_1</code>, any number of [0, p(C, S_1) * P(C + BinaryOperation, op_1))
+may be used to represent <code>op</code>.</p>
+<p>Similarly, we'll encode <code>left</code> and <code>right</code> in context C + <code>BinaryOperation</code>.</p>
+<h1 id="random-notes-on-the-format" class="section-header"><a href="#random-notes-on-the-format">Random notes on the format</a></h1>
+<ul>
+<li>We don't want too many dependencies between the dictionaries of two lazy
+functions, as we generally don't know in which order they will be loaded.
+The exception is if each lazy function has its own header and this header
+contains a dictionary, in which case we may easily load the headers and
+dictionaries in reading order. I guess we should do that.</li>
+</ul>
+<h1 id="encoding" class="section-header"><a href="#encoding">Encoding</a></h1>
+<p>Pass 1: walk the tree, compute the probabilities for each symbol.
+Pass 2: use probabilities to actually encode the symbols.</p>
+<ul>
+<li>Whenever we encounter a symbol that we have never seen in a given context,
+the symbol is followed by its definition as soon as possible.</li>
+</ul>
+<p>FIXME: Some symbols will need to be defined more than once. Need to estimate
+how often this appears.</p>
+<p>FIXME: Wait, no, that doesn't work. If we want this to work, we first need
+to deliver the probability table for everything. That's not what we want.</p>
+<p>Option: we may initialize the dictionary as follows:</p>
+<ul>
+<li>initial probability of a new symbol is 1.</li>
+<li>whenever we create a symbol, we followup with its actual probability</li>
+<li>the probability of new symbols decreases each time we add a symbol</li>
+</ul>
+<p>----- Initially, start with everything equi-likely. We'll add a predefined
+and/or custom dictionary later.</p>
+</div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="dictionary/index.html"
+                                  title='mod binjs_io::entropy::dictionary'>dictionary</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="probabilities/index.html"
+                                  title='mod binjs_io::entropy::probabilities'>probabilities</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="read/index.html"
+                                  title='mod binjs_io::entropy::read'>read</a></td>
+                           <td class='docblock-short'>
+                                <p>An entropy decoder</p>
+
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="write/index.html"
+                                  title='mod binjs_io::entropy::write'>write</a></td>
+                           <td class='docblock-short'>
+                                <p>An entropy encoder.</p>
+
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.FormatProvider.html"
+                                  title='struct binjs_io::entropy::FormatProvider'>FormatProvider</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="struct" href="struct.Options.html"
+                                  title='struct binjs_io::entropy::Options'>Options</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "binjs_io";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

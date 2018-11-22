@@ -1,63 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `brotli` crate.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, brotli">
-
-    <title>brotli - Rust</title>
-
-    <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
-    <script src="../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc mod">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        <p class='location'>Crate brotli</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'brotli', ty: 'mod', relpath: '../'};</script></div>
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>brotli</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/brotli/lib.rs.html#1-82' title='goto source code'>[src]</a></span></h1><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
-<table><tr><td><code>pub use enc::<a class="mod" href="../brotli/enc/interface/index.html" title="mod brotli::enc::interface">interface</a>;</code></td></tr><tr><td><code>pub use enc::input_pair::<a class="struct" href="../brotli/enc/input_pair/struct.InputReference.html" title="struct brotli::enc::input_pair::InputReference">InputReference</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompress.html" title="fn brotli::enc::BrotliCompress">BrotliCompress</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompressCustomAlloc.html" title="fn brotli::enc::BrotliCompressCustomAlloc">BrotliCompressCustomAlloc</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompressCustomIo.html" title="fn brotli::enc::BrotliCompressCustomIo">BrotliCompressCustomIo</a>;</code></td></tr><tr><td><code>pub use enc::reader::<a class="struct" href="../brotli/enc/reader/struct.CompressorReader.html" title="struct brotli::enc::reader::CompressorReader">CompressorReader</a>;</code></td></tr><tr><td><code>pub use enc::reader::<a class="struct" href="../brotli/enc/reader/struct.CompressorReaderCustomIo.html" title="struct brotli::enc::reader::CompressorReaderCustomIo">CompressorReaderCustomIo</a>;</code></td></tr><tr><td><code>pub use enc::writer::<a class="struct" href="../brotli/enc/writer/struct.CompressorWriter.html" title="struct brotli::enc::writer::CompressorWriter">CompressorWriter</a>;</code></td></tr><tr><td><code>pub use enc::writer::<a class="struct" href="../brotli/enc/writer/struct.CompressorWriterCustomIo.html" title="struct brotli::enc::writer::CompressorWriterCustomIo">CompressorWriterCustomIo</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `brotli` crate."><meta name="keywords" content="rust, rustlang, rust-lang, brotli"><title>brotli - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate brotli</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all brotli's items</p></a><div class="block items"><ul><li><a href="#reexports">Re-exports</a></li><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#constants">Constants</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'brotli', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/brotli/lib.rs.html#1-92' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>brotli</a></span></h1><h2 id='reexports' class='section-header'><a href="#reexports">Re-exports</a></h2>
+<table><tr><td><code>pub use self::enc::combined_alloc::<a class="struct" href="../brotli/enc/combined_alloc/struct.CombiningAllocator.html" title="struct brotli::enc::combined_alloc::CombiningAllocator">CombiningAllocator</a>;</code></td></tr><tr><td><code>pub use enc::<a class="mod" href="../brotli/enc/interface/index.html" title="mod brotli::enc::interface">interface</a>;</code></td></tr><tr><td><code>pub use enc::input_pair::<a class="struct" href="../brotli/enc/input_pair/struct.InputReference.html" title="struct brotli::enc::input_pair::InputReference">InputReference</a>;</code></td></tr><tr><td><code>pub use enc::input_pair::<a class="struct" href="../brotli/enc/input_pair/struct.InputReferenceMut.html" title="struct brotli::enc::input_pair::InputReferenceMut">InputReferenceMut</a>;</code></td></tr><tr><td><code>pub use enc::input_pair::<a class="struct" href="../brotli/enc/input_pair/struct.InputPair.html" title="struct brotli::enc::input_pair::InputPair">InputPair</a>;</code></td></tr><tr><td><code>pub use enc::interface::<a class="struct" href="../brotli/enc/interface/struct.SliceOffset.html" title="struct brotli::enc::interface::SliceOffset">SliceOffset</a>;</code></td></tr><tr><td><code>pub use enc::interface::<a class="fn" href="../brotli/enc/interface/fn.thaw.html" title="fn brotli::enc::interface::thaw">thaw</a>;</code></td></tr><tr><td><code>pub use enc::interface::<a class="fn" href="../brotli/enc/interface/fn.thaw_pair.html" title="fn brotli::enc::interface::thaw_pair">thaw_pair</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompress.html" title="fn brotli::enc::BrotliCompress">BrotliCompress</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompressCustomAlloc.html" title="fn brotli::enc::BrotliCompressCustomAlloc">BrotliCompressCustomAlloc</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompressCustomIo.html" title="fn brotli::enc::BrotliCompressCustomIo">BrotliCompressCustomIo</a>;</code></td></tr><tr><td><code>pub use enc::<a class="fn" href="../brotli/enc/fn.BrotliCompressCustomIoCustomDict.html" title="fn brotli::enc::BrotliCompressCustomIoCustomDict">BrotliCompressCustomIoCustomDict</a>;</code></td></tr><tr><td><code>pub use enc::reader::<a class="struct" href="../brotli/enc/reader/struct.CompressorReader.html" title="struct brotli::enc::reader::CompressorReader">CompressorReader</a>;</code></td></tr><tr><td><code>pub use enc::reader::<a class="struct" href="../brotli/enc/reader/struct.CompressorReaderCustomIo.html" title="struct brotli::enc::reader::CompressorReaderCustomIo">CompressorReaderCustomIo</a>;</code></td></tr><tr><td><code>pub use enc::writer::<a class="struct" href="../brotli/enc/writer/struct.CompressorWriter.html" title="struct brotli::enc::writer::CompressorWriter">CompressorWriter</a>;</code></td></tr><tr><td><code>pub use enc::writer::<a class="struct" href="../brotli/enc/writer/struct.CompressorWriterCustomIo.html" title="struct brotli::enc::writer::CompressorWriterCustomIo">CompressorWriterCustomIo</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="concat/index.html"
+                                  title='mod brotli::concat'>concat</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
                        <tr class=' module-item'>
                            <td><a class="mod" href="dictionary/index.html"
                                   title='mod brotli::dictionary'>dictionary</a></td>
@@ -68,6 +18,13 @@
                        <tr class=' module-item'>
                            <td><a class="mod" href="enc/index.html"
                                   title='mod brotli::enc'>enc</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class="mod" href="ffi/index.html"
+                                  title='mod brotli::ffi'>ffi</a></td>
                            <td class='docblock-short'>
                                 
                            </td>
@@ -185,6 +142,14 @@
                            <td class='docblock-short'>
                                 
                            </td>
+                       </tr></table><h2 id='constants' class='section-header'><a href="#constants">Constants</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class="constant" href="constant.VERSION.html"
+                                  title='constant brotli::VERSION'>VERSION</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
                        </tr></table><h2 id='traits' class='section-header'><a href="#traits">Traits</a></h2>
 <table>
                        <tr class=' module-item'>
@@ -247,6 +212,13 @@
                            </td>
                        </tr>
                        <tr class=' module-item'>
+                           <td><a class="fn" href="fn.BrotliDecompressCustomIoCustomDict.html"
+                                  title='fn brotli::BrotliDecompressCustomIoCustomDict'>BrotliDecompressCustomIoCustomDict</a></td>
+                           <td class='docblock-short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
                            <td><a class="fn" href="fn.BrotliDecompressStream.html"
                                   title='fn brotli::BrotliDecompressStream'>BrotliDecompressStream</a></td>
                            <td class='docblock-short'>
@@ -266,68 +238,4 @@
                            <td class='docblock-short'>
                                 
                            </td>
-                       </tr></table></section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../";
-        window.currentCrate = "brotli";
-    </script>
-    <script src="../main.js"></script>
-    <script defer src="../search-index.js"></script>
-</body>
-</html>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "brotli";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

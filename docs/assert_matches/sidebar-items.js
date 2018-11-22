@@ -1,1 +1,1 @@
-initSidebarItems({"macro":[["assert_matches","Asserts that an expression matches a given pattern."]]});
+initSidebarItems({"macro":[["assert_matches","Asserts that an expression matches a given pattern."],["debug_assert_matches","Asserts that an expression matches a given pattern."]]});

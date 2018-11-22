@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-1.2.0/src/enc/backward_references.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>backward_references.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle">
-    <script src="../../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/brotli-3.1.0/src/enc/backward_references.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>backward_references.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../light.css" id="themeStyle"><script src="../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1719,21 +1662,142 @@
 <span id="1662">1662</span>
 <span id="1663">1663</span>
 <span id="1664">1664</span>
-</pre><pre class="rust ">
+<span id="1665">1665</span>
+<span id="1666">1666</span>
+<span id="1667">1667</span>
+<span id="1668">1668</span>
+<span id="1669">1669</span>
+<span id="1670">1670</span>
+<span id="1671">1671</span>
+<span id="1672">1672</span>
+<span id="1673">1673</span>
+<span id="1674">1674</span>
+<span id="1675">1675</span>
+<span id="1676">1676</span>
+<span id="1677">1677</span>
+<span id="1678">1678</span>
+<span id="1679">1679</span>
+<span id="1680">1680</span>
+<span id="1681">1681</span>
+<span id="1682">1682</span>
+<span id="1683">1683</span>
+<span id="1684">1684</span>
+<span id="1685">1685</span>
+<span id="1686">1686</span>
+<span id="1687">1687</span>
+<span id="1688">1688</span>
+<span id="1689">1689</span>
+<span id="1690">1690</span>
+<span id="1691">1691</span>
+<span id="1692">1692</span>
+<span id="1693">1693</span>
+<span id="1694">1694</span>
+<span id="1695">1695</span>
+<span id="1696">1696</span>
+<span id="1697">1697</span>
+<span id="1698">1698</span>
+<span id="1699">1699</span>
+<span id="1700">1700</span>
+<span id="1701">1701</span>
+<span id="1702">1702</span>
+<span id="1703">1703</span>
+<span id="1704">1704</span>
+<span id="1705">1705</span>
+<span id="1706">1706</span>
+<span id="1707">1707</span>
+<span id="1708">1708</span>
+<span id="1709">1709</span>
+<span id="1710">1710</span>
+<span id="1711">1711</span>
+<span id="1712">1712</span>
+<span id="1713">1713</span>
+<span id="1714">1714</span>
+<span id="1715">1715</span>
+<span id="1716">1716</span>
+<span id="1717">1717</span>
+<span id="1718">1718</span>
+<span id="1719">1719</span>
+<span id="1720">1720</span>
+<span id="1721">1721</span>
+<span id="1722">1722</span>
+<span id="1723">1723</span>
+<span id="1724">1724</span>
+<span id="1725">1725</span>
+<span id="1726">1726</span>
+<span id="1727">1727</span>
+<span id="1728">1728</span>
+<span id="1729">1729</span>
+<span id="1730">1730</span>
+<span id="1731">1731</span>
+<span id="1732">1732</span>
+<span id="1733">1733</span>
+<span id="1734">1734</span>
+<span id="1735">1735</span>
+<span id="1736">1736</span>
+<span id="1737">1737</span>
+<span id="1738">1738</span>
+<span id="1739">1739</span>
+<span id="1740">1740</span>
+<span id="1741">1741</span>
+<span id="1742">1742</span>
+<span id="1743">1743</span>
+<span id="1744">1744</span>
+<span id="1745">1745</span>
+<span id="1746">1746</span>
+<span id="1747">1747</span>
+<span id="1748">1748</span>
+<span id="1749">1749</span>
+<span id="1750">1750</span>
+<span id="1751">1751</span>
+<span id="1752">1752</span>
+<span id="1753">1753</span>
+<span id="1754">1754</span>
+<span id="1755">1755</span>
+<span id="1756">1756</span>
+<span id="1757">1757</span>
+<span id="1758">1758</span>
+<span id="1759">1759</span>
+<span id="1760">1760</span>
+<span id="1761">1761</span>
+<span id="1762">1762</span>
+<span id="1763">1763</span>
+<span id="1764">1764</span>
+<span id="1765">1765</span>
+<span id="1766">1766</span>
+<span id="1767">1767</span>
+<span id="1768">1768</span>
+<span id="1769">1769</span>
+<span id="1770">1770</span>
+<span id="1771">1771</span>
+<span id="1772">1772</span>
+<span id="1773">1773</span>
+<span id="1774">1774</span>
+<span id="1775">1775</span>
+<span id="1776">1776</span>
+<span id="1777">1777</span>
+<span id="1778">1778</span>
+<span id="1779">1779</span>
+<span id="1780">1780</span>
+<span id="1781">1781</span>
+<span id="1782">1782</span>
+<span id="1783">1783</span>
+<span id="1784">1784</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span>
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">command</span>::{<span class="ident">Command</span>, <span class="ident">ComputeDistanceCode</span>, <span class="ident">InitCommand</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">command</span>::{<span class="ident">Command</span>, <span class="ident">ComputeDistanceCode</span>, <span class="ident">InitCommand</span>, <span class="ident">BrotliDistanceParams</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">hash_to_binary_tree</span>::{<span class="ident">H10</span>, <span class="ident">H10Buckets</span>, <span class="ident">H10DefaultParams</span>, <span class="ident">ZopfliNode</span>};
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">dictionary_hash</span>::<span class="ident">kStaticDictionaryHash</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">static_dict</span>::{<span class="ident">BROTLI_UNALIGNED_LOAD32</span>, <span class="ident">BROTLI_UNALIGNED_LOAD64</span>, <span class="ident">FindMatchLengthWithLimit</span>};
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">static_dict</span>::<span class="ident">BrotliDictionary</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">alloc</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">alloc</span>::{<span class="ident">SliceWrapper</span>, <span class="ident">SliceWrapperMut</span>};
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">Log2FloorNonZero</span>, <span class="ident">brotli_max_size_t</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">alloc</span>::{<span class="ident">SliceWrapper</span>, <span class="ident">SliceWrapperMut</span>, <span class="ident">Allocator</span>};
+<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">Log2FloorNonZero</span>, <span class="ident">brotli_max_size_t</span>, <span class="ident">floatX</span>};
 <span class="kw">use</span> <span class="ident">core</span>;
 <span class="kw">static</span> <span class="ident">kBrotliMinWindowBits</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">10i32</span>;
 
 <span class="kw">static</span> <span class="ident">kBrotliMaxWindowBits</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">24i32</span>;
 
-<span class="kw">static</span> <span class="ident">kInvalidMatch</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0xfffffffu32</span>;
+<span class="kw">pub</span> <span class="kw">static</span> <span class="ident">kInvalidMatch</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0xfffffffu32</span>;
 
 <span class="kw">static</span> <span class="ident">kCutoffTransformsCount</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">10u32</span>;
 
@@ -1746,16 +1810,19 @@
 <span class="kw">pub</span> <span class="kw">static</span> <span class="ident">kHashMul64Long</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">0x1fe35a7bu32</span> <span class="kw">as</span> (<span class="ident">u64</span>) <span class="op">&lt;&lt;</span> <span class="number">32i32</span> <span class="op">|</span> <span class="number">0xd3579bd3u32</span> <span class="kw">as</span> (<span class="ident">u64</span>);
 
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">repr</span>(<span class="ident">C</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">BrotliEncoderMode</span> {
   <span class="ident">BROTLI_MODE_GENERIC</span> <span class="op">=</span> <span class="number">0</span>,
   <span class="ident">BROTLI_MODE_TEXT</span> <span class="op">=</span> <span class="number">1</span>,
   <span class="ident">BROTLI_MODE_FONT</span> <span class="op">=</span> <span class="number">2</span>,
+  <span class="ident">BROTLI_FORCE_LSB_PRIOR</span> <span class="op">=</span> <span class="number">3</span>,
+  <span class="ident">BROTLI_FORCE_MSB_PRIOR</span> <span class="op">=</span> <span class="number">4</span>,
+  <span class="ident">BROTLI_FORCE_UTF8_PRIOR</span> <span class="op">=</span> <span class="number">5</span>,
+  <span class="ident">BROTLI_FORCE_SIGNED_PRIOR</span> <span class="op">=</span> <span class="number">6</span>,
 }
 
-
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>,<span class="ident">Copy</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>,<span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BrotliHasherParams</span> {
   <span class="comment">// type of hasher to use (default: type 6, but others have tradeoffs of speed/memory)</span>
   <span class="kw">pub</span> <span class="ident">type_</span>: <span class="ident">i32</span>,
@@ -1772,12 +1839,14 @@
 }
 
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BrotliEncoderParams</span> {
+  <span class="kw">pub</span> <span class="ident">dist</span>: <span class="ident">BrotliDistanceParams</span>,
   <span class="comment">// if this brotli file is generic, font or specifically text</span>
   <span class="kw">pub</span> <span class="ident">mode</span>: <span class="ident">BrotliEncoderMode</span>,
   <span class="comment">// quality param between 0 and 11 (11 is smallest but takes longest to encode)</span>
   <span class="kw">pub</span> <span class="ident">quality</span>: <span class="ident">i32</span>,
+  <span class="kw">pub</span> <span class="ident">q9_5</span>: <span class="ident">bool</span>,
   <span class="comment">// log of how big the ring buffer should be for copying prior data</span>
   <span class="kw">pub</span> <span class="ident">lgwin</span>: <span class="ident">i32</span>,
   <span class="comment">// log of how often metablocks should be serialized</span>
@@ -1796,12 +1865,42 @@
   <span class="comment">// if nonzero it will search for the temporal locality and effectiveness of the priors</span>
   <span class="comment">// for literals. The best adaptation and forgetfulness will be logged per metablock to the IR</span>
   <span class="kw">pub</span> <span class="ident">cdf_adaptation_detection</span>: <span class="ident">u8</span>,
+  <span class="comment">// whether to search for whether the previous byte or the context_map are better predictors on a per-context-map basis</span>
+  <span class="kw">pub</span> <span class="ident">prior_bitmask_detection</span>: <span class="ident">u8</span>,
+  <span class="comment">// for prior bitmask detection: stride_low, stride_speed, cm_low, cm_speed</span>
+  <span class="kw">pub</span> <span class="ident">literal_adaptation</span>:[(<span class="ident">u16</span>, <span class="ident">u16</span>); <span class="number">4</span>],
+  <span class="kw">pub</span> <span class="ident">large_window</span>: <span class="ident">bool</span>,
+  <span class="comment">// avoid search for the best ndirect vs npostfix parameters for distance</span>
+  <span class="kw">pub</span> <span class="ident">avoid_distance_prefix_search</span>: <span class="ident">bool</span>,
+  <span class="comment">// construct brotli in such a way that it may be concatenated with another brotli file using appropriate bit ops</span>
+  <span class="kw">pub</span> <span class="ident">catable</span>: <span class="ident">bool</span>,
+  <span class="comment">// can use the dictionary (default yes unless catable is set)</span>
+  <span class="kw">pub</span> <span class="ident">use_dictionary</span>: <span class="ident">bool</span>,
+  <span class="comment">// construct brotli in such a way that another concatable brotli file may be appended</span>
+  <span class="kw">pub</span> <span class="ident">appendable</span>: <span class="ident">bool</span>,
+  <span class="comment">// include a magic number and version number and size_hint at the beginning</span>
+  <span class="kw">pub</span> <span class="ident">magic_number</span>: <span class="ident">bool</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">BrotliEncoderParams</span> {
    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">BrotliEncoderParams</span> {
       <span class="kw">super</span>::<span class="ident">encode</span>::<span class="ident">BrotliEncoderInitParams</span>()
    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>,<span class="ident">Copy</span>,<span class="ident">Default</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">H9Opts</span>{
+   <span class="kw">pub</span> <span class="ident">literal_byte_score</span>: <span class="ident">u32</span>,
+}
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HowPrepared</span> {
+  <span class="ident">ALREADY_PREPARED</span>,
+  <span class="ident">NEWLY_PREPARED</span>,
+}
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Struct1</span> {
+  <span class="kw">pub</span> <span class="ident">params</span>: <span class="ident">BrotliHasherParams</span>,
+  <span class="kw">pub</span> <span class="ident">is_prepared_</span>: <span class="ident">i32</span>,
+  <span class="kw">pub</span> <span class="ident">dict_num_lookups</span>: <span class="ident">usize</span>,
+  <span class="kw">pub</span> <span class="ident">dict_num_matches</span>: <span class="ident">usize</span>,
 }
 
 <span class="kw">fn</span> <span class="ident">LiteralSpreeLengthForSparseSearch</span>(<span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliEncoderParams</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
@@ -1816,23 +1915,12 @@
   <span class="kw">if</span> <span class="ident">a</span> <span class="op">&lt;</span> <span class="ident">b</span> { <span class="ident">a</span> } <span class="kw">else</span> { <span class="ident">b</span> }
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HowPrepared</span> {
-  <span class="ident">ALREADY_PREPARED</span>,
-  <span class="ident">NEWLY_PREPARED</span>,
-}
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">HasherSearchResult</span> {
   <span class="kw">pub</span> <span class="ident">len</span>: <span class="ident">usize</span>,
   <span class="kw">pub</span> <span class="ident">len_x_code</span>: <span class="ident">usize</span>,
   <span class="kw">pub</span> <span class="ident">distance</span>: <span class="ident">usize</span>,
-  <span class="kw">pub</span> <span class="ident">score</span>: <span class="ident">usize</span>,
-}
-
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Struct1</span> {
-  <span class="kw">pub</span> <span class="ident">params</span>: <span class="ident">BrotliHasherParams</span>,
-  <span class="kw">pub</span> <span class="ident">is_prepared_</span>: <span class="ident">i32</span>,
-  <span class="kw">pub</span> <span class="ident">dict_num_lookups</span>: <span class="ident">usize</span>,
-  <span class="kw">pub</span> <span class="ident">dict_num_matches</span>: <span class="ident">usize</span>,
+  <span class="kw">pub</span> <span class="ident">score</span>: <span class="ident">u64</span>,
 }
 
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">AnyHasher</span> {
@@ -1843,7 +1931,7 @@
   <span class="kw">fn</span> <span class="ident">StoreLookahead</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span>;
   <span class="kw">fn</span> <span class="ident">PrepareDistanceCache</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">distance_cache</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">i32</span>]);
   <span class="kw">fn</span> <span class="ident">FindLongestMatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                      <span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+                      <span class="ident">dictionary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span><span class="op">&gt;</span>,
                       <span class="ident">dictionary_hash</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
                       <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                       <span class="ident">ring_buffer_mask</span>: <span class="ident">usize</span>,
@@ -1851,6 +1939,8 @@
                       <span class="ident">cur_ix</span>: <span class="ident">usize</span>,
                       <span class="ident">max_length</span>: <span class="ident">usize</span>,
                       <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                      <span class="ident">gap</span>: <span class="ident">usize</span>,
+                      <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                       <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>)
                       <span class="op">-&gt;</span> <span class="ident">bool</span>;
   <span class="kw">fn</span> <span class="ident">Store</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">mask</span>: <span class="ident">usize</span>, <span class="ident">ix</span>: <span class="ident">usize</span>);
@@ -1862,6 +1952,7 @@
                            <span class="ident">ringbuffer</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                            <span class="ident">ringbuffer_mask</span>: <span class="ident">usize</span>);
 }
+
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">StitchToPreviousBlockInternal</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">AnyHasher</span><span class="op">&gt;</span>(<span class="ident">handle</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>,
                                                    <span class="ident">num_bytes</span>: <span class="ident">usize</span>,
@@ -1967,7 +2058,7 @@
   }
 
   <span class="kw">fn</span> <span class="ident">FindLongestMatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                      <span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+                      <span class="ident">dictionary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span><span class="op">&gt;</span>,
                       <span class="ident">dictionary_hash</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
                       <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                       <span class="ident">ring_buffer_mask</span>: <span class="ident">usize</span>,
@@ -1975,6 +2066,8 @@
                       <span class="ident">cur_ix</span>: <span class="ident">usize</span>,
                       <span class="ident">max_length</span>: <span class="ident">usize</span>,
                       <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                      <span class="ident">gap</span>: <span class="ident">usize</span>,
+                      <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                       <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>)
                       <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">let</span> <span class="ident">opts</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">Opts</span>();
@@ -1982,7 +2075,7 @@
     <span class="kw">let</span> <span class="ident">cur_ix_masked</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">cur_ix</span> <span class="op">&amp;</span> <span class="ident">ring_buffer_mask</span>;
     <span class="kw">let</span> <span class="ident">key</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">HashBytes</span>(<span class="kw-2">&amp;</span><span class="ident">data</span>[(<span class="ident">cur_ix_masked</span> <span class="kw">as</span> (<span class="ident">usize</span>))..]) <span class="kw">as</span> <span class="ident">u32</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">compare_char</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="ident">data</span>[(<span class="ident">cur_ix_masked</span>.<span class="ident">wrapping_add</span>(<span class="ident">best_len_in</span>) <span class="kw">as</span> (<span class="ident">usize</span>))] <span class="kw">as</span> (<span class="ident">i32</span>);
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_score</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_score</span>: <span class="ident">u64</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_len</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">best_len_in</span>;
     <span class="kw">let</span> <span class="ident">cached_backward</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">distance_cache</span>[(<span class="number">0usize</span>)] <span class="kw">as</span> (<span class="ident">usize</span>);
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">prev_ix</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">cur_ix</span>.<span class="ident">wrapping_sub</span>(<span class="ident">cached_backward</span>);
@@ -2059,7 +2152,7 @@
                                            <span class="kw-2">&amp;</span><span class="ident">data</span>[(<span class="ident">cur_ix_masked</span> <span class="kw">as</span> (<span class="ident">usize</span>))..],
                                            <span class="ident">max_length</span>);
             <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;=</span> <span class="number">4usize</span> {
-              <span class="kw">let</span> <span class="ident">score</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">len</span>, <span class="ident">backward</span>, <span class="ident">opts</span>);
+              <span class="kw">let</span> <span class="ident">score</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">len</span>, <span class="ident">backward</span>, <span class="ident">opts</span>);
               <span class="kw">if</span> <span class="ident">best_score</span> <span class="op">&lt;</span> <span class="ident">score</span> {
                 <span class="ident">best_score</span> <span class="op">=</span> <span class="ident">score</span>;
                 <span class="ident">best_len</span> <span class="op">=</span> <span class="ident">len</span>;
@@ -2081,13 +2174,14 @@
         }
       }
     }
-    <span class="kw">if</span> <span class="self">self</span>.<span class="ident">buckets_</span>.<span class="ident">USE_DICTIONARY</span>() <span class="op">!=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> (<span class="ident">is_match_found</span> <span class="op">==</span> <span class="number">0</span>) {
-      <span class="ident">is_match_found</span> <span class="op">=</span> <span class="ident">SearchInStaticDictionary</span>(<span class="ident">dictionary</span>,
+    <span class="kw">if</span> <span class="ident">dictionary</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">buckets_</span>.<span class="ident">USE_DICTIONARY</span>() <span class="op">!=</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> (<span class="ident">is_match_found</span> <span class="op">==</span> <span class="number">0</span>) {
+      <span class="ident">is_match_found</span> <span class="op">=</span> <span class="ident">SearchInStaticDictionary</span>(<span class="ident">dictionary</span>.<span class="ident">unwrap</span>(),
                                                 <span class="ident">dictionary_hash</span>,
                                                 <span class="self">self</span>,
                                                 <span class="kw-2">&amp;</span><span class="ident">data</span>[(<span class="ident">cur_ix_masked</span> <span class="kw">as</span> (<span class="ident">usize</span>))..],
                                                 <span class="ident">max_length</span>,
-                                                <span class="ident">max_backward</span>,
+                                                <span class="ident">max_backward</span>.<span class="ident">wrapping_add</span>(<span class="ident">gap</span>),
+                                                <span class="ident">max_distance</span>,
                                                 <span class="ident">out</span>,
                                                 <span class="number">1i32</span>);
     }
@@ -2214,10 +2308,6 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">H9_BLOCK_SIZE</span> :<span class="ident">usize</span><span class="op">=</span> <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">H9_BLOCK_BITS</span>;
 <span class="kw">const</span> <span class="ident">H9_BLOCK_MASK</span> :<span class="ident">usize</span><span class="op">=</span> (<span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">H9_BLOCK_BITS</span>) <span class="op">-</span> <span class="number">1</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>,<span class="ident">Copy</span>,<span class="ident">Default</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">H9Opts</span>{
-   <span class="ident">literal_byte_score</span>: <span class="ident">u32</span>,
-}
 
 <span class="kw">impl</span> <span class="ident">H9Opts</span> {
    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">params</span>:<span class="kw-2">&amp;</span><span class="ident">BrotliHasherParams</span>) <span class="op">-&gt;</span> <span class="ident">H9Opts</span> {
@@ -2227,10 +2317,9 @@
    }
 }
 
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">H9</span><span class="op">&lt;</span><span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-              <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">num_</span>:<span class="ident">AllocU16</span>::<span class="ident">AllocatedMemory</span>,<span class="comment">//[u16;1 &lt;&lt; H9_BUCKET_BITS],</span>
-    <span class="kw">pub</span> <span class="ident">buckets_</span>:<span class="ident">AllocU32</span>::<span class="ident">AllocatedMemory</span>,<span class="comment">//[u32; H9_BLOCK_SIZE &lt;&lt; H9_BUCKET_BITS],</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">H9</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">pub</span> <span class="ident">num_</span>:<span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>,<span class="comment">//[u16;1 &lt;&lt; H9_BUCKET_BITS],</span>
+    <span class="kw">pub</span> <span class="ident">buckets_</span>:<span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>,<span class="comment">//[u32; H9_BLOCK_SIZE &lt;&lt; H9_BUCKET_BITS],</span>
     <span class="kw">pub</span> <span class="ident">dict_search_stats_</span>:<span class="ident">Struct1</span>,
     <span class="kw">pub</span> <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>,
 }
@@ -2256,11 +2345,11 @@
         }
 }
 
-<span class="kw">const</span> <span class="ident">kDistanceCacheIndex</span> : [<span class="ident">u8</span>;<span class="number">16</span>] <span class="op">=</span> [
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">kDistanceCacheIndex</span> : [<span class="ident">u8</span>;<span class="number">16</span>] <span class="op">=</span> [
     <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>,
 ];
 
-<span class="kw">const</span> <span class="ident">kDistanceCacheOffset</span> : [<span class="ident">i8</span>;<span class="number">16</span>]<span class="op">=</span> [
+<span class="kw">pub</span> <span class="kw">const</span> <span class="ident">kDistanceCacheOffset</span> : [<span class="ident">i8</span>;<span class="number">16</span>]<span class="op">=</span> [
     <span class="number">0i8</span>,
     <span class="number">0i8</span>,
     <span class="number">0i8</span>,
@@ -2278,13 +2367,13 @@
     <span class="op">-</span><span class="number">3i8</span>,
     <span class="number">3i8</span>];
 
-<span class="comment">//const BROTLI_LITERAL_BYTE_SCORE: usize = 540;</span>
-<span class="kw">const</span> <span class="ident">BROTLI_DISTANCE_BIT_PENALTY</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">120</span>;
+<span class="comment">//const BROTLI_LITERAL_BYTE_SCORE: u64 = 540;</span>
+<span class="kw">const</span> <span class="ident">BROTLI_DISTANCE_BIT_PENALTY</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">120</span>;
 
 
 <span class="comment">// Score must be positive after applying maximal penalty.</span>
-<span class="kw">const</span> <span class="ident">BROTLI_SCORE_BASE</span> : <span class="ident">usize</span> <span class="op">=</span> (<span class="ident">BROTLI_DISTANCE_BIT_PENALTY</span> <span class="op">*</span> <span class="number">8</span> <span class="op">*</span> <span class="number">8</span><span class="comment">/* sizeof usize*/</span>);
-<span class="kw">const</span> <span class="ident">kDistanceShortCodeCost</span> : [<span class="ident">usize</span>;<span class="number">16</span>] <span class="op">=</span> [
+<span class="kw">const</span> <span class="ident">BROTLI_SCORE_BASE</span> : <span class="ident">u32</span> <span class="op">=</span> (<span class="ident">BROTLI_DISTANCE_BIT_PENALTY</span> <span class="op">*</span> <span class="number">8</span> <span class="op">*</span> <span class="number">8</span><span class="comment">/* sizeof usize*/</span>);
+<span class="kw">const</span> <span class="ident">kDistanceShortCodeCost</span> : [<span class="ident">u32</span>;<span class="number">16</span>] <span class="op">=</span> [
   <span class="comment">/* Repeat last */</span>
   <span class="ident">BROTLI_SCORE_BASE</span> <span class="op">+</span>  <span class="number">60</span>,
   <span class="comment">/* 2nd, 3rd, 4th last */</span>
@@ -2309,20 +2398,19 @@
 
 <span class="kw">fn</span> <span class="ident">BackwardReferenceScoreH9</span>(<span class="ident">copy_length</span>: <span class="ident">usize</span>,
                             <span class="ident">backward_reference_offset</span>: <span class="ident">usize</span>,
-                            <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-    (<span class="ident">BROTLI_SCORE_BASE</span>.<span class="ident">wrapping_add</span>((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span>)).<span class="ident">wrapping_sub</span>(
-        (<span class="ident">BROTLI_DISTANCE_BIT_PENALTY</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">Log2FloorNonZero</span>(<span class="ident">backward_reference_offset</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="kw">as</span> <span class="ident">usize</span>))) <span class="op">&gt;&gt;</span> <span class="number">2</span>
+                            <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+    (<span class="ident">u64</span>::<span class="ident">from</span>(<span class="ident">BROTLI_SCORE_BASE</span>).<span class="ident">wrapping_add</span>((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span> <span class="kw">as</span> <span class="ident">u64</span>)).<span class="ident">wrapping_sub</span>(
+        (<span class="ident">BROTLI_DISTANCE_BIT_PENALTY</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">wrapping_mul</span>(<span class="ident">Log2FloorNonZero</span>(<span class="ident">backward_reference_offset</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="kw">as</span> <span class="ident">u64</span>))) <span class="op">&gt;&gt;</span> <span class="number">2</span>
 }
 
 <span class="kw">fn</span> <span class="ident">BackwardReferenceScoreUsingLastDistanceH9</span>(
     <span class="ident">copy_length</span> : <span class="ident">usize</span>, <span class="ident">distance_short_code</span> : <span class="ident">usize</span>,
-    <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-  ((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">usize</span>).<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span>).<span class="ident">wrapping_add</span>(
-      <span class="ident">kDistanceShortCodeCost</span>[<span class="ident">distance_short_code</span>])) <span class="op">&gt;&gt;</span> <span class="number">2</span>
+    <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+  ((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span> <span class="kw">as</span> <span class="ident">u64</span>).<span class="ident">wrapping_add</span>(
+      <span class="ident">u64</span>::<span class="ident">from</span>(<span class="ident">kDistanceShortCodeCost</span>[<span class="ident">distance_short_code</span>]))) <span class="op">&gt;&gt;</span> <span class="number">2</span>
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-              <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">AnyHasher</span> <span class="kw">for</span> <span class="ident">H9</span><span class="op">&lt;</span><span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">AnyHasher</span> <span class="kw">for</span> <span class="ident">H9</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span> {
   <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">Opts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">H9Opts</span> {
        <span class="self">self</span>.<span class="ident">h9_opts</span>
@@ -2350,7 +2438,7 @@
         <span class="ident">adv_prepare_distance_cache</span>(<span class="ident">distance_cache</span>, <span class="ident">num_distances</span>);
     }
     <span class="kw">fn</span> <span class="ident">FindLongestMatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                        <span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+                        <span class="ident">dictionary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span><span class="op">&gt;</span>,
                         <span class="ident">dictionary_hash</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
                         <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                         <span class="ident">ring_buffer_mask</span>: <span class="ident">usize</span>,
@@ -2358,11 +2446,13 @@
                         <span class="ident">cur_ix</span>: <span class="ident">usize</span>,
                         <span class="ident">max_length</span>: <span class="ident">usize</span>,
                         <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                        <span class="ident">gap</span>: <span class="ident">usize</span>,
+                        <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                         <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>)
                         <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">best_len_in</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">len</span>;
         <span class="kw">let</span> <span class="ident">cur_ix_masked</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">cur_ix</span> <span class="op">&amp;</span> <span class="ident">ring_buffer_mask</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_score</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_score</span>: <span class="ident">u64</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_len</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">best_len_in</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_match_found</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0i32</span>;
         (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">len_x_code</span> <span class="op">=</span> <span class="number">0usize</span>;
@@ -2449,14 +2539,15 @@
             <span class="ident">bucket</span>[<span class="kw-2">*</span><span class="ident">self_num_key</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">&amp;</span> <span class="ident">H9_BLOCK_MASK</span>] <span class="op">=</span> <span class="ident">cur_ix</span> <span class="kw">as</span> <span class="ident">u32</span>;
             <span class="kw-2">*</span><span class="ident">self_num_key</span> <span class="op">=</span> <span class="ident">self_num_key</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span>);
         }
-        <span class="kw">if</span> (<span class="ident">is_match_found</span> <span class="op">==</span> <span class="number">0</span>) {
+        <span class="kw">if</span> <span class="ident">is_match_found</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">dictionary</span>.<span class="ident">is_some</span>() {
             <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">cur_data</span>) <span class="op">=</span> <span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">cur_ix_masked</span> <span class="kw">as</span> <span class="ident">usize</span>);
-            <span class="ident">is_match_found</span> <span class="op">=</span> <span class="ident">SearchInStaticDictionary</span>(<span class="ident">dictionary</span>,
+            <span class="ident">is_match_found</span> <span class="op">=</span> <span class="ident">SearchInStaticDictionary</span>(<span class="ident">dictionary</span>.<span class="ident">unwrap</span>(),
                                                       <span class="ident">dictionary_hash</span>,
                                                       <span class="self">self</span>,
                                                       <span class="ident">cur_data</span>,
                                                       <span class="ident">max_length</span>,
-                                                      <span class="ident">max_backward</span>,
+                                                      <span class="ident">max_backward</span>.<span class="ident">wrapping_add</span>(<span class="ident">gap</span>),
+                                                      <span class="ident">max_distance</span>,
                                                       <span class="ident">out</span>,
                                                       <span class="number">0i32</span>);
         }
@@ -2509,8 +2600,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">Specialization</span>: <span class="ident">AdvHashSpecialization</span> <span class="op">+</span> <span class="ident">Sized</span>,
-                     <span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-                     <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>
+                     <span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>
 {
   <span class="kw">pub</span> <span class="ident">GetHasherCommon</span>: <span class="ident">Struct1</span>,
   <span class="kw">pub</span> <span class="ident">bucket_size_</span>: <span class="ident">u64</span>,
@@ -2518,8 +2608,8 @@
   <span class="kw">pub</span> <span class="ident">specialization</span>: <span class="ident">Specialization</span>, <span class="comment">// contains hash_mask_</span>
   <span class="kw">pub</span> <span class="ident">hash_shift_</span>: <span class="ident">i32</span>,
   <span class="kw">pub</span> <span class="ident">block_mask_</span>: <span class="ident">u32</span>,
-  <span class="kw">pub</span> <span class="ident">num</span>: <span class="ident">AllocU16</span>::<span class="ident">AllocatedMemory</span>,
-  <span class="kw">pub</span> <span class="ident">buckets</span>: <span class="ident">AllocU32</span>::<span class="ident">AllocatedMemory</span>,
+  <span class="kw">pub</span> <span class="ident">num</span>: <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>,
+  <span class="kw">pub</span> <span class="ident">buckets</span>: <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>,
   <span class="kw">pub</span> <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>,
 }
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">H5Sub</span> {}
@@ -2570,13 +2660,13 @@
   }
 }
 
-<span class="kw">fn</span> <span class="ident">BackwardReferencePenaltyUsingLastDistance</span>(<span class="ident">distance_short_code</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-  (<span class="number">39usize</span>).<span class="ident">wrapping_add</span>((<span class="number">0x1ca10i32</span> <span class="op">&gt;&gt;</span> (<span class="ident">distance_short_code</span> <span class="op">&amp;</span> <span class="number">0xeusize</span>) <span class="op">&amp;</span> <span class="number">0xei32</span>) <span class="kw">as</span> (<span class="ident">usize</span>))
+<span class="kw">fn</span> <span class="ident">BackwardReferencePenaltyUsingLastDistance</span>(<span class="ident">distance_short_code</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+  (<span class="number">39u64</span>).<span class="ident">wrapping_add</span>((<span class="number">0x1ca10u64</span> <span class="op">&gt;&gt;</span> (<span class="ident">distance_short_code</span> <span class="op">&amp;</span> <span class="number">0xeusize</span>) <span class="op">&amp;</span> <span class="number">0xeu64</span>))
 }
 
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Specialization</span>: <span class="ident">AdvHashSpecialization</span>, <span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">AnyHasher</span>
-  <span class="kw">for</span> <span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">Specialization</span>, <span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Specialization</span>: <span class="ident">AdvHashSpecialization</span>, <span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">AnyHasher</span>
+  <span class="kw">for</span> <span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">Specialization</span>, <span class="ident">Alloc</span><span class="op">&gt;</span> {
   <span class="kw">fn</span> <span class="ident">Opts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">H9Opts</span> {
      <span class="self">self</span>.<span class="ident">h9_opts</span>
   }
@@ -2647,7 +2737,7 @@
   }
 
   <span class="kw">fn</span> <span class="ident">FindLongestMatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                      <span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+                      <span class="ident">dictionary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span><span class="op">&gt;</span>,
                       <span class="ident">dictionary_hash</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
                       <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                       <span class="ident">ring_buffer_mask</span>: <span class="ident">usize</span>,
@@ -2655,12 +2745,14 @@
                       <span class="ident">cur_ix</span>: <span class="ident">usize</span>,
                       <span class="ident">max_length</span>: <span class="ident">usize</span>,
                       <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                      <span class="ident">gap</span>: <span class="ident">usize</span>,
+                      <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                       <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>)
                       <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">let</span> <span class="ident">opts</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">Opts</span>();
     <span class="kw">let</span> <span class="ident">cur_ix_masked</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">cur_ix</span> <span class="op">&amp;</span> <span class="ident">ring_buffer_mask</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_match_found</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0i32</span>;
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_score</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_score</span>: <span class="ident">u64</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">best_len</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">len</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span>: <span class="ident">usize</span>;
     (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">len</span> <span class="op">=</span> <span class="number">0usize</span>;
@@ -2697,7 +2789,7 @@
                                                       <span class="kw-2">&amp;</span><span class="ident">cur_data</span>,
                                                       <span class="ident">max_length</span>);
             <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;=</span> <span class="number">3usize</span> <span class="op">||</span> <span class="ident">len</span> <span class="op">==</span> <span class="number">2usize</span> <span class="op">&amp;&amp;</span> (<span class="ident">i</span> <span class="op">&lt;</span> <span class="number">2usize</span>) {
-              <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">score</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">BackwardReferenceScoreUsingLastDistance</span>(<span class="ident">len</span>, <span class="ident">opts</span>);
+              <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">score</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">BackwardReferenceScoreUsingLastDistance</span>(<span class="ident">len</span>, <span class="ident">opts</span>);
               <span class="kw">if</span> <span class="ident">best_score</span> <span class="op">&lt;</span> <span class="ident">score</span> {
                 <span class="kw">if</span> <span class="ident">i</span> <span class="op">!=</span> <span class="number">0usize</span> {
                   <span class="ident">score</span> <span class="op">=</span> <span class="ident">score</span>.<span class="ident">wrapping_sub</span>(<span class="ident">BackwardReferencePenaltyUsingLastDistance</span>(<span class="ident">i</span>));
@@ -2759,7 +2851,7 @@
                                                     <span class="kw-2">&amp;</span><span class="ident">cur_data</span>,
                                                     <span class="ident">max_length</span>);
           <span class="kw">if</span> <span class="ident">len</span> <span class="op">&gt;=</span> <span class="number">4usize</span> {
-            <span class="kw">let</span> <span class="ident">score</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">len</span>, <span class="ident">backward</span>, <span class="ident">opts</span>);
+            <span class="kw">let</span> <span class="ident">score</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">len</span>, <span class="ident">backward</span>, <span class="ident">opts</span>);
             <span class="kw">if</span> <span class="ident">best_score</span> <span class="op">&lt;</span> <span class="ident">score</span> {
               <span class="ident">best_score</span> <span class="op">=</span> <span class="ident">score</span>;
               <span class="ident">best_len</span> <span class="op">=</span> <span class="ident">len</span>;
@@ -2778,14 +2870,15 @@
         <span class="kw-2">*</span><span class="ident">_lhs</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">_lhs</span> <span class="kw">as</span> (<span class="ident">i32</span>) <span class="op">+</span> <span class="ident">_rhs</span>) <span class="kw">as</span> (<span class="ident">u16</span>);
       }
     }
-    <span class="kw">if</span> <span class="ident">is_match_found</span> <span class="op">==</span> <span class="number">0</span> {
+    <span class="kw">if</span> <span class="ident">is_match_found</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">dictionary</span>.<span class="ident">is_some</span>() {
       <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">cur_data</span>) <span class="op">=</span> <span class="ident">data</span>.<span class="ident">split_at</span>(<span class="ident">cur_ix_masked</span> <span class="kw">as</span> <span class="ident">usize</span>);
-      <span class="ident">is_match_found</span> <span class="op">=</span> <span class="ident">SearchInStaticDictionary</span>(<span class="ident">dictionary</span>,
+      <span class="ident">is_match_found</span> <span class="op">=</span> <span class="ident">SearchInStaticDictionary</span>(<span class="ident">dictionary</span>.<span class="ident">unwrap</span>(),
                                                 <span class="ident">dictionary_hash</span>,
                                                 <span class="self">self</span>,
                                                 <span class="ident">cur_data</span>,
                                                 <span class="ident">max_length</span>,
-                                                <span class="ident">max_backward</span>,
+                                                <span class="ident">max_backward</span>.<span class="ident">wrapping_add</span>(<span class="ident">gap</span>),
+                                                <span class="ident">max_distance</span>,
                                                 <span class="ident">out</span>,
                                                 <span class="number">0i32</span>);
     }
@@ -2867,20 +2960,19 @@
 }
 
 
-<span class="kw">fn</span> <span class="ident">BackwardReferenceScoreUsingLastDistance</span>(<span class="ident">copy_length</span>: <span class="ident">usize</span>, <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-  ((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&gt;&gt;</span> <span class="number">2</span>)
-    .<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span>)
-    .<span class="ident">wrapping_add</span>(((<span class="number">30i32</span> <span class="op">*</span> <span class="number">8i32</span>) <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="ident">wrapping_mul</span>(::<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>()))
-    .<span class="ident">wrapping_add</span>(<span class="number">15usize</span>)
+<span class="kw">fn</span> <span class="ident">BackwardReferenceScoreUsingLastDistance</span>(<span class="ident">copy_length</span>: <span class="ident">usize</span>, <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+  ((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="op">&gt;&gt;</span> <span class="number">2</span>)
+    .<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span> <span class="kw">as</span> <span class="ident">u64</span>)
+    .<span class="ident">wrapping_add</span>((<span class="number">30u64</span> <span class="op">*</span> <span class="number">8u64</span>).<span class="ident">wrapping_mul</span>(::<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>() <span class="kw">as</span> <span class="ident">u64</span>))
+    .<span class="ident">wrapping_add</span>(<span class="number">15u64</span>)
 }
 
 
-<span class="kw">fn</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">copy_length</span>: <span class="ident">usize</span>, <span class="ident">backward_reference_offset</span>: <span class="ident">usize</span>, <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
-  ((<span class="number">30i32</span> <span class="op">*</span> <span class="number">8i32</span>) <span class="kw">as</span> (<span class="ident">usize</span>))
-    .<span class="ident">wrapping_mul</span>(::<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>())
-    .<span class="ident">wrapping_add</span>(((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&gt;&gt;</span> <span class="number">2</span>).<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span>))
-    .<span class="ident">wrapping_sub</span>((<span class="number">30u32</span>).<span class="ident">wrapping_mul</span>(<span class="ident">Log2FloorNonZero</span>(<span class="ident">backward_reference_offset</span> <span class="kw">as</span> <span class="ident">u64</span>)) <span class="kw">as</span>
-                  (<span class="ident">usize</span>))
+<span class="kw">fn</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">copy_length</span>: <span class="ident">usize</span>, <span class="ident">backward_reference_offset</span>: <span class="ident">usize</span>, <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>) <span class="op">-&gt;</span> <span class="ident">u64</span> {
+  (<span class="number">30u64</span> <span class="op">*</span> <span class="number">8u64</span>)
+    .<span class="ident">wrapping_mul</span>(::<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>() <span class="kw">as</span> <span class="ident">u64</span>)
+    .<span class="ident">wrapping_add</span>(((<span class="ident">h9_opts</span>.<span class="ident">literal_byte_score</span> <span class="kw">as</span> <span class="ident">usize</span>) <span class="op">&gt;&gt;</span> <span class="number">2</span>).<span class="ident">wrapping_mul</span>(<span class="ident">copy_length</span>) <span class="kw">as</span> <span class="ident">u64</span>)
+    .<span class="ident">wrapping_sub</span>((<span class="number">30u64</span>).<span class="ident">wrapping_mul</span>(<span class="ident">Log2FloorNonZero</span>(<span class="ident">backward_reference_offset</span> <span class="kw">as</span> <span class="ident">u64</span>) <span class="kw">as</span> <span class="ident">u64</span>))
 }
 
 <span class="kw">fn</span> <span class="ident">Hash14</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">u32</span> {
@@ -2893,6 +2985,7 @@
                             <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                             <span class="ident">max_length</span>: <span class="ident">usize</span>,
                             <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                            <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                             <span class="ident">h9_opts</span>: <span class="ident">H9Opts</span>,
                             <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>)
                             <span class="op">-&gt;</span> <span class="ident">i32</span> {
@@ -2901,7 +2994,7 @@
   <span class="kw">let</span> <span class="ident">offset</span>: <span class="ident">usize</span>;
   <span class="kw">let</span> <span class="ident">matchlen</span>: <span class="ident">usize</span>;
   <span class="kw">let</span> <span class="ident">backward</span>: <span class="ident">usize</span>;
-  <span class="kw">let</span> <span class="ident">score</span>: <span class="ident">usize</span>;
+  <span class="kw">let</span> <span class="ident">score</span>: <span class="ident">u64</span>;
   <span class="ident">len</span> <span class="op">=</span> <span class="ident">item</span> <span class="op">&amp;</span> <span class="number">0x1fusize</span>;
   <span class="ident">dist</span> <span class="op">=</span> <span class="ident">item</span> <span class="op">&gt;&gt;</span> <span class="number">5i32</span>;
   <span class="ident">offset</span> <span class="op">=</span> ((<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">offsets_by_length</span>[<span class="ident">len</span>] <span class="kw">as</span> (<span class="ident">usize</span>)).<span class="ident">wrapping_add</span>(<span class="ident">len</span>.<span class="ident">wrapping_mul</span>(<span class="ident">dist</span>));
@@ -2920,6 +3013,9 @@
       .<span class="ident">wrapping_add</span>(<span class="number">1usize</span>)
       .<span class="ident">wrapping_add</span>(<span class="ident">transform_id</span> <span class="op">&lt;&lt;</span> (<span class="kw-2">*</span><span class="ident">dictionary</span>).<span class="ident">size_bits_by_length</span>[<span class="ident">len</span>] <span class="kw">as</span> (<span class="ident">i32</span>));
   }
+  <span class="kw">if</span> <span class="ident">backward</span> <span class="op">&gt;</span> <span class="ident">max_distance</span> {
+      <span class="kw">return</span> <span class="number">0i32</span>;
+  }
   <span class="ident">score</span> <span class="op">=</span> <span class="ident">BackwardReferenceScore</span>(<span class="ident">matchlen</span>, <span class="ident">backward</span>, <span class="ident">h9_opts</span>);
   <span class="kw">if</span> <span class="ident">score</span> <span class="op">&lt;</span> (<span class="kw-2">*</span><span class="ident">out</span>).<span class="ident">score</span> {
     <span class="kw">return</span> <span class="number">0i32</span>;
@@ -2937,6 +3033,7 @@
                                                    <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                                                    <span class="ident">max_length</span>: <span class="ident">usize</span>,
                                                    <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                                                   <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                                                    <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>,
                                                    <span class="ident">shallow</span>: <span class="ident">i32</span>)
                                                    <span class="op">-&gt;</span> <span class="ident">i32</span> {
@@ -2956,7 +3053,7 @@
       (<span class="kw-2">*</span><span class="ident">xself</span>).<span class="ident">dict_num_lookups</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">xself</span>).<span class="ident">dict_num_lookups</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
       <span class="kw">if</span> <span class="ident">item</span> <span class="op">!=</span> <span class="number">0usize</span> {
         <span class="kw">let</span> <span class="ident">item_matches</span>: <span class="ident">i32</span> <span class="op">=</span>
-          <span class="ident">TestStaticDictionaryItem</span>(<span class="ident">dictionary</span>, <span class="ident">item</span>, <span class="ident">data</span>, <span class="ident">max_length</span>, <span class="ident">max_backward</span>, <span class="ident">opts</span>, <span class="ident">out</span>);
+          <span class="ident">TestStaticDictionaryItem</span>(<span class="ident">dictionary</span>, <span class="ident">item</span>, <span class="ident">data</span>, <span class="ident">max_length</span>, <span class="ident">max_backward</span>, <span class="ident">max_distance</span>, <span class="ident">opts</span>, <span class="ident">out</span>);
         <span class="kw">if</span> <span class="ident">item_matches</span> <span class="op">!=</span> <span class="number">0</span> {
           (<span class="kw-2">*</span><span class="ident">xself</span>).<span class="ident">dict_num_matches</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">xself</span>).<span class="ident">dict_num_matches</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
           <span class="ident">is_match_found</span> <span class="op">=</span> <span class="number">1i32</span>;
@@ -2969,15 +3066,16 @@
   <span class="ident">is_match_found</span>
 }
 
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> {
   <span class="ident">Uninit</span>,
-  <span class="ident">H2</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H2Sub</span><span class="op">&lt;</span><span class="ident">AllocU32</span><span class="op">&gt;&gt;</span>),
-  <span class="ident">H3</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H3Sub</span><span class="op">&lt;</span><span class="ident">AllocU32</span><span class="op">&gt;&gt;</span>),
-  <span class="ident">H4</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H4Sub</span><span class="op">&lt;</span><span class="ident">AllocU32</span><span class="op">&gt;&gt;</span>),
-  <span class="ident">H54</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H54Sub</span><span class="op">&lt;</span><span class="ident">AllocU32</span><span class="op">&gt;&gt;</span>),
-  <span class="ident">H5</span>(<span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">H5Sub</span>, <span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span>),
-  <span class="ident">H6</span>(<span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">H6Sub</span>, <span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span>),
-  <span class="ident">H9</span>(<span class="ident">H9</span><span class="op">&lt;</span><span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span>),
+  <span class="ident">H2</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H2Sub</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;&gt;</span>),
+  <span class="ident">H3</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H3Sub</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;&gt;</span>),
+  <span class="ident">H4</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H4Sub</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;&gt;</span>),
+  <span class="ident">H54</span>(<span class="ident">BasicHasher</span><span class="op">&lt;</span><span class="ident">H54Sub</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;&gt;</span>),
+  <span class="ident">H5</span>(<span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">H5Sub</span>, <span class="ident">Alloc</span><span class="op">&gt;</span>),
+  <span class="ident">H6</span>(<span class="ident">AdvHasher</span><span class="op">&lt;</span><span class="ident">H6Sub</span>, <span class="ident">Alloc</span><span class="op">&gt;</span>),
+  <span class="ident">H9</span>(<span class="ident">H9</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span>),
+  <span class="ident">H10</span>(<span class="ident">H10</span><span class="op">&lt;</span><span class="ident">Alloc</span>, <span class="ident">H10Buckets</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span>, <span class="ident">H10DefaultParams</span><span class="op">&gt;</span>),
 }
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">match_all_hashers_mut</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">xself</span> : <span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span> : <span class="ident">ident</span>, $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>) <span class="op">=&gt;</span> {
@@ -2989,6 +3087,7 @@
      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H6</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H54</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H9</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
+     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H10</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">Uninit</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;UNINTIALIZED&quot;</span>),
         }
     };
@@ -3003,18 +3102,22 @@
      <span class="kw-2">&amp;</span><span class="ident">UnionHasher</span>::<span class="ident">H6</span>(<span class="kw-2">ref</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
      <span class="kw-2">&amp;</span><span class="ident">UnionHasher</span>::<span class="ident">H54</span>(<span class="kw-2">ref</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
      <span class="kw-2">&amp;</span><span class="ident">UnionHasher</span>::<span class="ident">H9</span>(<span class="kw-2">ref</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
+     <span class="kw-2">&amp;</span><span class="ident">UnionHasher</span>::<span class="ident">H10</span>(<span class="kw-2">ref</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> <span class="ident">hasher</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func_call</span>($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">args</span>),<span class="kw-2">*</span>),
      <span class="kw-2">&amp;</span><span class="ident">UnionHasher</span>::<span class="ident">Uninit</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;UNINTIALIZED&quot;</span>),
         }
     };
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">AnyHasher</span>
-  <span class="kw">for</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">AnyHasher</span>
+  <span class="kw">for</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span> {
   <span class="kw">fn</span> <span class="ident">Opts</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">H9Opts</span> {
     <span class="kw">return</span> <span class="macro">match_all_hashers</span><span class="macro">!</span>(<span class="self">self</span>, <span class="ident">Opts</span>,);
   }
   <span class="kw">fn</span> <span class="ident">GetHasherCommon</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Struct1</span> {
     <span class="kw">return</span> <span class="macro">match_all_hashers_mut</span><span class="macro">!</span>(<span class="self">self</span>, <span class="ident">GetHasherCommon</span>,);
-  }
+  }<span class="comment">/*
+  fn GetH10Tree(&amp;mut self) -&gt; Option&lt;&amp;mut H10&lt;AllocU32, H10Buckets, H10DefaultParams&gt;&gt; {
+    return match_all_hashers_mut!(self, GetH10Tree,);
+  }*/</span>
   <span class="kw">fn</span> <span class="ident">Prepare</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">one_shot</span>: <span class="ident">bool</span>, <span class="ident">input_size</span>: <span class="ident">usize</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">HowPrepared</span> {
     <span class="kw">return</span> <span class="macro">match_all_hashers_mut</span><span class="macro">!</span>(<span class="self">self</span>, <span class="ident">Prepare</span>, <span class="ident">one_shot</span>, <span class="ident">input_size</span>, <span class="ident">data</span>);
   }
@@ -3043,7 +3146,7 @@
                                   <span class="ident">ringbuffer_mask</span>);
   }
   <span class="kw">fn</span> <span class="ident">FindLongestMatch</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
-                      <span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+                      <span class="ident">dictionary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span><span class="op">&gt;</span>,
                       <span class="ident">dictionary_hash</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
                       <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
                       <span class="ident">ring_buffer_mask</span>: <span class="ident">usize</span>,
@@ -3051,6 +3154,8 @@
                       <span class="ident">cur_ix</span>: <span class="ident">usize</span>,
                       <span class="ident">max_length</span>: <span class="ident">usize</span>,
                       <span class="ident">max_backward</span>: <span class="ident">usize</span>,
+                      <span class="ident">gap</span>: <span class="ident">usize</span>,
+                      <span class="ident">max_distance</span>: <span class="ident">usize</span>,
                       <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HasherSearchResult</span>)
                       <span class="op">-&gt;</span> <span class="ident">bool</span> {
     <span class="kw">return</span> <span class="macro">match_all_hashers_mut</span><span class="macro">!</span>(<span class="self">self</span>,
@@ -3063,6 +3168,8 @@
                                   <span class="ident">cur_ix</span>,
                                   <span class="ident">max_length</span>,
                                   <span class="ident">max_backward</span>,
+                                  <span class="ident">gap</span>,
+                                  <span class="ident">max_distance</span>,
                                   <span class="ident">out</span>);
   }
   <span class="kw">fn</span> <span class="ident">Store</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">mask</span>: <span class="ident">usize</span>, <span class="ident">ix</span>: <span class="ident">usize</span>) {
@@ -3072,8 +3179,46 @@
     <span class="kw">return</span> <span class="macro">match_all_hashers_mut</span><span class="macro">!</span>(<span class="self">self</span>, <span class="ident">StoreRange</span>, <span class="ident">data</span>, <span class="ident">mask</span>, <span class="ident">ix_start</span>, <span class="ident">ix_end</span>);
   }
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">Default</span>
-  <span class="kw">for</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span> {
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span> {
+  <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">free</span> (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">alloc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Alloc</span>) {
+    <span class="kw">match</span> <span class="self">self</span> {
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H2</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets_</span>.<span class="ident">buckets_</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H3</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets_</span>.<span class="ident">buckets_</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H4</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets_</span>.<span class="ident">buckets_</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H54</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets_</span>.<span class="ident">buckets_</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H5</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">num</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H6</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">num</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H9</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>,<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">num_</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+        <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">free_cell</span>(<span class="ident">alloc</span>, <span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">hasher</span>.<span class="ident">buckets_</span>, <span class="op">&lt;</span><span class="ident">Alloc</span> <span class="kw">as</span> <span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>::<span class="ident">AllocatedMemory</span>::<span class="ident">default</span>()));
+      }
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H10</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+        <span class="ident">hasher</span>.<span class="ident">free</span>(<span class="ident">alloc</span>);
+      }
+      <span class="kw">_</span> <span class="op">=&gt;</span> {}
+    }
+    <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="ident">UnionHasher</span>::<span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span>::<span class="ident">default</span>();
+  }
+}
+
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span> <span class="ident">Default</span>
+  <span class="kw">for</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span> {
   <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
     <span class="ident">UnionHasher</span>::<span class="ident">Uninit</span>
   }
@@ -3095,7 +3240,7 @@
           },
           })
           */</span>
-<span class="kw">fn</span> <span class="ident">CreateBackwardReferences</span><span class="op">&lt;</span><span class="ident">AH</span>: <span class="ident">AnyHasher</span><span class="op">&gt;</span>(<span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+<span class="kw">fn</span> <span class="ident">CreateBackwardReferences</span><span class="op">&lt;</span><span class="ident">AH</span>: <span class="ident">AnyHasher</span><span class="op">&gt;</span>(<span class="ident">dictionary</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span><span class="op">&gt;</span>,
                                            <span class="ident">dictionary_hash</span>: <span class="kw-2">&amp;</span>[<span class="ident">u16</span>],
                                            <span class="ident">num_bytes</span>: <span class="ident">usize</span>,
                                            <span class="kw-2">mut</span> <span class="ident">position</span>: <span class="ident">usize</span>,
@@ -3108,6 +3253,7 @@
                                            <span class="kw-2">mut</span> <span class="ident">commands</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">Command</span>],
                                            <span class="ident">num_commands</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">usize</span>,
                                            <span class="ident">num_literals</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">usize</span>) {
+  <span class="kw">let</span> <span class="ident">gap</span> <span class="op">=</span> <span class="number">0usize</span>;
   <span class="kw">let</span> <span class="ident">max_backward_limit</span>: <span class="ident">usize</span> <span class="op">=</span> (<span class="number">1usize</span> <span class="op">&lt;&lt;</span> (<span class="kw-2">*</span><span class="ident">params</span>).<span class="ident">lgwin</span>).<span class="ident">wrapping_sub</span>(<span class="number">16usize</span>);
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_commands_count</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">0</span>;
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">insert_length</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">last_insert_len</span>;
@@ -3119,9 +3265,9 @@
   };
   <span class="kw">let</span> <span class="ident">random_heuristics_window_size</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">LiteralSpreeLengthForSparseSearch</span>(<span class="ident">params</span>);
   <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">apply_random_heuristics</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">wrapping_add</span>(<span class="ident">random_heuristics_window_size</span>);
-  <span class="kw">let</span> <span class="ident">kMinScore</span>: <span class="ident">usize</span> <span class="op">=</span> ((<span class="number">30i32</span> <span class="op">*</span> <span class="number">8i32</span>) <span class="kw">as</span> (<span class="ident">usize</span>))
-    .<span class="ident">wrapping_mul</span>(::<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>())
-    .<span class="ident">wrapping_add</span>(<span class="number">100usize</span>);
+  <span class="kw">let</span> <span class="ident">kMinScore</span>: <span class="ident">u64</span> <span class="op">=</span> (<span class="number">30u64</span> <span class="op">*</span> <span class="number">8</span>)
+    .<span class="ident">wrapping_mul</span>(::<span class="ident">core</span>::<span class="ident">mem</span>::<span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>() <span class="kw">as</span> <span class="ident">u64</span>)
+    .<span class="ident">wrapping_add</span>(<span class="number">100u64</span>);
   <span class="ident">hasher</span>.<span class="ident">PrepareDistanceCache</span>(<span class="ident">dist_cache</span>);
   <span class="kw">while</span> <span class="ident">position</span>.<span class="ident">wrapping_add</span>(<span class="ident">hasher</span>.<span class="ident">HashTypeLength</span>()) <span class="op">&lt;</span> <span class="ident">pos_end</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">max_length</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="ident">pos_end</span>.<span class="ident">wrapping_sub</span>(<span class="ident">position</span>);
@@ -3144,12 +3290,14 @@
                                <span class="ident">position</span>,
                                <span class="ident">max_length</span>,
                                <span class="ident">max_distance</span>,
+                               <span class="ident">gap</span>,
+                               <span class="ident">params</span>.<span class="ident">dist</span>.<span class="ident">max_distance</span>,
                                <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sr</span>) {
       <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">delayed_backward_references_in_row</span>: <span class="ident">i32</span> <span class="op">=</span> <span class="number">0i32</span>;
       <span class="ident">max_length</span> <span class="op">=</span> <span class="ident">max_length</span>.<span class="ident">wrapping_sub</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
       <span class="lifetime">&#39;break6</span>: <span class="kw">loop</span> {
         <span class="lifetime">&#39;continue7</span>: <span class="kw">loop</span> {
-          <span class="kw">let</span> <span class="ident">cost_diff_lazy</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">175usize</span>;
+          <span class="kw">let</span> <span class="ident">cost_diff_lazy</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">175</span>;
           <span class="kw">let</span> <span class="ident">is_match_found</span>: <span class="ident">bool</span>;
           <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sr2</span> <span class="op">=</span> <span class="ident">HasherSearchResult</span> {
             <span class="ident">len</span>: <span class="number">0</span>,
@@ -3174,6 +3322,8 @@
                                                    <span class="ident">position</span>.<span class="ident">wrapping_add</span>(<span class="number">1usize</span>),
                                                    <span class="ident">max_length</span>,
                                                    <span class="ident">max_distance</span>,
+                                                   <span class="ident">gap</span>,
+                                                   <span class="ident">params</span>.<span class="ident">dist</span>.<span class="ident">max_distance</span>,
                                                    <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sr2</span>);
           <span class="kw">if</span> <span class="ident">is_match_found</span> <span class="op">&amp;&amp;</span> (<span class="ident">sr2</span>.<span class="ident">score</span> <span class="op">&gt;=</span> <span class="ident">sr</span>.<span class="ident">score</span>.<span class="ident">wrapping_add</span>(<span class="ident">cost_diff_lazy</span>)) {
             <span class="ident">position</span> <span class="op">=</span> <span class="ident">position</span>.<span class="ident">wrapping_add</span>(<span class="number">1</span> <span class="kw">as</span> (<span class="ident">usize</span>));
@@ -3211,6 +3361,7 @@
                       <span class="ident">commands</span> <span class="op">=</span> <span class="ident">new_commands</span>;
                       <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">_old</span>[<span class="number">0</span>]
                     },
+                    <span class="kw-2">&amp;</span><span class="ident">params</span>.<span class="ident">dist</span>,
                     <span class="ident">insert_length</span>,
                     <span class="ident">sr</span>.<span class="ident">len</span>,
                     <span class="ident">sr</span>.<span class="ident">len</span> <span class="op">^</span> <span class="ident">sr</span>.<span class="ident">len_x_code</span>,
@@ -3261,15 +3412,15 @@
   <span class="kw-2">*</span><span class="ident">last_insert_len</span> <span class="op">=</span> <span class="ident">insert_length</span>;
   <span class="kw-2">*</span><span class="ident">num_commands</span> <span class="op">=</span> (<span class="kw-2">*</span><span class="ident">num_commands</span>).<span class="ident">wrapping_add</span>(<span class="ident">new_commands_count</span>);
 }
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliCreateBackwardReferences</span><span class="op">&lt;</span><span class="ident">AllocU16</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
-                                      <span class="ident">AllocU32</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;&gt;</span>
-  (<span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">BrotliCreateBackwardReferences</span><span class="op">&lt;</span><span class="ident">Alloc</span>: <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">floatX</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">alloc</span>::<span class="ident">Allocator</span><span class="op">&lt;</span><span class="ident">ZopfliNode</span><span class="op">&gt;&gt;</span>
+  (<span class="ident">alloc</span> : <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Alloc</span>,
+   <span class="ident">dictionary</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliDictionary</span>,
    <span class="ident">num_bytes</span>: <span class="ident">usize</span>,
    <span class="ident">position</span>: <span class="ident">usize</span>,
    <span class="ident">ringbuffer</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
    <span class="ident">ringbuffer_mask</span>: <span class="ident">usize</span>,
    <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">BrotliEncoderParams</span>,
-   <span class="ident">hasher_union</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">AllocU16</span>, <span class="ident">AllocU32</span><span class="op">&gt;</span>,
+   <span class="ident">hasher_union</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span><span class="op">&lt;</span><span class="ident">Alloc</span><span class="op">&gt;</span>,
    <span class="ident">dist_cache</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">i32</span>],
    <span class="ident">last_insert_len</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">usize</span>,
    <span class="ident">commands</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">Command</span>],
@@ -3277,8 +3428,40 @@
    <span class="ident">num_literals</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">usize</span>) {
   <span class="kw">match</span> (<span class="ident">hasher_union</span>) {
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">Uninit</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;working with uninitialized hash map&quot;</span>),
+      <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H10</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
+          <span class="kw">if</span> <span class="ident">params</span>.<span class="ident">quality</span> <span class="op">&gt;=</span> <span class="number">11</span> {
+              <span class="kw">super</span>::<span class="ident">backward_references_hq</span>::<span class="ident">BrotliCreateHqZopfliBackwardReferences</span>(
+                  <span class="ident">alloc</span>, <span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
+                  <span class="ident">num_bytes</span>,
+                  <span class="ident">position</span>,
+                  <span class="ident">ringbuffer</span>,
+                  <span class="ident">ringbuffer_mask</span>,
+                  <span class="ident">params</span>,
+                  <span class="ident">hasher</span>,
+                  <span class="ident">dist_cache</span>,
+                  <span class="ident">last_insert_len</span>,
+                  <span class="ident">commands</span>,
+                  <span class="ident">num_commands</span>,
+                  <span class="ident">num_literals</span>)
+          } <span class="kw">else</span> {
+              <span class="kw">super</span>::<span class="ident">backward_references_hq</span>::<span class="ident">BrotliCreateZopfliBackwardReferences</span>(
+                  <span class="ident">alloc</span>,
+                  <span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
+                  <span class="ident">num_bytes</span>,
+                  <span class="ident">position</span>,
+                  <span class="ident">ringbuffer</span>,
+                  <span class="ident">ringbuffer_mask</span>,
+                  <span class="ident">params</span>,
+                  <span class="ident">hasher</span>,
+                  <span class="ident">dist_cache</span>,
+                  <span class="ident">last_insert_len</span>,
+                  <span class="ident">commands</span>,
+                  <span class="ident">num_commands</span>,
+                  <span class="ident">num_literals</span>)
+          }
+    }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H2</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3293,7 +3476,7 @@
                                <span class="ident">num_literals</span>)
     }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H3</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3308,7 +3491,7 @@
                                <span class="ident">num_literals</span>)
     }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H4</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3323,7 +3506,7 @@
                                <span class="ident">num_literals</span>)
     }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H5</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3338,7 +3521,7 @@
                                <span class="ident">num_literals</span>)
     }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H6</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3353,7 +3536,7 @@
                                <span class="ident">num_literals</span>)
     }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H9</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3368,7 +3551,7 @@
                                <span class="ident">num_literals</span>)
     }
     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">UnionHasher</span>::<span class="ident">H54</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">hasher</span>) <span class="op">=&gt;</span> {
-      <span class="ident">CreateBackwardReferences</span>(<span class="ident">dictionary</span>,
+      <span class="ident">CreateBackwardReferences</span>(<span class="kw">if</span> <span class="ident">params</span>.<span class="ident">use_dictionary</span> {<span class="prelude-val">Some</span>(<span class="ident">dictionary</span>)} <span class="kw">else</span> {<span class="prelude-val">None</span>},
                                <span class="kw-2">&amp;</span><span class="ident">kStaticDictionaryHash</span>[..],
                                <span class="ident">num_bytes</span>,
                                <span class="ident">position</span>,
@@ -3384,69 +3567,5 @@
     }
   }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../../";
-        window.currentCrate = "brotli";
-    </script>
-    <script src="../../../main.js"></script>
-    <script defer src="../../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../../";window.currentCrate = "brotli";</script><script src="../../../aliases.js"></script><script src="../../../main.js"></script><script defer src="../../../search-index.js"></script></body></html>

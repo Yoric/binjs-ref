@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["ParseError",""]],"struct":[["ErrorRecovery",""]]});
+initSidebarItems({"enum":[["ParseError",""]],"macro":[["lalrpop_mod","Define a module using the generated parse from a `.lalrpop` file."]],"struct":[["ErrorRecovery",""]]});

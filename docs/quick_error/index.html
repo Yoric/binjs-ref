@@ -1,64 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `quick_error` crate.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, quick_error">
-
-    <title>quick_error - Rust</title>
-
-    <link rel="stylesheet" type="text/css" href="../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../dark.css">
-    <link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle">
-    <script src="../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc mod">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        <p class='location'>Crate quick_error</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'quick_error', ty: 'mod', relpath: '../'};</script></div>
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>quick_error</a></span><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/quick_error/lib.rs.html#1-1301' title='goto source code'>[src]</a></span></h1><div class='docblock'><p>A macro which makes errors easy to write</p>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `quick_error` crate."><meta name="keywords" content="rust, rustlang, rust-lang, quick_error"><title>quick_error - Rust</title><link rel="stylesheet" type="text/css" href="../normalize.css"><link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../dark.css"><link rel="stylesheet" type="text/css" href="../light.css" id="themeStyle"><script src="../storage.js"></script></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><p class='location'>Crate quick_error</p><div class="sidebar-elems"><a id='all-types' href='all.html'><p>See all quick_error's items</p></a><div class="block items"><ul><li><a href="#macros">Macros</a></li><li><a href="#structs">Structs</a></li><li><a href="#traits">Traits</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'quick_error', ty: 'mod', relpath: '../'};</script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../settings.html"><img src="../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../src/quick_error/lib.rs.html#1-1309' title='goto source code'>[src]</a></span><span class='in-band'>Crate <a class="mod" href=''>quick_error</a></span></h1><div class='docblock'><p>A macro which makes errors easy to write</p>
 <p>Minimum type is like this:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quick_error</span>;
 
 <span class="macro">quick_error</span><span class="macro">!</span> {
@@ -66,7 +9,7 @@
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
         <span class="ident">Variant1</span> {}
     }
-}</pre>
+}</pre></div>
 <p>Both <code>pub</code> and non-public types may be declared, and all meta attributes
 (such as <code>#[derive(Debug)]</code>) are forwarded as is. The <code>Debug</code> must be
 implemented (but you may do that yourself if you like). The documentation
@@ -75,7 +18,7 @@ are allowed.</p>
 <h1 id="allowed-syntax" class="section-header"><a href="#allowed-syntax">Allowed Syntax</a></h1>
 <p>You may add arbitrary parameters to any struct variant:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -84,7 +27,7 @@ are allowed.</p>
         <span class="doccomment">/// Utf8 Error</span>
         <span class="ident">Utf8</span>(<span class="ident">err</span>: <span class="ident">std</span>::<span class="ident">str</span>::<span class="ident">Utf8Error</span>) {}
     }
-}</pre>
+}</pre></div>
 <p>Note unlike in normal Enum declarations you declare names of fields (which
 are omitted from type). How they can be used is outlined below.</p>
 <p>Now you might have noticed trailing braces <code>{}</code>. They are used to define
@@ -97,7 +40,7 @@ implementations. By default:</p>
 </ul>
 <p>To define description simply add <code>description(value)</code> inside braces:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -108,13 +51,13 @@ implementations. By default:</p>
             <span class="ident">description</span>(<span class="string">&quot;utf8 error&quot;</span>)
         }
     }
-}</pre>
+}</pre></div>
 <p>Normal rules for borrowing apply. So most of the time description either
 returns constant string or forwards description from enclosed type.</p>
 <p>To change <code>cause</code> method to return some error, add <code>cause(value)</code>, for
 example:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -130,14 +73,14 @@ example:</p>
             <span class="ident">description</span>(<span class="ident">err</span>.<span class="ident">description</span>())
         }
     }
-}</pre>
+}</pre></div>
 <p>Note you don't need to wrap value in <code>Some</code>, its implicit. In case you want
 <code>None</code> returned just omit the <code>cause</code>. You can't return <code>None</code>
 conditionally.</p>
 <p>To change how each clause is <code>Display</code>ed add <code>display(pattern,..args)</code>,
 for example:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -148,11 +91,11 @@ for example:</p>
             <span class="ident">display</span>(<span class="string">&quot;Utf8 error, valid up to {}&quot;</span>, <span class="ident">err</span>.<span class="ident">valid_up_to</span>())
         }
     }
-}</pre>
+}</pre></div>
 <p>If you need a reference to the error when <code>Display</code>ing, you can instead use
 <code>display(x) -&gt; (pattern, ..args)</code>, where <code>x</code> sets the name of the reference.</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span>; <span class="comment">// put methods like `description()` of this trait into scope</span>
 
 <span class="macro">quick_error</span><span class="macro">!</span> {
@@ -165,12 +108,12 @@ for example:</p>
             <span class="ident">display</span>(<span class="ident">self_</span>) <span class="op">-&gt;</span> (<span class="string">&quot;{}, valid up to {}&quot;</span>, <span class="ident">self_</span>.<span class="ident">description</span>(), <span class="ident">err</span>.<span class="ident">valid_up_to</span>())
         }
     }
-}</pre>
+}</pre></div>
 <p>To convert to the type from any other, use one of the three forms of
 <code>from</code> clause.</p>
 <p>For example, to convert simple wrapper use bare <code>from()</code>:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -178,12 +121,12 @@ for example:</p>
             <span class="ident">from</span>()
         }
     }
-}</pre>
+}</pre></div>
 <p>This implements <code>From&lt;io::Error&gt;</code>.</p>
 <p>To convert to singleton enumeration type (discarding the value), use
 the <code>from(type)</code> form:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -191,12 +134,12 @@ the <code>from(type)</code> form:</p>
             <span class="ident">from</span>(<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Error</span>)
         }
     }
-}</pre>
+}</pre></div>
 <p>And the most powerful form is <code>from(var: type) -&gt; (arguments...)</code>. It
 might be used to convert to type with multiple arguments or for arbitrary
 value conversions:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="macro">quick_error</span><span class="macro">!</span> {
     <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">SomeError</span> {
@@ -210,13 +153,13 @@ value conversions:</p>
             <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">std</span>::<span class="ident">string</span>::<span class="ident">FromUtf8Error</span>) <span class="op">-&gt;</span> (<span class="ident">err</span>.<span class="ident">utf8_error</span>())
         }
     }
-}</pre>
+}</pre></div>
 <h1 id="context" class="section-header"><a href="#context">Context</a></h1>
 <p>Since quick-error 1.1 we also have a <code>context</code> declaration, which is
 similar to (the longest form of) <code>from</code>, but allows adding some context to
 the error. We need a longer example to demonstrate this:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="kw">use</span> <span class="ident">quick_error</span>::<span class="ident">ResultExt</span>;
 
 <span class="macro">quick_error</span><span class="macro">!</span> {
@@ -239,7 +182,7 @@ the error. We need a longer example to demonstrate this:</p>
 
     <span class="prelude-val">Ok</span>(())
 }
-</pre>
+</pre></div>
 <p>Each <code>context(a: A, b: B)</code> clause implements
 <code>From&lt;Context&lt;A, B&gt;&gt; for Error</code>. Which means multiple <code>context</code> clauses
 are a subject to the normal coherence rules. Unfortunately, we can't
@@ -258,7 +201,7 @@ Docstrings are also okay.  Empty braces can be omitted as of quick_error
 <p>Since quick-error 1.2.0 we  have a way to make a private enum that is
 wrapped by public structure:</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 <span class="attribute">#[<span class="ident">macro_use</span>]</span> <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">quick_error</span>;
 
 <span class="macro">quick_error</span><span class="macro">!</span> {
@@ -266,17 +209,17 @@ wrapped by public structure:</p>
     <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">PubError</span> <span class="ident">wraps</span> <span class="ident">ErrorEnum</span> {
         <span class="ident">Variant1</span> {}
     }
-}</pre>
+}</pre></div>
 <p>This generates data structures like this</p>
 
-<pre class="rust rust-example-rendered">
+<div class="example-wrap"><pre class="rust rust-example-rendered">
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PubError</span>(<span class="ident">ErrorEnum</span>);
 
 <span class="kw">enum</span> <span class="ident">ErrorEnum</span> {
     <span class="ident">Variant1</span>,
 }
-</pre>
+</pre></div>
 <p>Which in turn allows you to export just <code>PubError</code> in your crate and keep
 actual enumeration private to the crate. This is useful to keep backwards
 compatibility for error types. Currently there is no shorcuts to define
@@ -310,68 +253,4 @@ future versions.</p>
                                 <p>Result extension trait adding a <code>context</code> method</p>
 
                            </td>
-                       </tr></table></section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../";
-        window.currentCrate = "quick_error";
-    </script>
-    <script src="../main.js"></script>
-    <script defer src="../search-index.js"></script>
-</body>
-</html>
+                       </tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../";window.currentCrate = "quick_error";</script><script src="../aliases.js"></script><script src="../main.js"></script><script defer src="../search-index.js"></script></body></html>

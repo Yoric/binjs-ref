@@ -1,61 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/termcolor-0.3.6/src/lib.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>lib.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
-          id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">   1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/Users/dteller/.cargo/registry/src/github.com-1ecc6299db9ec823/termcolor-1.0.4/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1752,7 +1695,205 @@
 <span id="1695">1695</span>
 <span id="1696">1696</span>
 <span id="1697">1697</span>
-</pre><pre class="rust ">
+<span id="1698">1698</span>
+<span id="1699">1699</span>
+<span id="1700">1700</span>
+<span id="1701">1701</span>
+<span id="1702">1702</span>
+<span id="1703">1703</span>
+<span id="1704">1704</span>
+<span id="1705">1705</span>
+<span id="1706">1706</span>
+<span id="1707">1707</span>
+<span id="1708">1708</span>
+<span id="1709">1709</span>
+<span id="1710">1710</span>
+<span id="1711">1711</span>
+<span id="1712">1712</span>
+<span id="1713">1713</span>
+<span id="1714">1714</span>
+<span id="1715">1715</span>
+<span id="1716">1716</span>
+<span id="1717">1717</span>
+<span id="1718">1718</span>
+<span id="1719">1719</span>
+<span id="1720">1720</span>
+<span id="1721">1721</span>
+<span id="1722">1722</span>
+<span id="1723">1723</span>
+<span id="1724">1724</span>
+<span id="1725">1725</span>
+<span id="1726">1726</span>
+<span id="1727">1727</span>
+<span id="1728">1728</span>
+<span id="1729">1729</span>
+<span id="1730">1730</span>
+<span id="1731">1731</span>
+<span id="1732">1732</span>
+<span id="1733">1733</span>
+<span id="1734">1734</span>
+<span id="1735">1735</span>
+<span id="1736">1736</span>
+<span id="1737">1737</span>
+<span id="1738">1738</span>
+<span id="1739">1739</span>
+<span id="1740">1740</span>
+<span id="1741">1741</span>
+<span id="1742">1742</span>
+<span id="1743">1743</span>
+<span id="1744">1744</span>
+<span id="1745">1745</span>
+<span id="1746">1746</span>
+<span id="1747">1747</span>
+<span id="1748">1748</span>
+<span id="1749">1749</span>
+<span id="1750">1750</span>
+<span id="1751">1751</span>
+<span id="1752">1752</span>
+<span id="1753">1753</span>
+<span id="1754">1754</span>
+<span id="1755">1755</span>
+<span id="1756">1756</span>
+<span id="1757">1757</span>
+<span id="1758">1758</span>
+<span id="1759">1759</span>
+<span id="1760">1760</span>
+<span id="1761">1761</span>
+<span id="1762">1762</span>
+<span id="1763">1763</span>
+<span id="1764">1764</span>
+<span id="1765">1765</span>
+<span id="1766">1766</span>
+<span id="1767">1767</span>
+<span id="1768">1768</span>
+<span id="1769">1769</span>
+<span id="1770">1770</span>
+<span id="1771">1771</span>
+<span id="1772">1772</span>
+<span id="1773">1773</span>
+<span id="1774">1774</span>
+<span id="1775">1775</span>
+<span id="1776">1776</span>
+<span id="1777">1777</span>
+<span id="1778">1778</span>
+<span id="1779">1779</span>
+<span id="1780">1780</span>
+<span id="1781">1781</span>
+<span id="1782">1782</span>
+<span id="1783">1783</span>
+<span id="1784">1784</span>
+<span id="1785">1785</span>
+<span id="1786">1786</span>
+<span id="1787">1787</span>
+<span id="1788">1788</span>
+<span id="1789">1789</span>
+<span id="1790">1790</span>
+<span id="1791">1791</span>
+<span id="1792">1792</span>
+<span id="1793">1793</span>
+<span id="1794">1794</span>
+<span id="1795">1795</span>
+<span id="1796">1796</span>
+<span id="1797">1797</span>
+<span id="1798">1798</span>
+<span id="1799">1799</span>
+<span id="1800">1800</span>
+<span id="1801">1801</span>
+<span id="1802">1802</span>
+<span id="1803">1803</span>
+<span id="1804">1804</span>
+<span id="1805">1805</span>
+<span id="1806">1806</span>
+<span id="1807">1807</span>
+<span id="1808">1808</span>
+<span id="1809">1809</span>
+<span id="1810">1810</span>
+<span id="1811">1811</span>
+<span id="1812">1812</span>
+<span id="1813">1813</span>
+<span id="1814">1814</span>
+<span id="1815">1815</span>
+<span id="1816">1816</span>
+<span id="1817">1817</span>
+<span id="1818">1818</span>
+<span id="1819">1819</span>
+<span id="1820">1820</span>
+<span id="1821">1821</span>
+<span id="1822">1822</span>
+<span id="1823">1823</span>
+<span id="1824">1824</span>
+<span id="1825">1825</span>
+<span id="1826">1826</span>
+<span id="1827">1827</span>
+<span id="1828">1828</span>
+<span id="1829">1829</span>
+<span id="1830">1830</span>
+<span id="1831">1831</span>
+<span id="1832">1832</span>
+<span id="1833">1833</span>
+<span id="1834">1834</span>
+<span id="1835">1835</span>
+<span id="1836">1836</span>
+<span id="1837">1837</span>
+<span id="1838">1838</span>
+<span id="1839">1839</span>
+<span id="1840">1840</span>
+<span id="1841">1841</span>
+<span id="1842">1842</span>
+<span id="1843">1843</span>
+<span id="1844">1844</span>
+<span id="1845">1845</span>
+<span id="1846">1846</span>
+<span id="1847">1847</span>
+<span id="1848">1848</span>
+<span id="1849">1849</span>
+<span id="1850">1850</span>
+<span id="1851">1851</span>
+<span id="1852">1852</span>
+<span id="1853">1853</span>
+<span id="1854">1854</span>
+<span id="1855">1855</span>
+<span id="1856">1856</span>
+<span id="1857">1857</span>
+<span id="1858">1858</span>
+<span id="1859">1859</span>
+<span id="1860">1860</span>
+<span id="1861">1861</span>
+<span id="1862">1862</span>
+<span id="1863">1863</span>
+<span id="1864">1864</span>
+<span id="1865">1865</span>
+<span id="1866">1866</span>
+<span id="1867">1867</span>
+<span id="1868">1868</span>
+<span id="1869">1869</span>
+<span id="1870">1870</span>
+<span id="1871">1871</span>
+<span id="1872">1872</span>
+<span id="1873">1873</span>
+<span id="1874">1874</span>
+<span id="1875">1875</span>
+<span id="1876">1876</span>
+<span id="1877">1877</span>
+<span id="1878">1878</span>
+<span id="1879">1879</span>
+<span id="1880">1880</span>
+<span id="1881">1881</span>
+<span id="1882">1882</span>
+<span id="1883">1883</span>
+<span id="1884">1884</span>
+<span id="1885">1885</span>
+<span id="1886">1886</span>
+<span id="1887">1887</span>
+<span id="1888">1888</span>
+<span id="1889">1889</span>
+<span id="1890">1890</span>
+<span id="1891">1891</span>
+<span id="1892">1892</span>
+<span id="1893">1893</span>
+<span id="1894">1894</span>
+<span id="1895">1895</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/*!
 This crate provides a cross platform abstraction for writing colored text to
 a terminal. Colors are written using either ANSI escape sequences or by
@@ -1857,6 +1998,21 @@ bufwtr.print(&amp;buffer)?;
     <span class="doccomment">/// If there was a problem resetting the color settings, then an error is</span>
     <span class="doccomment">/// returned.</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Returns true if and only if the underlying writer must synchronously</span>
+    <span class="doccomment">/// interact with an end user&#39;s device in order to control colors. By</span>
+    <span class="doccomment">/// default, this always returns `false`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// In practice, this should return `true` if the underlying writer is</span>
+    <span class="doccomment">/// manipulating colors using the Windows console APIs.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This is useful for writing generic code (such as a buffered writer)</span>
+    <span class="doccomment">/// that can perform certain optimizations when the underlying writer</span>
+    <span class="doccomment">/// doesn&#39;t rely on synchronous APIs. For example, ANSI escape sequences</span>
+    <span class="doccomment">/// can be passed through to the end user&#39;s device as is.</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">false</span>
+    }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">WriteColor</span><span class="op">&gt;</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">T</span> {
@@ -1865,6 +2021,16 @@ bufwtr.print(&amp;buffer)?;
         (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">set_color</span>(<span class="ident">spec</span>)
     }
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">reset</span>() }
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">is_synchronous</span>() }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="question-mark">?</span><span class="ident">Sized</span> <span class="op">+</span> <span class="ident">WriteColor</span><span class="op">&gt;</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">Box</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">supports_color</span>() }
+    <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">set_color</span>(<span class="ident">spec</span>)
+    }
+    <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { (<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">reset</span>() }
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { (<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">is_synchronous</span>() }
 }
 
 <span class="doccomment">/// ColorChoice represents the color preferences of an end user.</span>
@@ -1947,11 +2113,15 @@ bufwtr.print(&amp;buffer)?;
 <span class="kw">enum</span> <span class="ident">StandardStreamType</span> {
     <span class="ident">Stdout</span>,
     <span class="ident">Stderr</span>,
+    <span class="ident">StdoutBuffered</span>,
+    <span class="ident">StderrBuffered</span>,
 }
 
 <span class="kw">enum</span> <span class="ident">IoStandardStream</span> {
     <span class="ident">Stdout</span>(<span class="ident">io</span>::<span class="ident">Stdout</span>),
     <span class="ident">Stderr</span>(<span class="ident">io</span>::<span class="ident">Stderr</span>),
+    <span class="ident">StdoutBuffered</span>(<span class="ident">io</span>::<span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Stdout</span><span class="op">&gt;</span>),
+    <span class="ident">StderrBuffered</span>(<span class="ident">io</span>::<span class="ident">BufWriter</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Stderr</span><span class="op">&gt;</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">IoStandardStream</span> {
@@ -1962,6 +2132,14 @@ bufwtr.print(&amp;buffer)?;
             }
             <span class="ident">StandardStreamType</span>::<span class="ident">Stderr</span> <span class="op">=&gt;</span> {
                 <span class="ident">IoStandardStream</span>::<span class="ident">Stderr</span>(<span class="ident">io</span>::<span class="ident">stderr</span>())
+            }
+            <span class="ident">StandardStreamType</span>::<span class="ident">StdoutBuffered</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">BufWriter</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">stdout</span>());
+                <span class="ident">IoStandardStream</span>::<span class="ident">StdoutBuffered</span>(<span class="ident">wtr</span>)
+            }
+            <span class="ident">StandardStreamType</span>::<span class="ident">StderrBuffered</span> <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span> <span class="ident">io</span>::<span class="ident">BufWriter</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">stderr</span>());
+                <span class="ident">IoStandardStream</span>::<span class="ident">StderrBuffered</span>(<span class="ident">wtr</span>)
             }
         }
     }
@@ -1974,22 +2152,34 @@ bufwtr.print(&amp;buffer)?;
             <span class="ident">IoStandardStream</span>::<span class="ident">Stderr</span>(<span class="kw-2">ref</span> <span class="ident">s</span>) <span class="op">=&gt;</span> {
                 <span class="ident">IoStandardStreamLock</span>::<span class="ident">StderrLock</span>(<span class="ident">s</span>.<span class="ident">lock</span>())
             }
+            <span class="ident">IoStandardStream</span>::<span class="ident">StdoutBuffered</span>(<span class="kw">_</span>)
+            <span class="op">|</span> <span class="ident">IoStandardStream</span>::<span class="ident">StderrBuffered</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
+                <span class="comment">// We don&#39;t permit this case to ever occur in the public API,</span>
+                <span class="comment">// so it&#39;s OK to panic.</span>
+                <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;cannot lock a buffered standard stream&quot;</span>)
+            }
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">IoStandardStream</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">IoStandardStream</span>::<span class="ident">Stdout</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">write</span>(<span class="ident">b</span>),
             <span class="ident">IoStandardStream</span>::<span class="ident">Stderr</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">write</span>(<span class="ident">b</span>),
+            <span class="ident">IoStandardStream</span>::<span class="ident">StdoutBuffered</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">write</span>(<span class="ident">b</span>),
+            <span class="ident">IoStandardStream</span>::<span class="ident">StderrBuffered</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">write</span>(<span class="ident">b</span>),
         }
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">IoStandardStream</span>::<span class="ident">Stdout</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">flush</span>(),
             <span class="ident">IoStandardStream</span>::<span class="ident">Stderr</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">flush</span>(),
+            <span class="ident">IoStandardStream</span>::<span class="ident">StdoutBuffered</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">flush</span>(),
+            <span class="ident">IoStandardStream</span>::<span class="ident">StderrBuffered</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">flush</span>(),
         }
     }
 }
@@ -2002,6 +2192,7 @@ bufwtr.print(&amp;buffer)?;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">IoStandardStreamLock</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">IoStandardStreamLock</span>::<span class="ident">StdoutLock</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">write</span>(<span class="ident">b</span>),
@@ -2009,6 +2200,7 @@ bufwtr.print(&amp;buffer)?;
         }
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">IoStandardStreamLock</span>::<span class="ident">StdoutLock</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>.<span class="ident">flush</span>(),
@@ -2032,6 +2224,11 @@ bufwtr.print(&amp;buffer)?;
 <span class="doccomment">/// `StandardStream`.</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StandardStreamLock</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span><span class="op">&lt;</span><span class="ident">WriterInnerLock</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">IoStandardStreamLock</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="doccomment">/// Like `StandardStream`, but does buffered writing.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BufferedStandardStream</span> {
+    <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span><span class="op">&lt;</span><span class="ident">WriterInner</span><span class="op">&lt;</span><span class="ident">IoStandardStream</span><span class="op">&gt;&gt;</span>,
 }
 
 <span class="doccomment">/// WriterInner is a (limited) generic representation of a writer. It is</span>
@@ -2059,58 +2256,6 @@ bufwtr.print(&amp;buffer)?;
 }
 
 <span class="kw">impl</span> <span class="ident">StandardStream</span> {
-    <span class="doccomment">/// Create a new `StandardStream` with the given color preferences.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The specific color/style settings can be configured when writing via</span>
-    <span class="doccomment">/// the `WriteColor` trait.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
-    <span class="kw">fn</span> <span class="ident">create</span>(<span class="ident">sty</span>: <span class="ident">StandardStreamType</span>, <span class="ident">choice</span>: <span class="ident">ColorChoice</span>) <span class="op">-&gt;</span> <span class="ident">StandardStream</span> {
-        <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span>
-            <span class="kw">if</span> <span class="ident">choice</span>.<span class="ident">should_attempt_color</span>() {
-                <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="ident">Ansi</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
-            } <span class="kw">else</span> {
-                <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="ident">NoColor</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
-            };
-        <span class="ident">StandardStream</span> { <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>) }
-    }
-
-    <span class="doccomment">/// Create a new `StandardStream` with the given color preferences.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// If coloring is desired and a Windows console could not be found, then</span>
-    <span class="doccomment">/// ANSI escape sequences are used instead.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// The specific color/style settings can be configured when writing via</span>
-    <span class="doccomment">/// the `WriteColor` trait.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">create</span>(<span class="ident">sty</span>: <span class="ident">StandardStreamType</span>, <span class="ident">choice</span>: <span class="ident">ColorChoice</span>) <span class="op">-&gt;</span> <span class="ident">StandardStream</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">con</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">sty</span> {
-            <span class="ident">StandardStreamType</span>::<span class="ident">Stdout</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stdout</span>(),
-            <span class="ident">StandardStreamType</span>::<span class="ident">Stderr</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stderr</span>(),
-        };
-        <span class="kw">let</span> <span class="ident">is_win_console</span> <span class="op">=</span> <span class="ident">con</span>.<span class="ident">is_ok</span>();
-        <span class="kw">let</span> <span class="ident">is_console_virtual</span> <span class="op">=</span> <span class="ident">con</span>.<span class="ident">as_mut</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">con</span><span class="op">|</span> {
-            <span class="ident">con</span>.<span class="ident">set_virtual_terminal_processing</span>(<span class="bool-val">true</span>).<span class="ident">is_ok</span>()
-        }).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
-        <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span>
-            <span class="kw">if</span> <span class="ident">choice</span>.<span class="ident">should_attempt_color</span>() {
-                <span class="kw">if</span> <span class="ident">choice</span>.<span class="ident">should_ansi</span>() <span class="op">||</span> <span class="ident">is_console_virtual</span> {
-                    <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="ident">Ansi</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">console</span>) <span class="op">=</span> <span class="ident">con</span> {
-                    <span class="ident">WriterInner</span>::<span class="ident">Windows</span> {
-                        <span class="ident">wtr</span>: <span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>),
-                        <span class="ident">console</span>: <span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="ident">console</span>),
-                    }
-                } <span class="kw">else</span> {
-                    <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="ident">Ansi</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
-                }
-            } <span class="kw">else</span> {
-                <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="ident">NoColor</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
-            };
-        <span class="ident">StandardStream</span> {
-            <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>).<span class="ident">is_console</span>(<span class="ident">is_win_console</span>),
-        }
-    }
-
     <span class="doccomment">/// Create a new `StandardStream` with the given color preferences that</span>
     <span class="doccomment">/// writes to standard output.</span>
     <span class="doccomment">///</span>
@@ -2120,7 +2265,8 @@ bufwtr.print(&amp;buffer)?;
     <span class="doccomment">/// The specific color/style settings can be configured when writing via</span>
     <span class="doccomment">/// the `WriteColor` trait.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stdout</span>(<span class="ident">choice</span>: <span class="ident">ColorChoice</span>) <span class="op">-&gt;</span> <span class="ident">StandardStream</span> {
-        <span class="ident">StandardStream</span>::<span class="ident">create</span>(<span class="ident">StandardStreamType</span>::<span class="ident">Stdout</span>, <span class="ident">choice</span>)
+        <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span> <span class="ident">WriterInner</span>::<span class="ident">create</span>(<span class="ident">StandardStreamType</span>::<span class="ident">Stdout</span>, <span class="ident">choice</span>);
+        <span class="ident">StandardStream</span> { <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>) }
     }
 
     <span class="doccomment">/// Create a new `StandardStream` with the given color preferences that</span>
@@ -2132,7 +2278,8 @@ bufwtr.print(&amp;buffer)?;
     <span class="doccomment">/// The specific color/style settings can be configured when writing via</span>
     <span class="doccomment">/// the `WriteColor` trait.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stderr</span>(<span class="ident">choice</span>: <span class="ident">ColorChoice</span>) <span class="op">-&gt;</span> <span class="ident">StandardStream</span> {
-        <span class="ident">StandardStream</span>::<span class="ident">create</span>(<span class="ident">StandardStreamType</span>::<span class="ident">Stderr</span>, <span class="ident">choice</span>)
+        <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span> <span class="ident">WriterInner</span>::<span class="ident">create</span>(<span class="ident">StandardStreamType</span>::<span class="ident">Stderr</span>, <span class="ident">choice</span>);
+        <span class="ident">StandardStream</span> { <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>) }
     }
 
     <span class="doccomment">/// Lock the underlying writer.</span>
@@ -2182,33 +2329,168 @@ bufwtr.print(&amp;buffer)?;
     }
 }
 
+<span class="kw">impl</span> <span class="ident">BufferedStandardStream</span> {
+    <span class="doccomment">/// Create a new `BufferedStandardStream` with the given color preferences</span>
+    <span class="doccomment">/// that writes to standard output via a buffered writer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// On Windows, if coloring is desired and a Windows console could not be</span>
+    <span class="doccomment">/// found, then ANSI escape sequences are used instead.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The specific color/style settings can be configured when writing via</span>
+    <span class="doccomment">/// the `WriteColor` trait.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stdout</span>(<span class="ident">choice</span>: <span class="ident">ColorChoice</span>) <span class="op">-&gt;</span> <span class="ident">BufferedStandardStream</span> {
+        <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span> <span class="ident">WriterInner</span>::<span class="ident">create</span>(
+            <span class="ident">StandardStreamType</span>::<span class="ident">StdoutBuffered</span>,
+            <span class="ident">choice</span>,
+        );
+        <span class="ident">BufferedStandardStream</span> { <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>) }
+    }
+
+    <span class="doccomment">/// Create a new `BufferedStandardStream` with the given color preferences</span>
+    <span class="doccomment">/// that writes to standard error via a buffered writer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// On Windows, if coloring is desired and a Windows console could not be</span>
+    <span class="doccomment">/// found, then ANSI escape sequences are used instead.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The specific color/style settings can be configured when writing via</span>
+    <span class="doccomment">/// the `WriteColor` trait.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">stderr</span>(<span class="ident">choice</span>: <span class="ident">ColorChoice</span>) <span class="op">-&gt;</span> <span class="ident">BufferedStandardStream</span> {
+        <span class="kw">let</span> <span class="ident">wtr</span> <span class="op">=</span> <span class="ident">WriterInner</span>::<span class="ident">create</span>(
+            <span class="ident">StandardStreamType</span>::<span class="ident">StderrBuffered</span>,
+            <span class="ident">choice</span>,
+        );
+        <span class="ident">BufferedStandardStream</span> { <span class="ident">wtr</span>: <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>) }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">WriterInner</span><span class="op">&lt;</span><span class="ident">IoStandardStream</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a new inner writer for a standard stream with the given color</span>
+    <span class="doccomment">/// preferences.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+    <span class="kw">fn</span> <span class="ident">create</span>(
+        <span class="ident">sty</span>: <span class="ident">StandardStreamType</span>,
+        <span class="ident">choice</span>: <span class="ident">ColorChoice</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">WriterInner</span><span class="op">&lt;</span><span class="ident">IoStandardStream</span><span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="ident">choice</span>.<span class="ident">should_attempt_color</span>() {
+            <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="ident">Ansi</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
+        } <span class="kw">else</span> {
+            <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="ident">NoColor</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
+        }
+    }
+
+    <span class="doccomment">/// Create a new inner writer for a standard stream with the given color</span>
+    <span class="doccomment">/// preferences.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If coloring is desired and a Windows console could not be found, then</span>
+    <span class="doccomment">/// ANSI escape sequences are used instead.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">create</span>(
+        <span class="ident">sty</span>: <span class="ident">StandardStreamType</span>,
+        <span class="ident">choice</span>: <span class="ident">ColorChoice</span>,
+    ) <span class="op">-&gt;</span> <span class="ident">WriterInner</span><span class="op">&lt;</span><span class="ident">IoStandardStream</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">con</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">sty</span> {
+            <span class="ident">StandardStreamType</span>::<span class="ident">Stdout</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stdout</span>(),
+            <span class="ident">StandardStreamType</span>::<span class="ident">Stderr</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stderr</span>(),
+            <span class="ident">StandardStreamType</span>::<span class="ident">StdoutBuffered</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stdout</span>(),
+            <span class="ident">StandardStreamType</span>::<span class="ident">StderrBuffered</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stderr</span>(),
+        };
+        <span class="kw">let</span> <span class="ident">is_console_virtual</span> <span class="op">=</span> <span class="ident">con</span>.<span class="ident">as_mut</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">con</span><span class="op">|</span> {
+            <span class="ident">con</span>.<span class="ident">set_virtual_terminal_processing</span>(<span class="bool-val">true</span>).<span class="ident">is_ok</span>()
+        }).<span class="ident">unwrap_or</span>(<span class="bool-val">false</span>);
+        <span class="kw">if</span> <span class="ident">choice</span>.<span class="ident">should_attempt_color</span>() {
+            <span class="kw">if</span> <span class="ident">choice</span>.<span class="ident">should_ansi</span>() <span class="op">||</span> <span class="ident">is_console_virtual</span> {
+                <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="ident">Ansi</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">console</span>) <span class="op">=</span> <span class="ident">con</span> {
+                <span class="ident">WriterInner</span>::<span class="ident">Windows</span> {
+                    <span class="ident">wtr</span>: <span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>),
+                    <span class="ident">console</span>: <span class="ident">Mutex</span>::<span class="ident">new</span>(<span class="ident">console</span>),
+                }
+            } <span class="kw">else</span> {
+                <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="ident">Ansi</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
+            }
+        } <span class="kw">else</span> {
+            <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="ident">NoColor</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>)))
+        }
+    }
+}
+
 <span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">StandardStream</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">write</span>(<span class="ident">b</span>) }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">flush</span>() }
 }
 
 <span class="kw">impl</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">StandardStream</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">supports_color</span>() }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">set_color</span>(<span class="ident">spec</span>)
     }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">reset</span>() }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">is_synchronous</span>() }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">StandardStreamLock</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">write</span>(<span class="ident">b</span>) }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">flush</span>() }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">StandardStreamLock</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">supports_color</span>() }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">set_color</span>(<span class="ident">spec</span>)
     }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">reset</span>() }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">is_synchronous</span>() }
+}
+
+<span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">BufferedStandardStream</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">b</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">write</span>(<span class="ident">b</span>) }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">flush</span>() }
+}
+
+<span class="kw">impl</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">BufferedStandardStream</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">supports_color</span>() }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_synchronous</span>() {
+            <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">flush</span>()<span class="question-mark">?</span>;
+        }
+        <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">set_color</span>(<span class="ident">spec</span>)
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">reset</span>() }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">is_synchronous</span>() }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">WriterInner</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">wtr</span>) <span class="op">=&gt;</span> <span class="ident">wtr</span>.<span class="ident">write</span>(<span class="ident">buf</span>),
@@ -2218,6 +2500,7 @@ bufwtr.print(&amp;buffer)?;
         }
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
             <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">wtr</span>) <span class="op">=&gt;</span> <span class="ident">wtr</span>.<span class="ident">flush</span>(),
@@ -2261,6 +2544,15 @@ bufwtr.print(&amp;buffer)?;
                 <span class="ident">console</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>().<span class="ident">reset</span>()<span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(())
             }
+        }
+    }
+
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">WriterInner</span>::<span class="ident">NoColor</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">WriterInner</span>::<span class="ident">Ansi</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+            <span class="ident">WriterInner</span>::<span class="ident">Windows</span> {..} <span class="op">=&gt;</span> <span class="bool-val">true</span>,
         }
     }
 }
@@ -2324,6 +2616,16 @@ bufwtr.print(&amp;buffer)?;
             }
         }
     }
+
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">WriterInnerLock</span>::<span class="ident">Unreachable</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="ident">WriterInnerLock</span>::<span class="ident">NoColor</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">WriterInnerLock</span>::<span class="ident">Ansi</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
+            <span class="ident">WriterInnerLock</span>::<span class="ident">Windows</span> {..} <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        }
+    }
 }
 
 <span class="doccomment">/// Writes colored buffers to stdout or stderr.</span>
@@ -2373,6 +2675,8 @@ bufwtr.print(&amp;buffer)?;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">con</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">sty</span> {
             <span class="ident">StandardStreamType</span>::<span class="ident">Stdout</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stdout</span>(),
             <span class="ident">StandardStreamType</span>::<span class="ident">Stderr</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stderr</span>(),
+            <span class="ident">StandardStreamType</span>::<span class="ident">StdoutBuffered</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stdout</span>(),
+            <span class="ident">StandardStreamType</span>::<span class="ident">StderrBuffered</span> <span class="op">=&gt;</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stderr</span>(),
         }.<span class="ident">ok</span>();
         <span class="kw">let</span> <span class="ident">is_console_virtual</span> <span class="op">=</span> <span class="ident">con</span>.<span class="ident">as_mut</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">con</span><span class="op">|</span> {
             <span class="ident">con</span>.<span class="ident">set_virtual_terminal_processing</span>(<span class="bool-val">true</span>).<span class="ident">is_ok</span>()
@@ -2382,8 +2686,7 @@ bufwtr.print(&amp;buffer)?;
         <span class="kw">if</span> <span class="ident">is_console_virtual</span> {
             <span class="ident">con</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         }
-        <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>))
-            .<span class="ident">is_console</span>(<span class="ident">con</span>.<span class="ident">is_some</span>());
+        <span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">IoStandardStream</span>::<span class="ident">new</span>(<span class="ident">sty</span>));
         <span class="ident">BufferWriter</span> {
             <span class="ident">stream</span>: <span class="ident">stream</span>,
             <span class="ident">printed</span>: <span class="ident">AtomicBool</span>::<span class="ident">new</span>(<span class="bool-val">false</span>),
@@ -2611,6 +2914,7 @@ bufwtr.print(&amp;buffer)?;
 }
 
 <span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">Buffer</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
             <span class="ident">BufferInner</span>::<span class="ident">NoColor</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">w</span>) <span class="op">=&gt;</span> <span class="ident">w</span>.<span class="ident">write</span>(<span class="ident">buf</span>),
@@ -2620,6 +2924,7 @@ bufwtr.print(&amp;buffer)?;
         }
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
             <span class="ident">BufferInner</span>::<span class="ident">NoColor</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">w</span>) <span class="op">=&gt;</span> <span class="ident">w</span>.<span class="ident">flush</span>(),
@@ -2631,6 +2936,7 @@ bufwtr.print(&amp;buffer)?;
 }
 
 <span class="kw">impl</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">Buffer</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
             <span class="ident">BufferInner</span>::<span class="ident">NoColor</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
@@ -2640,6 +2946,7 @@ bufwtr.print(&amp;buffer)?;
         }
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
             <span class="ident">BufferInner</span>::<span class="ident">NoColor</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">w</span>) <span class="op">=&gt;</span> <span class="ident">w</span>.<span class="ident">set_color</span>(<span class="ident">spec</span>),
@@ -2649,6 +2956,7 @@ bufwtr.print(&amp;buffer)?;
         }
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="number">0</span> {
             <span class="ident">BufferInner</span>::<span class="ident">NoColor</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">w</span>) <span class="op">=&gt;</span> <span class="ident">w</span>.<span class="ident">reset</span>(),
@@ -2656,6 +2964,11 @@ bufwtr.print(&amp;buffer)?;
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
             <span class="ident">BufferInner</span>::<span class="ident">Windows</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">w</span>) <span class="op">=&gt;</span> <span class="ident">w</span>.<span class="ident">reset</span>(),
         }
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">false</span>
     }
 }
 
@@ -2678,19 +2991,29 @@ bufwtr.print(&amp;buffer)?;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">NoColor</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write</span>(<span class="ident">buf</span>)
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">flush</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">NoColor</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="bool-val">false</span> }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="prelude-val">Ok</span>(()) }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="prelude-val">Ok</span>(()) }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="bool-val">false</span> }
 }
 
 <span class="doccomment">/// Satisfies `WriteColor` using standard ANSI escape sequences.</span>
@@ -2712,18 +3035,22 @@ bufwtr.print(&amp;buffer)?;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">Ansi</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">write</span>(<span class="ident">buf</span>)
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">flush</span>()
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">Ansi</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="bool-val">true</span> }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">reset</span>()<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="ident">spec</span>.<span class="ident">bold</span> {
@@ -2741,9 +3068,13 @@ bufwtr.print(&amp;buffer)?;
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">write_str</span>(<span class="string">&quot;\x1B[0m&quot;</span>)
     }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="bool-val">false</span> }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">Ansi</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
@@ -2938,11 +3269,13 @@ bufwtr.print(&amp;buffer)?;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
 <span class="kw">impl</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">WindowsBuffer</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">buf</span>.<span class="ident">extend_from_slice</span>(<span class="ident">buf</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
@@ -2950,16 +3283,24 @@ bufwtr.print(&amp;buffer)?;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
 <span class="kw">impl</span> <span class="ident">WriteColor</span> <span class="kw">for</span> <span class="ident">WindowsBuffer</span> {
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">supports_color</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="bool-val">true</span> }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">set_color</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">spec</span>: <span class="kw-2">&amp;</span><span class="ident">ColorSpec</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">push</span>(<span class="prelude-val">Some</span>(<span class="ident">spec</span>.<span class="ident">clone</span>()));
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">push</span>(<span class="prelude-val">None</span>);
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="attribute">#[<span class="ident">inline</span>]</span>
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="bool-val">false</span>
     }
 }
 
@@ -3105,7 +3446,7 @@ bufwtr.print(&amp;buffer)?;
 <span class="doccomment">///</span>
 <span class="doccomment">/// Hexadecimal numbers are written with a `0x` prefix.</span>
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Color</span> {
     <span class="ident">Black</span>,
     <span class="ident">Blue</span>,
@@ -3289,7 +3630,10 @@ bufwtr.print(&amp;buffer)?;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">wtr</span>: <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">LossyStandardStream</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="ident">LossyStandardStream</span> { <span class="ident">wtr</span>: <span class="ident">wtr</span>, <span class="ident">is_console</span>: <span class="bool-val">false</span> }
+        <span class="kw">let</span> <span class="ident">is_console</span> <span class="op">=</span>
+            <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stdout</span>().<span class="ident">is_ok</span>()
+            <span class="op">||</span> <span class="ident">wincolor</span>::<span class="ident">Console</span>::<span class="ident">stderr</span>().<span class="ident">is_ok</span>();
+        <span class="ident">LossyStandardStream</span> { <span class="ident">wtr</span>: <span class="ident">wtr</span>, <span class="ident">is_console</span>: <span class="ident">is_console</span> }
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
@@ -3299,13 +3643,7 @@ bufwtr.print(&amp;buffer)?;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
     <span class="kw">fn</span> <span class="ident">wrap</span><span class="op">&lt;</span><span class="ident">Q</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">wtr</span>: <span class="ident">Q</span>) <span class="op">-&gt;</span> <span class="ident">LossyStandardStream</span><span class="op">&lt;</span><span class="ident">Q</span><span class="op">&gt;</span> {
-        <span class="ident">LossyStandardStream</span>::<span class="ident">new</span>(<span class="ident">wtr</span>).<span class="ident">is_console</span>(<span class="self">self</span>.<span class="ident">is_console</span>)
-    }
-
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">windows</span>)]</span>
-    <span class="kw">fn</span> <span class="ident">is_console</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">yes</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">LossyStandardStream</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">is_console</span> <span class="op">=</span> <span class="ident">yes</span>;
-        <span class="self">self</span>
+        <span class="ident">LossyStandardStream</span> { <span class="ident">wtr</span>: <span class="ident">wtr</span>, <span class="ident">is_console</span>: <span class="self">self</span>.<span class="ident">is_console</span> }
     }
 
     <span class="kw">fn</span> <span class="ident">get_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">W</span> {
@@ -3319,6 +3657,7 @@ bufwtr.print(&amp;buffer)?;
         <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">set_color</span>(<span class="ident">spec</span>)
     }
     <span class="kw">fn</span> <span class="ident">reset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">reset</span>() }
+    <span class="kw">fn</span> <span class="ident">is_synchronous</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> { <span class="self">self</span>.<span class="ident">wtr</span>.<span class="ident">is_synchronous</span>() }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">io</span>::<span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="ident">Write</span> <span class="kw">for</span> <span class="ident">LossyStandardStream</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span> {
@@ -3450,69 +3789,5 @@ bufwtr.print(&amp;buffer)?;
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">buf</span>.<span class="number">0</span>, <span class="string">b&quot;\x1B[48;5;208m&quot;</span>);
     }
 }
-</pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "termcolor";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "termcolor";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
