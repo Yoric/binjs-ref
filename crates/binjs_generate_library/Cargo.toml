@@ -1,15 +1,18 @@
 [package]
 name = "binjs_generate_library"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["David Teller <D.O.Teller@gmail.com>"]
+description = "Code generator component of the Binary AST reference implementation."
+license = "MIT"
+repository = "https://github.com/Yoric/binjs-ref"
 
 [dependencies]
-binjs_meta = { path = "../binjs_meta/", version = "*" }
+binjs_meta = { path = "../binjs_meta/", version = "^0.4" }
 env_logger = "^0.5.6"
 itertools = "^0.7"
 log = "^0.4"
 
 [dev-dependencies]
 clap = "^2"
-webidl = "*"
+webidl = "^0.8"
 yaml-rust = "^0.4"
