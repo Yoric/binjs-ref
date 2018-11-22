@@ -1,25 +1,28 @@
 [package]
 name = "binjs_io"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["David Teller <D.O.Teller@gmail.com>"]
+description = "I/O component of the Binary AST reference implementation."
+license = "MIT"
+repository = "https://github.com/Yoric/binjs-ref"
 
 [dependencies]
-bincode = "*"
-binjs_shared = { path = "../binjs_shared", version = "*" }
-brotli = "*"
+bincode = "^1.0"
+binjs_shared = { path = "../binjs_shared", version = "^0.1" }
+brotli = "^3.1"
 clap = "^2.32"
 derive_more = "0.13.0"
 flate2 = "^1.0"
-itertools = "*"
-lzw = "*"
-log = "*"
+itertools = "^0.7"
+lzw = "^0.10"
+log = "^0.4"
 rand = "^0.6"
 range-encoding = "0.1.9"
 serde = "^1.0"
 serde_derive = "^1.0"
-vec_map = "*"
-xml-rs = "*"
+vec_map = "^0.8"
+xml-rs = "^0.8"
 
 [dev-dependencies]
-env_logger = "*"
-assert_matches = "*"
+assert_matches = "^1.3"
+env_logger = "^0.6"
