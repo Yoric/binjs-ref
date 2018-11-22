@@ -13,6 +13,7 @@ binjs_generic = { path = "crates/binjs_generic", version = "*" }
 binjs_es6 = { path = "crates/binjs_es6", version = "*" }
 binjs_io = { path = "crates/binjs_io", version = "*" }
 binjs_meta = { path = "crates/binjs_meta", version = "*" }
+binjs_ratel = { path = "crates/binjs_ratel", version = "*" }
 binjs_shared = { path = "crates/binjs_shared", version = "*" }
 assert_matches = "*"
 bencher = "^0.1"

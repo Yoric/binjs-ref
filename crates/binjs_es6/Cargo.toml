@@ -1,6 +1,6 @@
 [package]
 name = "binjs_es6"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["David Teller <D.O.Teller@gmail.com>"]
 build = "build.rs"
 description = "ES6 component of the Binary AST reference implementation."

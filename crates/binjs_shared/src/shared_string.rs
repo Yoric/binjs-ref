@@ -92,6 +92,12 @@ impl SharedString {
         SharedString::Dynamic(Rc::new(value))
     }
 }
+impl std::borrow::Borrow<str> for SharedString
+{
+    fn borrow(&self) -> &str {
+        self.as_str()
+    }
+}
 
 #[macro_export]
 macro_rules! shared_string {
