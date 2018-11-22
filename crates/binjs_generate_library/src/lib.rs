@@ -1279,6 +1279,41 @@ impl<'a> Walker<'a> for ViewMut{rust_name}<'a> where Self: 'a {{
             buffer.push_str(&interfaces_enum);
         }
 
+        /// Print a generic type, which may be used to store values of any type.
+        fn print_universal_type(buffer: &mut String, interfaces: &HashMap<NodeName, Rc<Interface>>, typedefs: &HashMap<NodeName, Rc<Type>>) {
+            enum Kind {
+                Interface,
+                Typedef
+            }
+            let names = interfaces.keys()
+                .map(|v| (Kind::Interface, v))
+                .chain(typedefs.keys()
+                    .map(|v| (Kind::Typedef, v))
+                )
+                .sorted_by_key(|kv| kv.1)
+                .into_iter()
+                .map(|(kind, name)| {
+                    format!(
+"    /// {kind} {name}
+    {rust_name},\n",
+                        name = name,
+                        rust_name = name.to_class_cases(),
+                        kind = match kind {
+                            Kind::Interface => "Interface",
+                            Kind::Typedef => "Typedef"
+                        })
+                })
+                .format("");
+            buffer.push_str(&format!("
+/// A universal container for AST Nodes.
+#[derive(PartialEq, Eq, Debug, PartialOrd, Ord)]
+pub enum ASTEverything {{
+{names}
+}}
+",
+                            names = names));
+        }
+
         fn print_visitor(buffer: &mut String, interfaces: &HashMap<NodeName, Rc<Interface>>, typedefs: &HashMap<NodeName, Rc<Type>>) {
             let path = "
 /// A PathItem, used when walking the tree with the strongly-typed `Walker` API.
@@ -1466,6 +1501,7 @@ impl<'a> From<&'a mut PropertyKey> for ViewMutNothing<PropertyKey> {{
         print_impl_names(&mut impl_buffer, self.spec.interfaces_by_name().keys());
         print_ast_interfaces(&mut ast_buffer, deanonymized.interfaces_by_name(), self.spec.get_null_name().to_str());
         print_visitor(&mut ast_buffer, deanonymized.interfaces_by_name(), deanonymized.typedefs_by_name());
+        print_universal_type(&mut ast_buffer, deanonymized.interfaces_by_name(), deanonymized.typedefs_by_name());
 
         struct_buffer.push_str("\n\n\n    // Field names (by lexicographical order)\n");
         impl_buffer.push_str("\n\n\n            // Field names (by lexicographical order)\n");
