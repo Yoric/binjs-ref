@@ -2,9 +2,12 @@
 name = "binjs_shared"
 version = "0.1.1"
 authors = ["David Teller <D.O.Teller@gmail.com>"]
+description = "Shared component of the Binary AST reference implementation."
+license = "MIT"
+repository = "https://github.com/Yoric/binjs-ref"
 
 [dependencies]
-itertools = "*"
+itertools = "^0.7"
 json = "^0.11"
 log = "^0.4"
 serde = "^1.0"
