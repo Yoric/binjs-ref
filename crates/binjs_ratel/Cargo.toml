@@ -1,0 +1,10 @@
+[package]
+name = "binjs_ratel"
+version = "0.1.0"
+authors = ["David Teller <D.O.Teller@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+binjs_es6 = { path = "../binjs_es6", version = "^0.2"}
+binjs_shared = { path = "../binjs_shared", version = "^0.1"}
+ratel = "^0.7"
