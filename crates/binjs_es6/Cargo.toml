@@ -1,6 +1,6 @@
 [package]
 name = "binjs_es6"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["David Teller <D.O.Teller@gmail.com>"]
 build = "build.rs"
 
