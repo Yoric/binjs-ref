@@ -9,8 +9,10 @@
 
 use ::TokenWriterError;
 use ::io::{ Path, TokenWriter };
-use ::io::statistics::{ ContentInfo, Instances };
+use ::io::statistics::{ Bytes, BytesAndInstances, ContentInfo, Instances };
 use bytes::lengthwriter::LengthWriter;
+use bytes::varnum::WriteVarNum;
+use super::probabilities::IntoStatistics;
 
 use binjs_shared::{ F64, FieldName, IdentifierName, InterfaceName, PropertyKey, SharedString };
 
