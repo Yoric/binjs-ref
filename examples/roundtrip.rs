@@ -78,7 +78,7 @@ fn main() {
         }
 
         let encoder = binjs::generic::io::Encoder::new();
-        let encoded = encoder.encode(&spec, &mut format, &ast)
+        let encoded = encoder.encode(None, &spec, &mut format, &ast)
             .expect("Could not encode AST");
 
         let data = encoded.as_ref();

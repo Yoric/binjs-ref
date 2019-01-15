@@ -55,7 +55,17 @@
 //! and/or custom dictionary later.
 
 pub mod dictionary;
+
+/// Reading a compressed stream.
 pub mod read;
+
+/// Tools shared by `read` and `write`.
+mod rw;
+
+/// Misc convenience utilities.
+mod util;
+
+/// Writing to a compressed stream.
 pub mod write;
 
 mod predict;
@@ -85,6 +95,10 @@ pub struct Options {
     /// kind written. If several files are written with the same options,
     /// we accumulate statistics.
     content_instances: Rc<RefCell<ContentInfo<Instances>>>,
+
+    /// If `true`, when compressing a file, also write streams to separate files,
+    /// for analysis purposes.
+    split_streams: bool,
 }
 impl Options {
     pub fn new(probability_tables:Dictionary<SymbolInfo>) -> Self {
@@ -92,6 +106,7 @@ impl Options {
             probability_tables,
             content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
             content_instances: Rc::new(RefCell::new(ContentInfo::default())),
+            split_streams: false,
         }
     }
 
@@ -133,6 +148,10 @@ impl ::FormatProvider for FormatProvider {
                 .takes_value(true)
                 .default_value("3")
             )
+            .arg(Arg::with_name("split-streams")
+                .long("split-streams")
+                .takes_value(false)
+            )
     }
 
     fn handle_subcommand(&self, matches: Option<&clap::ArgMatches>) -> Result<::Format, ::std::io::Error> {
@@ -147,12 +166,14 @@ impl ::FormatProvider for FormatProvider {
             .expect("Could not open dictionary");
         let probability_tables : Dictionary<Instances> = bincode::deserialize_from(probability_tables_source)
             .expect("Could not decode dictionary");
+        let split_streams = matches.is_present("split-streams");
 
         Ok(::Format::Entropy {
             options: Options {
                 probability_tables: probability_tables.instances_to_probabilities("probability_tables"),
                 content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
                 content_instances: Rc::new(RefCell::new(ContentInfo::default())),
+                split_streams,
             }
         })
     }

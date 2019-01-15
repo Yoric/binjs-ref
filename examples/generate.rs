@@ -102,7 +102,7 @@ Note that this tool does not attempt to make sure that the files are entirely co
             }
 
             let encoder = Encoder::new();
-            let encoded = encoder.encode(&spec, &mut format, &ast)
+            let encoded = encoder.encode(None, &spec, &mut format, &ast)
                 .expect("Could not encode AST");
 
             {

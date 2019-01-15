@@ -11,7 +11,7 @@ use binjs::source::{ Shift, SourceParser };
 use binjs::generic::FromJSON;
 use binjs::specialized::es6::ast::Walker;
 use binjs::io::{ Path as IOPath, TokenSerializer };
-use binjs::io::entropy::dictionary::{ Dictionary, DictionaryBuilder, KindedStringMap, FilesContaining, Instances };
+use binjs::io::entropy::dictionary::DictionaryBuilder;
 
 use std::fs::*;
 use std::thread;
@@ -36,8 +36,7 @@ macro_rules! progress {
 
 
 fn handle_path<'a>(options: &mut Options<'a>,
-    shared_dictionary: &mut Dictionary<Instances>,
-    shared_files_containing_string: &mut KindedStringMap<FilesContaining>,
+    shared_dictionary: &mut DictionaryBuilder,
     shared_number_of_files: &mut usize,
     source_path: &Path,
     sub_dir: &Path)
@@ -54,7 +53,7 @@ fn handle_path<'a>(options: &mut Options<'a>,
             .expect("Could not open directory")
             .map(|dir| dir.unwrap())
         {
-            handle_path(options, shared_dictionary, shared_files_containing_string, shared_number_of_files,
+            handle_path(options, shared_dictionary, shared_number_of_files,
                 &entry.path().as_path(), &sub_dir);
         }
         return;
@@ -68,12 +67,11 @@ fn handle_path<'a>(options: &mut Options<'a>,
 
     progress!(options.quiet, "Parsing.");
 
-    handle_path_or_text(options, shared_dictionary, shared_files_containing_string, shared_number_of_files, source_path);
+    handle_path_or_text(options, shared_dictionary, shared_number_of_files, source_path);
 }
 
 fn handle_path_or_text<'a>(options: &mut Options<'a>,
-    shared_dictionary: &mut Dictionary<Instances>,
-    shared_files_containing_string: &mut KindedStringMap<FilesContaining>,
+    dictionary_builder: &mut DictionaryBuilder,
     shared_number_of_files: &mut usize,
     source: &Path)
 {
@@ -94,23 +92,14 @@ fn handle_path_or_text<'a>(options: &mut Options<'a>,
     }
 
     progress!(options.quiet, "Building dictionary.");
-    let old_state_len = shared_dictionary.len();
-    let old_string_len = shared_files_containing_string.len();
 
     {
-        let builder = DictionaryBuilder::new(shared_dictionary, shared_files_containing_string);
-        let mut serializer = binjs::specialized::es6::io::Serializer::new(builder);
+        let mut serializer = binjs::specialized::es6::io::Serializer::new(dictionary_builder);
         serializer.serialize(&ast, &mut IOPath::new())
             .expect("Could not generate dictionary");
         serializer.done()
             .expect("Could not finalize dictionary");
     }
-
-    progress!(options.quiet, "Successfully built dictionary with {old_state_len} => {new_state_len} states, {old_string_len} => {new_string_len} strings",
-        new_state_len = shared_dictionary.len(),
-        old_state_len = old_state_len,
-        new_string_len = shared_files_containing_string.len(),
-        old_string_len = old_string_len);
 
     *shared_number_of_files += 1;
 }
@@ -175,6 +164,14 @@ fn main_aux() {
                     .map(|_| ())
                     .map_err(|e| format!("Invalid number {}", e)))
                 .help("String window width."),
+            Arg::with_name("threshold")
+                .long("threshold")
+                .takes_value(true)
+                .default_value("2")
+                .validator(|s| s.parse::<u32>()
+                    .map(|_| ())
+                    .map_err(|e| format!("Invalid number {}", e)))
+                .help("Prune from the dictionary all user-extensible values that appear in strictly less than [threshold] files"),
         ])
         .get_matches();
 
@@ -199,6 +196,9 @@ fn main_aux() {
     let width = str::parse(matches.value_of("window-width").unwrap())
         .expect("Invalid number");
 
+    let threshold: usize = str::parse(matches.value_of("threshold").unwrap())
+        .expect("Invalid number");
+
     progress!(quiet, "Generating dictionary with lazification {lazification}, depth {depth}, width {width}",
         lazification = lazification,
         depth = depth,
@@ -206,8 +206,7 @@ fn main_aux() {
 
     // Setup.
     let parser = Shift::new();
-    let mut dictionary = Dictionary::new(depth, width);
-    let mut files_containing_string = KindedStringMap::default();
+    let mut dictionary = DictionaryBuilder::new(depth, width);
     let mut number_of_files = 0;
 
     let mut options = Options {
@@ -218,7 +217,7 @@ fn main_aux() {
 
     // Process files.
     for source_path in sources {
-        handle_path(&mut options, &mut dictionary, &mut files_containing_string, &mut number_of_files,
+        handle_path(&mut options, &mut dictionary, &mut number_of_files,
             source_path, /* local root */ Path::new(""));
     }
 
@@ -243,6 +242,7 @@ fn main_aux() {
     progress!(quiet, "Writing probabilities to {:?}", dest_dictionary);
     let file_dictionary = File::create(dest_dictionary)
         .unwrap_or_else(|e| panic!("Could not create file: {:?}", e));
+    let dictionary = dictionary.done(threshold.into());
     bincode::serialize_into(file_dictionary, &dictionary)
         .expect("Could not serialize entropy dictionary");
 }

@@ -24,3 +24,8 @@ pub trait InstancesToProbabilities {
     type AsProbabilities;
     fn instances_to_probabilities(self, description: &str) -> Self::AsProbabilities;
 }
+
+pub trait IntoStatistics {
+    type AsStatistics;
+    fn into_statistics(self, description: &str) -> Self::AsStatistics;
+}

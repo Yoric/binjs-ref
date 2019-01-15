@@ -43,7 +43,7 @@ impl Encoder {
     pub fn new() -> Self {
         Encoder
     }
-    pub fn encode(&self, grammar: &binjs_meta::spec::Spec, format: &mut binjs_io::Format, ast: &JSON) -> Result<Box<AsRef<[u8]>>, std::io::Error>
+    pub fn encode(&self, path: Option<&std::path::Path>, grammar: &binjs_meta::spec::Spec, format: &mut binjs_io::Format, ast: &JSON) -> Result<Box<AsRef<[u8]>>, std::io::Error>
     {
         use binjs_io::TokenWriterTreeAdapter;
         match *format {
@@ -69,7 +69,7 @@ impl Encoder {
                 Ok(Box::new(data))
             }
             binjs_io::Format::Entropy { ref options } => {
-                let writer = binjs_io::entropy::write::Encoder::new((*options).clone());
+                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone());
                 let mut encoder = encode::Encoder::new(grammar, writer);
                 encoder.generic_encode(ast)?;
                 let data = encoder.done()?;

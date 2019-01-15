@@ -425,12 +425,21 @@ impl<NodeValue, Statistics> WindowPredict<NodeValue, Statistics> where NodeValue
         }
     }
 
+    pub fn get_dictionary_index(&self, value: &NodeValue) -> Option<usize> {
+        self.dictionary_index_by_value.get(value)
+            .map(|x| x.0)
+    }
+
     /// Update current window by moving the value at index `index` to the latest-seen
     /// position (index 0).
     ///
     /// Fails if the index is not in [0, self.latest_values.len()[
     fn window_move_to_front(&mut self, index: BackReference) -> Result<(), ()> {
         let as_usize = Into::<usize>::into(index);
+        if as_usize == 0 {
+            // Special case in which `rotate_right` doesn't work.
+            return Ok(())
+        }
         if as_usize >= self.latest_values.len() {
             return Err(());
         }
@@ -474,6 +483,7 @@ impl<NodeValue> WindowPredict<NodeValue, Instances> where NodeValue: Clone + Eq 
     pub fn add(&mut self, value: NodeValue) {
         // --- At this stage, we don't know whether the value is known.
 
+        debug!(target: "predict", "WindowPredict: Inserting value {:?}", value);
         let number_of_values = self.value_by_dictionary_index.len();
         let dictionary_index = *self.dictionary_index_by_value.entry(value.clone())
             .or_insert(DictionaryIndex(number_of_values));
@@ -507,6 +517,14 @@ impl<NodeValue> WindowPredict<NodeValue, Instances> where NodeValue: Clone + Eq 
 }
 
 impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq + std::hash::Hash + std::fmt::Debug {
+    pub fn frequencies(&mut self) -> Option<&Rc<RefCell<range_encoding::CumulativeDistributionFrequency>>> {
+        self.info
+            .stats_by_node_value_mut()
+            .values_mut()
+            .next()
+            .map(|any| &any.distribution)
+    }
+
     // FIXME: We should find a way to enforce a specific mapping between `index` and `WindowPredict`,
     // to make it easy to decode.
     pub fn value_by_symbol_index(&mut self, index: SymbolIndex) -> Option<NodeValue> {
@@ -536,10 +554,12 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
     pub fn stats_by_node_value_mut(&mut self, value: &NodeValue) -> Option<&mut SymbolInfo> {
         // At this stage, the value may appear in both the dictionary
         // and the window. We'll favor the window if possible.
+        debug!(target: "predict", "WindowPredict: Fetching {:?}", value);
         let prediction =
             match self.window_insert_value(value) {
                 Some(backref) => WindowPrediction::BackReference(backref),
                 None => {
+                    debug!(target: "predict", "WindowPredict: Value {:?} is not in the window, let's look for it in the dictionary", value);
                     let index = self.dictionary_index_by_value
                         .get(value)?
                         .clone();
@@ -547,6 +567,7 @@ impl<NodeValue> WindowPredict<NodeValue, SymbolInfo> where NodeValue: Clone + Eq
                 }
             };
 
+        debug!(target: "predict", "WindowPredict: {:?} has just been inserted and will be encoded as {:?}", value, prediction);
         self.info
             .stats_by_node_value_mut()
             .get_mut(&prediction)

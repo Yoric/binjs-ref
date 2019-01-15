@@ -245,11 +245,11 @@ impl Decoder {
     pub fn new() -> Self {
         Decoder
     }
-    pub fn decode<'a, R: Read + Seek, AST>(&self, format: &mut binjs_io::Format, source: R) -> Result<AST, TokenReaderError>
+    pub fn decode<'a, R: Read + Seek, AST>(&self, format: &'a mut binjs_io::Format, source: R) -> Result<AST, TokenReaderError>
         where
             Deserializer<binjs_io::simple::TreeTokenReader<R>> : Deserialization<binjs_io::simple::TreeTokenReader<R>, AST>,
             Deserializer<binjs_io::multipart::TreeTokenReader> : Deserialization<binjs_io::multipart::TreeTokenReader, AST>,
-            Deserializer<binjs_io::entropy::read::Decoder<R>> : Deserialization<binjs_io::entropy::read::Decoder<R>, AST>,
+            Deserializer<binjs_io::entropy::read::Decoder<'a>> : Deserialization<binjs_io::entropy::read::Decoder<'a>, AST>,
     {
         let mut path = IOPath::new();
         match *format {
@@ -266,11 +266,10 @@ impl Decoder {
                 Ok(ast)
             }
             binjs_io::Format::Entropy { ref options } => {
-                let reader = binjs_io::entropy::read::Decoder::new((*options).clone(), source)?;
+                let reader = binjs_io::entropy::read::Decoder::new(options, source)?;
                 let mut deserializer = Deserializer::new(reader);
                 let ast = deserializer.deserialize(&mut path)?;
                 Ok(ast)
-
             }
             _ => unimplemented!()
         }
@@ -281,26 +280,26 @@ impl Encoder {
     pub fn new() -> Self {
         Encoder
     }
-    pub fn encode<'a, AST>(&self, format: &'a mut binjs_io::Format, ast: &'a AST) -> Result<Box<AsRef<[u8]>>, TokenWriterError>
+    pub fn encode<'a, AST>(&self, path: Option<&std::path::Path>, format: &'a mut binjs_io::Format, ast: &'a AST) -> Result<Box<AsRef<[u8]>>, TokenWriterError>
         where
             Serializer<TokenWriterTreeAdapter<binjs_io::simple::TreeTokenWriter>> : Serialization<TokenWriterTreeAdapter<binjs_io::simple::TreeTokenWriter>, &'a AST>,
             Serializer<TokenWriterTreeAdapter<binjs_io::multipart::TreeTokenWriter>> : Serialization<TokenWriterTreeAdapter<binjs_io::multipart::TreeTokenWriter>, &'a AST>,
             Serializer<TokenWriterTreeAdapter<binjs_io::xml::Encoder>> : Serialization<TokenWriterTreeAdapter<binjs_io::xml::Encoder>, &'a AST>,
             Serializer<binjs_io::entropy::write::Encoder> : Serialization<binjs_io::entropy::write::Encoder, &'a AST>
     {
-        let mut path = IOPath::new();
+        let mut io_path = IOPath::new();
         match *format {
             binjs_io::Format::Simple { .. } => {
                 let writer = binjs_io::simple::TreeTokenWriter::new();
                 let mut serializer = Serializer::new(TokenWriterTreeAdapter::new(writer));
-                serializer.serialize(ast, &mut path)?;
+                serializer.serialize(ast, &mut io_path)?;
                 let data = serializer.done()?;
                 Ok(Box::new(data))
             }
             binjs_io::Format::Multipart { ref mut targets, .. } => {
                 let writer = binjs_io::multipart::TreeTokenWriter::new(targets.clone());
                 let mut serializer = Serializer::new(TokenWriterTreeAdapter::new(writer));
-                serializer.serialize(ast, &mut path)?;
+                serializer.serialize(ast, &mut io_path)?;
                 let data = serializer.done()?;
                 Ok(Box::new(data))
             }
@@ -308,14 +307,14 @@ impl Encoder {
             binjs_io::Format::XML => {
                 let writer = binjs_io::xml::Encoder::new();
                 let mut serializer = Serializer::new(TokenWriterTreeAdapter::new(writer));
-                serializer.serialize(ast, &mut path)?;
+                serializer.serialize(ast, &mut io_path)?;
                 let data = serializer.done()?;
                 Ok(Box::new(data))
             }
             binjs_io::Format::Entropy { ref options } => {
-                let writer = binjs_io::entropy::write::Encoder::new((*options).clone());
+                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone());
                 let mut serializer = Serializer::new(writer);
-                serializer.serialize(ast, &mut path)?;
+                serializer.serialize(ast, &mut io_path)?;
                 let data = serializer.done()?;
                 Ok(Box::new(data))
             }
