@@ -15,7 +15,13 @@ pub trait WriteVarNum {
 
 pub trait ReadVarNum {
     fn read_varnum(&mut self) -> Result<u32, std::io::Error>;
+    fn read_maybe_varnum(&mut self) -> Result<Option<u32>, std::io::Error>;
     fn read_varnum_to(&mut self, num: &mut u32) -> Result<usize, std::io::Error>;
+
+    /// As `read_varnum_to`, but ignore invalid 0s.
+    ///
+    /// Used to implement e.g. `read_varfloat`.
+    fn read_extended_varnum_to(&mut self, num: &mut u32) -> Result<usize, std::io::Error>;
 }
 
 impl<T> WriteVarNum for T where T: Write {
@@ -73,7 +79,17 @@ impl<T> ReadVarNum for T where T: Read {
         Ok(result)
     }
 
-    fn read_varnum_to(&mut self, num: &mut u32) -> Result<usize, std::io::Error> {
+    fn read_maybe_varnum(&mut self) -> Result<Option<u32>, std::io::Error> {
+        let mut result = 0;
+        let bytes = self.read_varnum_to(&mut result)?;
+        if result == 1 && bytes == 2 {
+            Ok(None)
+        } else {
+            Ok(Some(result))
+        }
+    }
+
+    fn read_extended_varnum_to(&mut self, num: &mut u32) -> Result<usize, std::io::Error> {
         let mut bytes = 0;
         let mut result : u32 = 0;
         let mut shift : u32 = 0;
@@ -87,15 +103,19 @@ impl<T> ReadVarNum for T where T: Read {
             let byte = buf[0];
             result |= (byte as u32 >> 1) << shift;
             if byte & 1 == 0 {
-                if result == 0 && shift != 0 {
-                    return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "Invalid varnum (invalid 0)"))
-                } else {
-                    *num = result;
-                    return Ok(bytes);
-                }
+                *num = result;
+                return Ok(bytes);
             }
             shift += 7;
         }
+    }
+
+    fn read_varnum_to(&mut self, num: &mut u32) -> Result<usize, std::io::Error> {
+        let bytes = self.read_extended_varnum_to(num)?;
+        if *num == 0 && bytes > 1 {
+            return Err(std::io::Error::new(std::io::ErrorKind::InvalidData, "Invalid varnum (invalid 0)"))
+        }
+        Ok(bytes)
     }
 }
 
