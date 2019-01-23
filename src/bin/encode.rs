@@ -246,6 +246,7 @@ fn main_aux() {
                 .short("i")
                 .multiple(true)
                 .takes_value(true)
+                .number_of_values(1)
                 .help("Input files to use. Must be JS source file. May be specified multiple times. If not specified, stdin is used."),
             Arg::with_name("out")
                 .long("out")
