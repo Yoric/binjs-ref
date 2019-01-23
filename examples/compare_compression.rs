@@ -2,6 +2,8 @@
 
 extern crate binjs;
 extern crate clap;
+#[macro_use]
+extern crate derive_more;
 extern crate env_logger;
 extern crate glob;
 extern crate itertools;
@@ -18,26 +20,16 @@ use std::collections::HashMap;
 use std::io::Write;
 use std::process::Command;
 
-#[derive(Clone)]
+#[derive(Add, AddAssign, Clone, Default)]
 struct Sizes {
     uncompressed: usize,
     gzip: usize,
     bzip2: usize,
     brotli: usize,
 }
-/*
-impl std::ops::Add for Sizes {
-    type Output = Self;
-    fn add(self, rhs: Sizes) -> Sizes {
-        self.uncompressed += rhs.uncompressed;
-        self.gzip += rhs.gzip;
-        self.bzip2 += rhs.bzip2;
-        self.brotli += rhs.brotli;
-        self
-    }
-}
-*/
-#[derive(Clone)]
+
+
+#[derive(Add, AddAssign, Clone, Default)]
 struct FileStats {
     from_text: Sizes,
     from_binjs: Sizes,
@@ -175,28 +167,21 @@ fn main() {
     eprintln!("*** Done");
 
     let all_stats = all_stats.into_iter().sorted_by(|a, b| Ord::cmp(&a.0, &b.0));
-    println!("File, Source (b), Source+Gzip (b), Source+Brotli (b), Source+BZip2 (b), BinAST (b), BinAST/Source, BinAST+GZip (b), BinAST+GZip/Source+GZip, BinAST+GZip/BinAST, BinAST+Brotli (b), BinAST+Brotli/Source+Brotli, BinAST+Brotli/BinAST, BinAST+BZip2 (b), BinAST+BZip2/Source+BZip2, BinAST+BZip2/BinAST");
-    for (path, file_stats) in all_stats {
-        println!("{path:?}, {source}, {source_gzip}, {source_brotli}, {source_bzip2}, {binjs}, {uncompressed_to_uncompressed:2}, {binjs_gzip}, {gzip_to_gzip:2}, {gzip_to_uncompressed:2}, {binjs_brotli}, {brotli_to_brotli:2}, {brotli_to_uncompressed:2}, {binjs_bzip2}, {bzip2_to_bzip2:2}, {bzip2_to_uncompressed:2}",
-            source = file_stats.from_text.uncompressed,
-            source_gzip = file_stats.from_text.gzip,
-            source_brotli = file_stats.from_text.brotli,
-            source_bzip2 = file_stats.from_text.bzip2,
-
-            binjs = file_stats.from_binjs.uncompressed,
-            uncompressed_to_uncompressed = (file_stats.from_binjs.uncompressed as f64) / (file_stats.from_text.uncompressed as f64),
-            binjs_gzip = file_stats.from_binjs.gzip,
-            gzip_to_gzip = (file_stats.from_binjs.gzip as f64) / (file_stats.from_text.gzip as f64),
-            gzip_to_uncompressed = (file_stats.from_binjs.gzip as f64) / (file_stats.from_binjs.uncompressed as f64),
-
-            binjs_brotli = file_stats.from_binjs.brotli,
-            brotli_to_brotli = (file_stats.from_binjs.brotli as f64) / (file_stats.from_text.brotli as f64),
-            brotli_to_uncompressed = (file_stats.from_binjs.brotli as f64) / (file_stats.from_binjs.uncompressed as f64),
-
-            binjs_bzip2 = file_stats.from_binjs.bzip2,
-            bzip2_to_bzip2 = (file_stats.from_binjs.bzip2 as f64) / (file_stats.from_text.bzip2 as f64),
-            bzip2_to_uncompressed = (file_stats.from_binjs.bzip2 as f64) / (file_stats.from_binjs.uncompressed as f64),
-
-            path = path);
+    println!("File, Source (b), BinAST/Source+Brotli");
+    let mut sum_stats = FileStats::default();
+    for (_, file_stats) in &all_stats {
+        sum_stats += file_stats.clone();
     }
+    print_one(&"<<TOTAL>>", &sum_stats);
+
+    for (path, file_stats) in &all_stats {
+        print_one(path, file_stats);
+    }
+}
+
+fn print_one<T: std::fmt::Debug>(name: &T, file_stats: &FileStats) {
+    println!("{name:?}, {source}, {binjs_to_brotli:.2}",
+        source = file_stats.from_text.uncompressed,
+        binjs_to_brotli = (file_stats.from_binjs.uncompressed as f64) / (file_stats.from_text.brotli as f64),
+        name = name);
 }
