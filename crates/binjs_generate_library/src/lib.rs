@@ -173,15 +173,16 @@ use json::JsonValue as JSON;
                 let definition = format!(
                     "
 /// Implementation of string enum {name}
-#[derive(PartialEq, Debug, Clone)]\npub enum {rust_name} {{\n{values}\n    }}\n",
+#[derive(PartialEq, Debug, Clone)]\npub enum {rust_name} {{\n{values}\n}}\n",
                     name = name,
                     rust_name = rust_name,
                     values = string_enum
                         .strings()
                         .iter()
                         .map(|s| format!(
-                            "/// Implementation of variant \"{spec_variant_name}\"
-     {rust_variant_name}",
+                            "
+    /// Implementation of variant \"{spec_variant_name}\"
+    {rust_variant_name}",
                             spec_variant_name = s,
                             rust_variant_name = ToCases::to_cpp_enum_case(s)
                         ))
