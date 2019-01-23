@@ -8,7 +8,6 @@ extern crate itertools;
 extern crate rand;
 
 use binjs::generic::FromJSON;
-use binjs::io::{Format, Path as IOPath, TokenSerializer};
 use binjs::source::*;
 
 use clap::*;
@@ -104,16 +103,21 @@ fn main() {
             .multiple(true)
             .required(true)
             .takes_value(true)
+            .number_of_values(1)
             .help("Glob path towards source files")])
         .subcommand(binjs::io::Format::subcommand())
         .get_matches();
 
     let mut format =
         binjs::io::Format::from_matches(&matches).expect("Could not determine encoding format");
+    println!("Using format: {}", format.name());
+    println!("Source files: {}", matches.values_of("in").unwrap().format(", "));
 
     let parser = Shift::try_new().expect("Could not launch Shift");
 
     let mut all_stats = HashMap::new();
+
+    let encoder = binjs::specialized::es6::io::Encoder::new();
 
     for path in matches.values_of("in").expect("Missing `in`") {
         for source_path in glob::glob(&path).expect("Invalid pattern") {
@@ -133,23 +137,9 @@ fn main() {
                 binjs::specialized::es6::ast::Script::import(&json).expect("Could not import AST");
             binjs::specialized::es6::scopes::AnnotationVisitor::new().annotate_script(&mut ast);
 
-            let data: Box<AsRef<[u8]>> = match format {
-                Format::Multipart {
-                    ref mut targets, ..
-                } => {
-                    targets.reset();
-                    let writer = binjs::io::TokenWriterTreeAdapter::new(
-                        binjs::io::multipart::TreeTokenWriter::new(targets.clone()),
-                    );
-                    let mut serializer = binjs::specialized::es6::io::Serializer::new(writer);
-                    serializer
-                        .serialize(&ast, &mut IOPath::new())
-                        .expect("Could not encode AST");
-                    let data = serializer.done().expect("Could not finalize AST encoding");
-                    Box::new(data)
-                }
-                _ => unimplemented!(),
-            };
+            let data = encoder
+                .encode(None, &mut format, &ast)
+                .expect("Could not encode");
 
             {
                 let mut binjs_encoded = std::fs::File::create(&dest_path_binjs)
