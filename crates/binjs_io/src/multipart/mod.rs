@@ -162,6 +162,7 @@ impl ::FormatProvider for FormatProvider {
 
     fn handle_subcommand(
         &self,
+        _spec: &binjs_meta::spec::Spec,
         matches: Option<&clap::ArgMatches>,
     ) -> Result<::Format, ::std::io::Error> {
         use bytes::compress::Compression;

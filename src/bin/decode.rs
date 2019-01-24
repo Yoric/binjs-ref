@@ -62,6 +62,15 @@ fn main() {
         .subcommand(binjs::io::Format::subcommand())
         .get_matches();
 
+    // Prepare grammar (used for entropy).
+    let mut builder = binjs::meta::spec::SpecBuilder::new();
+    let _ = binjs::generic::es6::Library::new(&mut builder);
+    let spec_options = binjs::meta::spec::SpecOptions {
+        null: &builder.node_name(""),
+        root: &builder.node_name("Script"),
+    };
+    let spec = builder.into_spec(spec_options);
+
     // Common options.
     let source_path = matches.value_of("INPUT");
     let dest_path = matches.value_of("OUTPUT");
@@ -69,7 +78,7 @@ fn main() {
 
     // Format options.
     let format =
-        binjs::io::Format::from_matches(&matches).expect("Could not parse encoding format");
+        binjs::io::Format::from_matches(&spec, &matches).expect("Could not parse encoding format");
     progress!(quiet, "Using format: {}", format.name());
 
     // Setup.
@@ -103,13 +112,6 @@ fn main() {
     }
 
     progress!(quiet, "Pretty-printing");
-    let mut builder = binjs::meta::spec::SpecBuilder::new();
-    let _ = binjs::generic::es6::Library::new(&mut builder);
-    let spec_options = binjs::meta::spec::SpecOptions {
-        null: &builder.node_name(""),
-        root: &builder.node_name("Script"),
-    };
-    let spec = builder.into_spec(spec_options);
     let printer = Shift::try_new().expect("Could not launch Shift");
     let source = printer
         .to_source(&spec, json)

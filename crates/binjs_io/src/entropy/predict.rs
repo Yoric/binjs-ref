@@ -472,6 +472,10 @@ where
         self.context_predict.len()
     }
 
+    pub fn depth(&self) -> usize {
+        self.depth
+    }
+
     /// All the paths known to this predictor.
     ///
     /// Used mainly for debugging.

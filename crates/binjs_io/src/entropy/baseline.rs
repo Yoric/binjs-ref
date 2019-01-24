@@ -20,6 +20,12 @@ type IOPath = binjs_shared::ast::Path<
     ),
 >;
 
+pub fn build(depth: usize, spec: &Spec) -> Dictionary<Instances> {
+    let mut builder = BaselineDictionaryBuilder::new(depth, spec);
+    builder.start();
+    builder.done()
+}
+
 struct BaselineDictionaryBuilder<'a> {
     dictionary: Dictionary<Instances>,
     spec: &'a Spec,
@@ -36,6 +42,10 @@ impl<'a> BaselineDictionaryBuilder<'a> {
             null_name,
             path: IOPath::new(),
         }
+    }
+
+    pub fn start(&mut self) {
+        self.visit_named_type(&self.spec.get_root(), false);
     }
 
     pub fn done(self) -> Dictionary<Instances> {

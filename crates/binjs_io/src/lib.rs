@@ -216,6 +216,7 @@ pub trait FormatProvider {
     /// Produce a format given command-line argument matches.
     fn handle_subcommand(
         &self,
+        spec: &binjs_meta::spec::Spec,
         matches: Option<&clap::ArgMatches>,
     ) -> Result<::Format, ::std::io::Error>;
 }
@@ -351,16 +352,16 @@ impl Format {
     /// Pick the first format provider that was invoked by
     /// `matches` as a subcommand. If none, pick the default
     /// provider, without any command-line arguments.
-    pub fn from_matches(matches: &clap::ArgMatches) -> Result<Self, std::io::Error> {
+    pub fn from_matches(spec: &binjs_meta::spec::Spec, matches: &clap::ArgMatches) -> Result<Self, std::io::Error> {
         if let Some(matches) = matches.subcommand_matches(ADVANCED_COMMAND) {
             for provider in Self::providers().into_iter() {
                 let subcommand = provider.subcommand();
                 let key = subcommand.get_name();
                 if let Some(matches) = matches.subcommand_matches(key) {
-                    return provider.handle_subcommand(Some(matches));
+                    return provider.handle_subcommand(spec, Some(matches));
                 }
             }
         }
-        Self::default_provider().handle_subcommand(None)
+        Self::default_provider().handle_subcommand(spec, None)
     }
 }

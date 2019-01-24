@@ -546,6 +546,7 @@ impl ::FormatProvider for FormatProvider {
 
     fn handle_subcommand(
         &self,
+        _spec: &binjs_meta::spec::Spec,
         _: Option<&clap::ArgMatches>,
     ) -> Result<::Format, ::std::io::Error> {
         Ok(::Format::Simple)

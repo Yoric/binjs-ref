@@ -309,6 +309,12 @@ impl<T> Dictionary<T> {
         }
     }
 
+    pub fn depth(&self) -> usize {
+        assert_eq!(self.bool_by_path.depth(), self.string_enum_by_path.depth());
+        assert_eq!(self.bool_by_path.depth(), self.interface_name_by_path.depth());
+        self.bool_by_path.depth()
+    }
+
     /// Return the number of states in this dictionary.
     pub fn len(&self) -> usize {
         // Make sure that we don't forget a field.
@@ -352,17 +358,17 @@ impl Dictionary<Instances> {
         let mut result = self;
 
         for (path, value, instances) in fallback.bool_by_path.into_iter() {
-            assert_eq!(Into::<usize>::into(instances), 1);
+            assert_eq!(Into::<usize>::into(instances), 1); // Sanity check
             result.bool_by_path.add_if_absent(path.borrow(), value);
         }
 
         for (path, value, instances) in fallback.string_enum_by_path.into_iter() {
-            assert_eq!(Into::<usize>::into(instances), 1);
+            assert_eq!(Into::<usize>::into(instances), 1); // Sanity check
             result.string_enum_by_path.add_if_absent(path.borrow(), value);
         }
 
         for (path, value, instances) in fallback.interface_name_by_path.into_iter() {
-            assert_eq!(Into::<usize>::into(instances), 1);
+            assert_eq!(Into::<usize>::into(instances), 1); // Sanity check
             result.interface_name_by_path.add_if_absent(path.borrow(), value);
         }
 
