@@ -1,4 +1,7 @@
 //! A mechanism used to build a baseline dictionary.
+//!
+//! The baseline dictionary is a simple dictionary extracted mechanically from the grammar
+//! specifications.
 
 use ::entropy::Dictionary;
 use io::statistics::Instances;
@@ -7,7 +10,6 @@ use binjs_meta::spec::{ self, Spec };
 use binjs_shared::{ FieldName, InterfaceName, SharedString };
 
 use std::borrow::Borrow;
-use std::collections::{ HashMap, HashSet };
 use std::rc::Rc;
 
 type IOPath = binjs_shared::ast::Path<
@@ -18,7 +20,7 @@ type IOPath = binjs_shared::ast::Path<
     ),
 >;
 
-pub struct BaselineDictionaryBuilder<'a> {
+struct BaselineDictionaryBuilder<'a> {
     dictionary: Dictionary<Instances>,
     spec: &'a Spec,
     path: IOPath,
@@ -36,8 +38,9 @@ impl<'a> BaselineDictionaryBuilder<'a> {
         }
     }
 
-    pub fn start(&mut self) {
-        self.visit_named_type(&self.spec.get_root(), false)
+    pub fn done(self) -> Dictionary<Instances> {
+        assert_eq!(self.path.len(), 0);
+        self.dictionary
     }
 
     fn visit_named_type(&mut self, node: &binjs_meta::spec::NamedType, or_null: bool) {

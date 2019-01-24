@@ -119,6 +119,10 @@ mod context_information {
         pub fn len(&self) -> usize {
             self.stats_by_node_value.len()
         }
+
+        pub fn into_iter(self) -> impl Iterator<Item = (NodeValue, Statistics)> {
+            self.stats_by_node_value.into_iter()
+        }
     }
 
     // Methods that make sense only when we have finished computing frequency information.
@@ -262,6 +266,18 @@ where
     /// Used mainly for debugging.
     pub fn contexts(&self) -> impl Iterator<Item = &Context> {
         self.by_context.keys()
+    }
+
+    pub fn into_iter(self) -> impl Iterator<Item = (Context, NodeValue, Statistics)> {
+        std::iter::Iterator::flatten(self.by_context.into_iter()
+            .map(|(context, info)| {
+                let context = context.clone();
+                info.into_iter()
+                    .map(move |(node_value, statistics)|
+                        (context.clone(), node_value, statistics)
+                    )
+            })
+        )
     }
 
     /// The number of states in this predictor.
@@ -461,6 +477,10 @@ where
     /// Used mainly for debugging.
     pub fn paths(&self) -> impl Iterator<Item = &IOPath> {
         self.context_predict.contexts()
+    }
+
+    pub fn into_iter(self) -> impl Iterator<Item = (IOPath, NodeValue, Statistics)> {
+        self.context_predict.into_iter()
     }
 
     fn tail<'a>(&self, path: &'a [IOPathItem]) -> &'a [IOPathItem] {

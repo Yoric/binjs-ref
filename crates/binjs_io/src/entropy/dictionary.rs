@@ -346,6 +346,30 @@ impl<T> Dictionary<T> {
     }
 }
 
+impl Dictionary<Instances> {
+    pub fn with_grammar_fallback(self, fallback: Dictionary<Instances>) -> Self {
+        use std::borrow::Borrow;
+        let mut result = self;
+
+        for (path, value, instances) in fallback.bool_by_path.into_iter() {
+            assert_eq!(Into::<usize>::into(instances), 1);
+            result.bool_by_path.add_if_absent(path.borrow(), value);
+        }
+
+        for (path, value, instances) in fallback.string_enum_by_path.into_iter() {
+            assert_eq!(Into::<usize>::into(instances), 1);
+            result.string_enum_by_path.add_if_absent(path.borrow(), value);
+        }
+
+        for (path, value, instances) in fallback.interface_name_by_path.into_iter() {
+            assert_eq!(Into::<usize>::into(instances), 1);
+            result.interface_name_by_path.add_if_absent(path.borrow(), value);
+        }
+
+        result
+    }
+}
+
 impl InstancesToProbabilities for Dictionary<Instances> {
     type AsProbabilities = Dictionary<SymbolInfo>;
 
