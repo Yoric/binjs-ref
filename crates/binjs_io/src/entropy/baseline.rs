@@ -105,9 +105,11 @@ impl<'a> BaselineDictionaryBuilder<'a> {
     }
 
     fn visit_interface(&mut self, interface: &spec::Interface, or_null: bool) {
+        debug!(target: "baseline", "Visiting interface {} in path {:?}", interface.name().to_str(), self.path);
         let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
         if self.dictionary.interface_name_by_path.contains_value(self.path.borrow(), interface_name.clone()) {
             // Already visited in this context, avoid looping.
+            debug!(target: "baseline", "Context already visited, avoid looping");
             return;
         }
         // Register interface.
