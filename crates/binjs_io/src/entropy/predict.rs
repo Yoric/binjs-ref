@@ -152,6 +152,17 @@ mod context_information {
                 .and_modify(|instances| *instances += 1.into())
                 .or_insert(1.into());
         }
+
+        pub fn add_if_absent(&mut self, node_value: NodeValue) {
+            self.stats_by_node_value
+                .entry(node_value)
+                .or_insert(1.into());
+        }
+
+
+        pub fn contains_value(&self, node_value: NodeValue) -> bool {
+            self.stats_by_node_value.contains_key(&node_value)
+        }
     }
 
     impl<NodeValue> ::entropy::probabilities::InstancesToProbabilities
@@ -271,6 +282,33 @@ where
             .entry(context)
             .or_insert_with(|| ContextInformation::new());
         stats_by_node_value.add(value)
+    }
+
+    pub fn add_if_absent(&mut self, context: Context, value: NodeValue) {
+        let stats_by_node_value = self
+            .by_context
+            .entry(context)
+            .or_insert_with(|| ContextInformation::new());
+        stats_by_node_value.add_if_absent(value)
+    }
+
+    pub fn contains_context<C: ?Sized>(&self, context: &C) -> bool
+    where
+        Context: std::borrow::Borrow<C>,
+        C: Hash + Eq
+    {
+        self.by_context.contains_key(context)
+    }
+
+    pub fn contains_value<C: ?Sized>(&self, context: &C, value: NodeValue) -> bool
+    where
+        Context: std::borrow::Borrow<C>,
+        C: Hash + Eq
+    {
+        match self.by_context.get(context) {
+            None => false,
+            Some(info) => info.contains_value(value)
+        }
     }
 }
 
@@ -444,6 +482,24 @@ where
         let mut as_path = IOPath::new();
         as_path.extend_from_slice(tail);
         self.context_predict.add(as_path, value);
+    }
+
+    pub fn add_if_absent(&mut self, path: &[IOPathItem], value: NodeValue) {
+        let tail = self.tail(path);
+        let mut as_path = IOPath::new();
+        as_path.extend_from_slice(tail);
+        self.context_predict.add_if_absent(as_path, value);
+    }
+
+    /// `true` if at least one value has been recorded at this path, `false` otherwise.
+    pub fn contains_path(&self, path: &[IOPathItem]) -> bool {
+        let tail = self.tail(path);
+        self.context_predict.contains_context(tail)
+    }
+
+    pub fn contains_value(&self, path: &[IOPathItem], value: NodeValue) -> bool {
+        let tail = self.tail(path);
+        self.context_predict.contains_value(tail, value)
     }
 }
 impl<NodeValue> PathPredict<NodeValue, SymbolInfo>

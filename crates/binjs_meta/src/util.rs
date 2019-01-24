@@ -94,6 +94,11 @@ pub trait ToCases: ToStr {
     fn to_rust_identifier_case(&self) -> String {
         self.to_str().to_rust_identifier_case()
     }
+
+    fn to_rust_const_case(&self) -> String {
+        let as_identifier = self.to_str().to_rust_identifier_case();
+        inflector::cases::screamingsnakecase::to_screaming_snake_case(&as_identifier)
+    }
 }
 
 impl<T> ToCases for T

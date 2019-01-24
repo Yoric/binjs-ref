@@ -12,7 +12,7 @@ mod json_conversion;
 pub use json_conversion::*;
 
 pub mod ast;
-pub use ast::Node;
+pub use ast::{ ReflectEnum, ReflectInterface, Node, ReflectType };
 
 pub mod mru;
 mod shared_string;

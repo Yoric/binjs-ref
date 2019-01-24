@@ -205,7 +205,7 @@ where
 pub struct Dictionary<T> {
     // --- Non-extensible sets of symbols, predicted by path.
     // Used for entropy coding.
-    //
+    // ---
     /// All booleans appearing in the AST, predicted by path.
     pub bool_by_path: PathPredict<Option<bool>, T>,
 
@@ -219,7 +219,7 @@ pub struct Dictionary<T> {
     // Used for experiments with entropy coding, but so far, not very
     // good with extensibility. There are good chances that this section
     // will disappear in future versions.
-    //
+    // ---
     /// All floats appearing in the AST.
     pub float_by_path: PathPredict<Option<F64>, T>,
 
@@ -242,7 +242,7 @@ pub struct Dictionary<T> {
     // Used for experiments for extensibility of entropy coding, but so far,
     // not very good at compression, and might cause serious alignment issues.
     // There are good chances that this section will disappear in future versions.
-    //
+    // ---
     /// All property keys, predicted by window.
     pub property_key_by_window: WindowPredict<Option<PropertyKey>, T>,
 
@@ -256,7 +256,7 @@ pub struct Dictionary<T> {
     // Used to represent instances of extensible sets of symbols as indices in
     // a table. Pretty good for extensibility, experiments pending on
     // compression-level and performance.
-    //
+    // ---
     /// All unsigned longs.
     pub unsigned_longs: IndexedTable<u32>,
 
@@ -526,8 +526,16 @@ impl DictionaryBuilder {
     /// Return a dictionary containing all the paths collected and all
     /// the user-extensible content that appear in more than one file.
     pub fn done(self, threshold: FilesContaining) -> Dictionary<Instances> {
+        // Start with the dictionary we're currently building.
         let mut dictionary = self.dictionary;
 
+        // FIXME: Inject escape values.
+        // I need an API that walks all the possible grammar paths (given the maximal depth)
+        // and injects one of each possible
+        // InterfaceName/String Enum/Boolean.
+        //
+
+        // Generate indexed tables for user-extensible values.
         dictionary.identifier_names = IndexedTable::new(
             self.files_containing_user_extensible_data
                 .identifier_name_instances,
@@ -874,3 +882,4 @@ impl TokenWriter for DictionaryBuilder {
         Ok(())
     }
 }
+

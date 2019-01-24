@@ -114,7 +114,7 @@ impl RustExporter {
         let mut ast_buffer = String::new();
         ast_buffer.push_str("
 use binjs_shared;
-use binjs_shared::{ FieldName, FromJSON, FromJSONError, IdentifierName, InterfaceName, Offset, PropertyKey, SharedString, ToJSON, VisitMe };
+use binjs_shared::{ FieldName, FromJSON, FromJSONError, IdentifierName, InterfaceName, Offset, PropertyKey, ReflectEnum, ReflectInterface, ReflectType, SharedString, ToJSON, VisitMe };
 use binjs_io::{ Deserialization, InnerDeserialization, Serialization, TokenReader, TokenReaderError, TokenWriter, TokenWriterError };
 
 use io::*;
@@ -186,7 +186,25 @@ use json::JsonValue as JSON;
                             spec_variant_name = s,
                             rust_variant_name = ToCases::to_cpp_enum_case(s)
                         ))
-                        .format(",\n")
+                        .format(",")
+                );
+                let reflect = format!(
+                    "
+pub struct ReflectionFor{rust_name};
+impl ReflectEnum for ReflectionFor{rust_name} {{
+    /// All the possible values for this enum.
+    fn values(&self) -> &'static [&'static str] {{
+        &[{values}]
+    }}
+}}\n",
+                    rust_name = rust_name,
+                    values = string_enum
+                        .strings()
+                        .iter()
+                        .sorted()
+                        .into_iter()
+                        .map(|s| format!("\"{}\"", s))
+                        .format(", ")
                 );
                 let default = format!(
                     "
@@ -325,6 +343,7 @@ impl<'a> Walker<'a> for {name} where Self: 'a {{
                     name = name);
 
                 buffer.push_str(&definition);
+                buffer.push_str(&reflect);
                 buffer.push_str(&default);
                 buffer.push_str(&from_json);
                 buffer.push_str(&to_json);
@@ -1032,6 +1051,8 @@ impl binjs_shared::Node for {rust_name} {{
 ",
                     fields = field_specs
                         .iter()
+                        .sorted()
+                        .into_iter()
                         .map(|(field_name, spec)| format!(
                             "    /// Implementation of field {spec_name}
     pub {rust_name}: {contents}",
@@ -1042,6 +1063,42 @@ impl binjs_shared::Node for {rust_name} {{
                         .format(",\n"),
                     rust_name = rust_name,
                     spec_name = name
+                );
+
+                let reflect = format!(
+                    "
+/*
+/// Implementing reflexivity.
+pub struct ReflectionFor{rust_name};
+impl ReflectInterface for ReflectionFor{rust_name} {{
+    fn name(&self) -> &'static str {{
+        \"{spec_name}\"
+    }}
+    fn fields(&self) -> &'static [(&'static str, ReflectType)] {{
+        &[{fields}]
+    }}
+}}\n
+*/
+",
+                    spec_name = name,
+                    rust_name = rust_name,
+                    fields = interface
+                        .contents()
+                        .fields()
+                        .iter()
+                        .map(|field|
+                            format!(
+                            "(\"{spec_name}\", {reflect_type})",
+                            spec_name = field.name().to_str(),
+                            reflect_type = "unimplemented!()"
+/*                            match field.type_().spec {
+                                Array {
+                                    ref contents,
+                                    ..
+                                } => format!("ReflectType::Array({})")
+                            }*/
+                        ))
+                        .format(", ")
                 );
 
                 let from_reader = format!("
@@ -1323,6 +1380,7 @@ impl<'a> Walker<'a> for ViewMut{rust_name}<'a> where Self: 'a {{
                         .format("\n")
                     );
                 buffer.push_str(&definition);
+                buffer.push_str(&reflect);
                 buffer.push_str(&from_reader);
                 buffer.push_str(&to_writer);
                 buffer.push_str(&from_json);

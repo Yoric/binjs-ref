@@ -261,3 +261,21 @@ pub trait Node: downcast_rs::Downcast {
     fn name(&self) -> &'static str;
 }
 impl_downcast!(Node);
+
+pub enum ReflectType {
+    Enum(&'static ReflectEnum),
+    EnumOrNull(&'static ReflectEnum),
+    Interface(&'static ReflectInterface),
+    InterfaceOrNull(&'static ReflectInterface),
+    Array(Box<ReflectType>),
+    UserExtensible,
+}
+
+pub trait ReflectEnum {
+    fn values(&self) -> &'static [&'static str];
+}
+
+pub trait ReflectInterface {
+    fn name(&self) -> &'static str;
+    fn fields(&self) -> &'static [(&'static str, ReflectType)];
+}

@@ -5,6 +5,7 @@ authors = ["David Teller <D.O.Teller@gmail.com>"]
 
 [dependencies]
 bincode = "^1.0"
+binjs_meta = { path = "../binjs_meta", version = "*" }
 binjs_shared = { path = "../binjs_shared", version = "*" }
 brotli = "^3.0"
 clap = "^2.32"

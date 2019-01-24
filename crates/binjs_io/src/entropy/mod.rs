@@ -46,6 +46,7 @@
 //!    - (TBD)
 //! ```
 
+mod baseline;
 pub mod dictionary;
 
 /// Reading a compressed stream.
