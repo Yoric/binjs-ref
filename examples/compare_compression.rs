@@ -100,8 +100,17 @@ fn main() {
         .subcommand(binjs::io::Format::subcommand())
         .get_matches();
 
+    // Prepare grammar (used for entropy).
+    let mut builder = binjs::meta::spec::SpecBuilder::new();
+    let _ = binjs::generic::es6::Library::new(&mut builder);
+    let spec_options = binjs::meta::spec::SpecOptions {
+        null: &builder.node_name(""),
+        root: &builder.node_name("Script"),
+    };
+    let spec = builder.into_spec(spec_options);
+
     let mut format =
-        binjs::io::Format::from_matches(&matches).expect("Could not determine encoding format");
+        binjs::io::Format::from_matches(&spec, &matches).expect("Could not determine encoding format");
     println!("Using format: {}", format.name());
     println!("Source files: {}", matches.values_of("in").unwrap().format(", "));
 

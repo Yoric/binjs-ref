@@ -358,16 +358,19 @@ impl Dictionary<Instances> {
         let mut result = self;
 
         for (path, value, instances) in fallback.bool_by_path.into_iter() {
+            debug!(target: "dictionary", "Adding fallback boolean entry {:?} => {:?}", path, value);
             assert_eq!(Into::<usize>::into(instances), 1); // Sanity check
             result.bool_by_path.add_if_absent(path.borrow(), value);
         }
 
         for (path, value, instances) in fallback.string_enum_by_path.into_iter() {
+            debug!(target: "dictionary", "Adding fallback string enum entry {:?} => {:?}", path, value);
             assert_eq!(Into::<usize>::into(instances), 1); // Sanity check
             result.string_enum_by_path.add_if_absent(path.borrow(), value);
         }
 
         for (path, value, instances) in fallback.interface_name_by_path.into_iter() {
+            debug!(target: "dictionary", "Adding fallback interface entry {:?} => {:?}", path, value);
             assert_eq!(Into::<usize>::into(instances), 1); // Sanity check
             result.interface_name_by_path.add_if_absent(path.borrow(), value);
         }

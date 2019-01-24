@@ -58,7 +58,16 @@ Note that this tool does not attempt to make sure that the files are entirely co
 
     let mut rng = rand::thread_rng();
 
-    let mut format = binjs::io::Format::from_matches(&matches)
+    // Prepare grammar (used for entropy).
+    let mut builder = binjs::meta::spec::SpecBuilder::new();
+    let _ = binjs::generic::es6::Library::new(&mut builder);
+    let spec_options = binjs::meta::spec::SpecOptions {
+        null: &builder.node_name(""),
+        root: &builder.node_name("Script"),
+    };
+    let spec = builder.into_spec(spec_options);
+
+    let mut format = binjs::io::Format::from_matches(&spec, &matches)
         .expect("Could not determine encoding format")
         .randomize_options(&mut rng);
 

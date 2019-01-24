@@ -94,9 +94,22 @@ pub struct Options {
     split_streams: bool,
 }
 impl Options {
-    pub fn new(probability_tables: Dictionary<SymbolInfo>) -> Self {
+    pub fn new(spec: &binjs_meta::spec::Spec, dictionary: Option<Dictionary<Instances>>) -> Self {
+        use entropy::probabilities::InstancesToProbabilities;
+        let probability_tables = match dictionary {
+            None => {
+                // Use the baseline probability tables. More than 1 level makes no sense.
+                let baseline = baseline::build(1, spec);
+                baseline
+            }
+            Some(built_from_samples) => {
+                // Append the baseline probability tables as escape mechanism.
+                let baseline = baseline::build(built_from_samples.depth(), spec);
+                built_from_samples.with_grammar_fallback(baseline)
+            }
+        };
         Options {
-            probability_tables,
+            probability_tables: probability_tables.instances_to_probabilities("dictionary"),
             content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
             content_instances: Rc::new(RefCell::new(ContentInfo::default())),
             split_streams: false,
@@ -173,17 +186,12 @@ impl ::FormatProvider for FormatProvider {
         spec: &binjs_meta::spec::Spec,
         matches: Option<&clap::ArgMatches>,
     ) -> Result<::Format, ::std::io::Error> {
-        use self::probabilities::InstancesToProbabilities;
         use bincode;
 
         let matches = matches.unwrap();
 
-        let probability_tables = match matches.value_of("dictionary") {
-            None => {
-                // Use the baseline probability tables.
-                let baseline = baseline::build(1, spec);
-                baseline
-            }
+        let dictionary = match matches.value_of("dictionary") {
+            None => None,
             Some(path) => {
                 // Load a dictionary from disk.
                 let source =
@@ -191,10 +199,7 @@ impl ::FormatProvider for FormatProvider {
                 let surface_dictionary: Dictionary<Instances> =
                     bincode::deserialize_from(source)
                         .expect("Could not decode dictionary");
-
-                // Append the baselind probability tables as escape mechanism.
-                let baseline = baseline::build(surface_dictionary.depth(), spec);
-                surface_dictionary.with_grammar_fallback(baseline)
+                Some(surface_dictionary)
             }
         };
 
@@ -202,11 +207,10 @@ impl ::FormatProvider for FormatProvider {
 
         Ok(::Format::Entropy {
             options: Options {
-                probability_tables: probability_tables
-                    .instances_to_probabilities("probability_tables"),
                 content_lengths: Rc::new(RefCell::new(ContentInfo::default())),
                 content_instances: Rc::new(RefCell::new(ContentInfo::default())),
                 split_streams,
+                ..Options::new(spec, dictionary)
             },
         })
     }
