@@ -10,6 +10,7 @@ use binjs_meta::spec::{ self, Spec };
 use binjs_shared::{ FieldName, InterfaceName, SharedString };
 
 use std::borrow::Borrow;
+use std::collections::{ HashMap, HashSet };
 use std::rc::Rc;
 
 type IOPath = binjs_shared::ast::Path<
@@ -26,6 +27,218 @@ pub fn build(depth: usize, spec: &Spec) -> Dictionary<Instances> {
     builder.done()
 }
 
+struct BaselineDictionaryBuilder<'a> {
+    dictionary: Dictionary<Instances>,
+    spec: &'a Spec,
+    null_name: InterfaceName,
+    depth: usize,
+    path_by_interface_name: HashMap<InterfaceName, HashSet<IOPath>>,
+}
+impl<'a> BaselineDictionaryBuilder<'a> {
+    pub fn new(depth: usize, spec: &'a Spec) -> Self {
+        let null_name = InterfaceName::from_rc_string(spec.get_null_name().to_rc_string().clone());
+
+        BaselineDictionaryBuilder {
+            spec,
+            null_name,
+            depth,
+            dictionary: Dictionary::new(depth, 0),
+            path_by_interface_name: HashMap::new(),
+        }
+    }
+
+    fn collect_paths_to_prefix<I, NodeValue: 'a>(&self, path: &IOPath, interface_name: &InterfaceName, iter: I)
+        -> Vec<(IOPath, NodeValue)>
+    where
+        I: Iterator<Item = (&'a IOPath, &'a NodeValue, &'a Instances)>,
+        NodeValue: Clone,
+    {
+        let mut result = vec![];
+        for (sub_path, value, statistics) in iter {
+            assert_eq!(Into::<usize>::into(*statistics), 1);
+            match sub_path.get(0) {
+                Some(item) if item.interface() == interface_name => {
+                    result.push((path.with_suffix(sub_path.borrow()), (*value).clone()));
+                }
+                _ => {}
+            }
+        }
+        result
+    }
+
+    fn extend_content(&mut self, path: &IOPath, type_spec: &spec::TypeSpec) {
+        use self::spec::TypeSpec;
+        use self::spec::NamedType;
+        match type_spec {
+            TypeSpec::Array { ref contents, .. } => {
+                // Entering an array doesn't affect the path.
+                self.extend_content(path, contents.spec());
+            }
+            TypeSpec::TypeSum(ref sum) => {
+                for spec in sum.types() {
+                    self.extend_content(path, spec);
+                }
+            }
+            TypeSpec::NamedType(ref name) => {
+                let named_type = self.spec.get_type_by_name(name).unwrap(); // Grammar has been verified already.
+                match named_type {
+                    NamedType::Interface(ref interface) => {
+                        let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
+
+                        // Now, take all the paths that start with `interface_name` and prefix their path with `path`.
+
+                        let bools_to_add = self.collect_paths_to_prefix(path, &interface_name, self.dictionary.bool_by_path.iter());
+                        for (path, value) in bools_to_add.into_iter() {
+                            self.dictionary.bool_by_path.add_if_absent(path.borrow(), value.clone());
+                        }
+
+                        // Now, string enums.
+                        let string_enums_to_add = self.collect_paths_to_prefix(path, &interface_name, self.dictionary.string_enum_by_path.iter());
+                        for (path, value) in string_enums_to_add.into_iter() {
+                            self.dictionary.string_enum_by_path.add_if_absent(path.borrow(), value.clone());
+                        }
+
+                        // Finally, interface names.
+                        let interface_names_to_add = self.collect_paths_to_prefix(path, &interface_name, self.dictionary.interface_name_by_path.iter());
+                        for (path, value) in interface_names_to_add.into_iter() {
+                            self.dictionary.interface_name_by_path.add_if_absent(path.borrow(), value.clone());
+                        }
+
+                        // FIXME: Handle path_by_interface_name?
+                    }
+                    NamedType::Typedef(ref def) => self.extend_content(path, def.spec()),
+                    NamedType::StringEnum(_) => {
+                        // String enums have been seeded as part of `seed_content`.
+                        // At this stage, we only need to alter their path.
+                    }
+                }
+            }
+            TypeSpec::Boolean => {
+                // Booleans have been seeded as part of `seed_content`.
+                // At this stage, we only need to alter their path.
+            }
+            TypeSpec::String | TypeSpec::Number | TypeSpec::UnsignedLong | TypeSpec::Offset | TypeSpec::Void
+                | TypeSpec::IdentifierName | TypeSpec::PropertyKey => {
+                    // User-extensible values don't get in the baseline dictionary.
+            }
+        }
+    }
+
+    fn seed_content(&mut self, path: &IOPath, type_spec: &spec::TypeSpec, or_null: bool) {
+        use self::spec::TypeSpec;
+        use self::spec::NamedType;
+        match type_spec {
+            TypeSpec::Array { ref contents, .. } => {
+                // Entering an array doesn't affect the path.
+                self.seed_content(path, contents.spec(), contents.is_optional());
+            }
+            TypeSpec::TypeSum(ref sum) => {
+                for spec in sum.types() {
+                    self.seed_content(path, spec, or_null);
+                }
+            }
+            TypeSpec::NamedType(ref name) => {
+                let named_type = self.spec.get_type_by_name(name).unwrap(); // Grammar has been verified already.
+                match named_type {
+                    NamedType::Interface(ref interface) => {
+                        let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
+
+                        // Store path => interface and interface => path.
+                        self.dictionary.interface_name_by_path.add(path.borrow(), interface_name.clone());
+                        self.path_by_interface_name.entry(interface_name.clone())
+                            .or_insert_with(|| HashSet::new())
+                            .insert(path.clone());
+                        if or_null {
+                            self.dictionary.interface_name_by_path.add(path.borrow(), self.null_name.clone());
+                            self.path_by_interface_name.entry(self.null_name.clone())
+                                .or_insert_with(|| HashSet::new())
+                                .insert(path.clone());
+                        }
+                    }
+                    NamedType::Typedef(ref def) => self.seed_content(path, def.spec(), or_null || def.is_optional()),
+                    NamedType::StringEnum(ref string_enum) => {
+                        for value in string_enum.strings() {
+                            let shared_string = SharedString::from_rc_string(Rc::new(value.clone()));
+                            self.dictionary.string_enum_by_path.add(path.borrow(), shared_string);
+                        }
+                        if or_null {
+                            panic!()
+                            // The byte-level format supports this, but as the specs don't require it,
+                            // our internal APIs don't for the moment.
+                        }
+                    }
+                }
+            }
+            TypeSpec::Boolean => {
+                self.dictionary.bool_by_path.add(path.borrow(), Some(true));
+                self.dictionary.bool_by_path.add(path.borrow(), Some(false));
+                if or_null {
+                    self.dictionary.bool_by_path.add(path.borrow(), None);
+                }
+            }
+            TypeSpec::String | TypeSpec::Number | TypeSpec::UnsignedLong | TypeSpec::Offset | TypeSpec::Void
+                | TypeSpec::IdentifierName | TypeSpec::PropertyKey => {
+                    // User-extensible values don't get in the baseline dictionary.
+            }
+        }
+    }
+
+    pub fn start(&mut self) {
+        // Seed the dictionary with depth 1 data.
+        let mut path = IOPath::new();
+        for (_, interface) in self.spec.interfaces_by_name() {
+            let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
+            path.enter_interface(interface_name.clone());
+            for (position, field) in interface.contents().fields().iter().enumerate() {
+                let field_name = FieldName::from_rc_string(field.name().to_rc_string().clone());
+                path.enter_field((position, field_name.clone()));
+                self.seed_content(&path, field.type_().spec(), field.type_().is_optional());
+                path.exit_field((position, field_name));
+            }
+            path.exit_interface(interface_name.clone());
+        }
+
+        for _ in 1..self.depth {
+            // Expand path depth by 1 level.
+            let mut path = IOPath::new();
+            for (_, interface) in self.spec.interfaces_by_name() {
+                let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
+                path.enter_interface(interface_name.clone());
+                for (position, field) in interface.contents().fields().iter().enumerate() {
+                    let field_name = FieldName::from_rc_string(field.name().to_rc_string().clone());
+                    path.enter_field((position, field_name.clone()));
+                    self.extend_content(&path, field.type_().spec());
+                    path.exit_field((position, field_name));
+                }
+                path.exit_interface(interface_name.clone());
+            }
+        }
+
+        // Garbage-collect paths that have nothing to do here.
+        let depth = self.depth;
+        let root_name = InterfaceName::from_rc_string(self.spec.get_root_name().to_rc_string().clone());
+        let retain = |path: &IOPath| {
+            // Retain paths that have the expected depth.
+            if path.len() == depth {
+                return true;
+            }
+            // Also retain shorter paths that start from the root.
+            match path.get(0) {
+                Some(item) if item.interface() == &root_name => true,
+                _ => false
+            }
+        };
+        self.dictionary.bool_by_path.retain(|path, _, _| retain(path));
+        self.dictionary.interface_name_by_path.retain(|path, _, _| retain(path));
+        self.dictionary.string_enum_by_path.retain(|path, _, _| retain(path));
+    }
+
+    pub fn done(self) -> Dictionary<Instances> {
+        self.dictionary
+    }
+}
+
+/*
 struct BaselineDictionaryBuilder<'a> {
     dictionary: Dictionary<Instances>,
     spec: &'a Spec,
@@ -151,3 +364,4 @@ impl<'a> BaselineDictionaryBuilder<'a> {
     }
 }
 
+*/

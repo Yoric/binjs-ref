@@ -123,6 +123,16 @@ mod context_information {
         pub fn into_iter(self) -> impl Iterator<Item = (NodeValue, Statistics)> {
             self.stats_by_node_value.into_iter()
         }
+
+        pub fn iter(&self) -> impl Iterator<Item = (&NodeValue, &Statistics)> {
+            self.stats_by_node_value.iter()
+        }
+
+        pub fn retain<F>(&mut self, f: F) where
+            F: for<'r, 's> FnMut(&'r NodeValue, &'s mut Statistics) -> bool
+        {
+            self.stats_by_node_value.retain(f)
+        }
     }
 
     // Methods that make sense only when we have finished computing frequency information.
@@ -266,6 +276,28 @@ where
     /// Used mainly for debugging.
     pub fn contexts(&self) -> impl Iterator<Item = &Context> {
         self.by_context.keys()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (&Context, &NodeValue, &Statistics)> {
+        std::iter::Iterator::flatten(self.by_context.iter()
+            .map(|(context, info)| {
+                info.iter()
+                    .map(move |(node_value, statistics)|
+                        (context, node_value, statistics)
+                    )
+            })
+        )
+    }
+
+    pub fn retain<F>(&mut self, mut f: F) where
+        F: FnMut(&Context, &NodeValue, &Statistics) -> bool
+    {
+        // FIXME: Garbage-context empty contexts.
+        for (context, info) in self.by_context.iter_mut() {
+            info.retain(|node_value, statistics| {
+                f(context, node_value, statistics)
+            })
+        }
     }
 
     pub fn into_iter(self) -> impl Iterator<Item = (Context, NodeValue, Statistics)> {
@@ -485,6 +517,16 @@ where
 
     pub fn into_iter(self) -> impl Iterator<Item = (IOPath, NodeValue, Statistics)> {
         self.context_predict.into_iter()
+    }
+
+    pub fn iter(&self) -> impl Iterator<Item = (&IOPath, &NodeValue, &Statistics)> {
+        self.context_predict.iter()
+    }
+
+    pub fn retain<F>(&mut self, f: F) where
+        F: FnMut(&IOPath, &NodeValue, &Statistics) -> bool
+    {
+        self.context_predict.retain(f)
     }
 
     fn tail<'a>(&self, path: &'a [IOPathItem]) -> &'a [IOPathItem] {

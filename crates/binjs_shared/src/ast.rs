@@ -163,6 +163,18 @@ where
         self.items.extend_from_slice(slice)
     }
 
+    pub fn with_suffix<S>(&self, suffix: S) -> Self
+    where
+        I: Clone,
+        F: Clone,
+        S: std::borrow::Borrow<[PathItem<I, F>]>,
+    {
+        let mut clone = self.clone();
+        let slice = suffix.borrow();
+        clone.extend_from_slice(&slice);
+        clone
+    }
+
     /// Create an empty `Path`, initialized to hold up
     /// to `capacity` elements without resize.
     pub fn with_capacity(capacity: usize) -> Self {
