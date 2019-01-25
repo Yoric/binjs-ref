@@ -140,6 +140,7 @@ macro_rules! emit_symbol_to_main_stream {
             use std::borrow::Borrow;
 
             let path = $path.borrow();
+/*
             debug!(target: "entropy_details", "Known paths ({}): [{}]",
                 $description,
                 $me.options
@@ -148,7 +149,7 @@ macro_rules! emit_symbol_to_main_stream {
                     .paths()
                     .map(|k| format!("{:?}", k))
                     .format(", "));
-
+*/
             // 1. Locate the `SymbolInfo` information for this value given the
             // path information.
             let symbol = $me.options

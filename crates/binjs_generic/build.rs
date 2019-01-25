@@ -21,13 +21,9 @@ fn main() {
     file.read_to_string(&mut source)
         .expect("Could not read source");
 
-    // Check spec. We don't really need null/fake_root
-    // for this operation. It may change in the future,
-    // we'll see then.
-
     let mut builder = Importer::import(&source).expect("Could not parse source");
-    let fake_root = builder.node_name(""); // Ignored.
-    let null = builder.node_name("_Null"); // Ignored.
+    let fake_root = builder.node_name("Script");
+    let null = builder.node_name("");
     builder.add_interface(&null).unwrap();
     let spec = builder.into_spec(SpecOptions {
         root: &fake_root,

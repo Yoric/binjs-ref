@@ -58,7 +58,7 @@ test!(test_entropy_roundtrip, {
         let _ = serializer.done().expect("Could not walk");
     }
 
-    println!("Checking identifiers per file");
+    println!("* Checking identifiers per file");
     check_strings(
         &builder.files_containing().identifier_name_instances,
         vec![
@@ -72,14 +72,14 @@ test!(test_entropy_roundtrip, {
         |name| Some(IdentifierName::from_string(name.to_string())),
     );
 
-    println!("Checking property keys per file");
+    println!("* Checking property keys per file");
     check_strings(
         &builder.files_containing().property_key_instances,
         vec![("PI", 1), ("log", 2)],
         |name| Some(PropertyKey::from_string(name.to_string())),
     );
 
-    println!("Checking interface names per file");
+    println!("* Checking interface names per file");
     check_strings(
         &builder.files_containing().interface_name_instances,
         vec![
@@ -115,7 +115,7 @@ test!(test_entropy_roundtrip, {
         |name| InterfaceName::from_string(name.to_string()),
     );
 
-    println!("String literals per file");
+    println!("* String literals per file");
     check_strings(
         &builder.files_containing().string_literal_instances,
         vec![("Some text", 1), ("That\'s alright", 1), ("use strict", 1)],
@@ -136,13 +136,13 @@ test!(test_entropy_roundtrip, {
 
     for maybe_dictionary in vec![Some(dictionary), None].into_iter() {
         if maybe_dictionary.is_some() {
-            println!("Testing with a dictionary");
+            println!("** Testing with a dictionary");
         } else {
-            println!("Testing WITHOUT a dictionary");
+            println!("** Testing WITHOUT a dictionary");
         }
         let options = entropy::Options::new(&spec, maybe_dictionary);
 
-        println!("Starting roundtrip that should fit in dictionary");
+        println!("Starting roundtrip with the sources that were used to build thhe dictionary");
         for source in &dict_sources {
             test_with_options(&parser, source, &options);
         }

@@ -92,13 +92,11 @@ impl<'a> BaselineDictionaryBuilder<'a> {
                             self.dictionary.bool_by_path.add_if_absent(path.borrow(), value.clone());
                         }
 
-                        // Now, string enums.
                         let string_enums_to_add = self.collect_paths_to_prefix(path, &interface_name, self.dictionary.string_enum_by_path.iter());
                         for (path, value) in string_enums_to_add.into_iter() {
                             self.dictionary.string_enum_by_path.add_if_absent(path.borrow(), value.clone());
                         }
 
-                        // Finally, interface names.
                         let interface_names_to_add = self.collect_paths_to_prefix(path, &interface_name, self.dictionary.interface_name_by_path.iter());
                         for (path, value) in interface_names_to_add.into_iter() {
                             self.dictionary.interface_name_by_path.add_if_absent(path.borrow(), value.clone());
@@ -144,12 +142,12 @@ impl<'a> BaselineDictionaryBuilder<'a> {
                         let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
 
                         // Store path => interface and interface => path.
-                        self.dictionary.interface_name_by_path.add(path.borrow(), interface_name.clone());
+                        self.dictionary.interface_name_by_path.add_if_absent(path.borrow(), interface_name.clone());
                         self.path_by_interface_name.entry(interface_name.clone())
                             .or_insert_with(|| HashSet::new())
                             .insert(path.clone());
                         if or_null {
-                            self.dictionary.interface_name_by_path.add(path.borrow(), self.null_name.clone());
+                            self.dictionary.interface_name_by_path.add_if_absent(path.borrow(), self.null_name.clone());
                             self.path_by_interface_name.entry(self.null_name.clone())
                                 .or_insert_with(|| HashSet::new())
                                 .insert(path.clone());
@@ -159,7 +157,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
                     NamedType::StringEnum(ref string_enum) => {
                         for value in string_enum.strings() {
                             let shared_string = SharedString::from_rc_string(Rc::new(value.clone()));
-                            self.dictionary.string_enum_by_path.add(path.borrow(), shared_string);
+                            self.dictionary.string_enum_by_path.add_if_absent(path.borrow(), shared_string);
                         }
                         if or_null {
                             panic!()
@@ -170,10 +168,10 @@ impl<'a> BaselineDictionaryBuilder<'a> {
                 }
             }
             TypeSpec::Boolean => {
-                self.dictionary.bool_by_path.add(path.borrow(), Some(true));
-                self.dictionary.bool_by_path.add(path.borrow(), Some(false));
+                self.dictionary.bool_by_path.add_if_absent(path.borrow(), Some(true));
+                self.dictionary.bool_by_path.add_if_absent(path.borrow(), Some(false));
                 if or_null {
-                    self.dictionary.bool_by_path.add(path.borrow(), None);
+                    self.dictionary.bool_by_path.add_if_absent(path.borrow(), None);
                 }
             }
             TypeSpec::String | TypeSpec::Number | TypeSpec::UnsignedLong | TypeSpec::Offset | TypeSpec::Void
@@ -185,6 +183,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
 
     pub fn start(&mut self) {
         // Seed the dictionary with depth 1 data.
+        debug!(target: "baseline", "Seeding dictionary to depth 1");
         let mut path = IOPath::new();
         for (_, interface) in self.spec.interfaces_by_name() {
             let interface_name = InterfaceName::from_rc_string(interface.name().to_rc_string().clone());
@@ -197,8 +196,10 @@ impl<'a> BaselineDictionaryBuilder<'a> {
             }
             path.exit_interface(interface_name.clone());
         }
+        debug!(target: "baseline", "After seeding, dictionary has {} states", self.dictionary.len());
 
-        for _ in 1..self.depth {
+        for i in 1..self.depth {
+            debug!(target: "baseline", "Extending dictionary to depth {}", i + 1);
             // Expand path depth by 1 level.
             let mut path = IOPath::new();
             for (_, interface) in self.spec.interfaces_by_name() {
@@ -212,6 +213,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
                 }
                 path.exit_interface(interface_name.clone());
             }
+            debug!(target: "baseline", "After extending, dictionary has {} states", self.dictionary.len());
         }
 
         // Garbage-collect paths that have nothing to do here.
@@ -234,6 +236,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
     }
 
     pub fn done(self) -> Dictionary<Instances> {
+        debug!(target: "baseline", "Final dictionary has {} state", self.dictionary.len());
         self.dictionary
     }
 }

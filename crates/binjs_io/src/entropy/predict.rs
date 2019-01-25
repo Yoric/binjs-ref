@@ -598,8 +598,15 @@ where
         &mut self,
         path: &[IOPathItem],
         value: &NodeValue,
-    ) -> Option<&mut SymbolInfo> {
+    ) -> Option<&mut SymbolInfo> where NodeValue: std::fmt::Debug {
+        use std::borrow::Borrow;
         let tail = self.tail(path);
+        debug!(target: "predict", "Available values at path {:?}: [{:?}]",
+            tail,
+            self.iter()
+                .filter(|(path_2, _, _)| &Borrow::<[IOPathItem]>::borrow(*path_2) == &tail)
+                .map(|(_, value, _)| value)
+                .format(", "));
         self.context_predict.stats_by_node_value_mut(tail, value)
     }
 
