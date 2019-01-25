@@ -13,6 +13,8 @@ use std::borrow::Borrow;
 use std::collections::{ HashMap, HashSet };
 use std::rc::Rc;
 
+use itertools::Itertools;
+
 type IOPath = binjs_shared::ast::Path<
     InterfaceName,
     (
@@ -37,6 +39,18 @@ struct BaselineDictionaryBuilder<'a> {
 impl<'a> BaselineDictionaryBuilder<'a> {
     pub fn new(depth: usize, spec: &'a Spec) -> Self {
         let null_name = InterfaceName::from_rc_string(spec.get_null_name().to_rc_string().clone());
+        debug!(target: "baseline", "Starting baseline with depth {depth}, null = \"{null}\", root = \"{root}\"",
+            null = null_name.as_str(),
+            root = spec.get_root_name().to_str(),
+            depth = depth);
+
+        debug!(target: "baseline", "Roots: [{:?}]\n",
+            spec.resolved_sums_of_interfaces_by_name()
+                .get(spec.get_root_name())
+                .unwrap()
+                .iter()
+                .map(|node_name| InterfaceName::from_rc_string(node_name.to_rc_string().clone()))
+                .format(", "));
 
         BaselineDictionaryBuilder {
             spec,
@@ -218,7 +232,14 @@ impl<'a> BaselineDictionaryBuilder<'a> {
 
         // Garbage-collect paths that have nothing to do here.
         let depth = self.depth;
-        let root_name = InterfaceName::from_rc_string(self.spec.get_root_name().to_rc_string().clone());
+        let roots: HashSet<_> = self.spec.resolved_sums_of_interfaces_by_name()
+            .get(self.spec.get_root_name())
+            .unwrap()
+            .iter()
+            .map(|node_name| InterfaceName::from_rc_string(node_name.to_rc_string().clone()))
+            .collect();
+
+
         let retain = |path: &IOPath| {
             // Retain paths that have the expected depth.
             if path.len() == depth {
@@ -226,7 +247,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
             }
             // Also retain shorter paths that start from the root.
             match path.get(0) {
-                Some(item) if item.interface() == &root_name => true,
+                Some(item) if roots.contains(item.interface()) => true,
                 _ => false
             }
         };
