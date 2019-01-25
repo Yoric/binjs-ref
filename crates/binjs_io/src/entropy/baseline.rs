@@ -234,26 +234,33 @@ impl<'a> BaselineDictionaryBuilder<'a> {
         let depth = self.depth;
         let roots: HashSet<_> = self.spec.resolved_sums_of_interfaces_by_name()
             .get(self.spec.get_root_name())
-            .unwrap()
+            .unwrap_or_else(|| panic!("Cannot get grammar roots {:?}", self.spec.get_root_name()))
             .iter()
             .map(|node_name| InterfaceName::from_rc_string(node_name.to_rc_string().clone()))
             .collect();
 
+        {
+            let retain = |path: &IOPath| {
+                // Retain paths that have the expected depth.
+                if path.len() == depth {
+                    return true;
+                }
+                // Also retain shorter paths that start from the root.
+                match path.get(0) {
+                    Some(item) if roots.contains(item.interface()) => true,
+                    _ => false
+                }
+            };
+            self.dictionary.bool_by_path.retain(|path, _, _| retain(path));
+            self.dictionary.interface_name_by_path.retain(|path, _, _| retain(path));
+            self.dictionary.string_enum_by_path.retain(|path, _, _| retain(path));
+        }
 
-        let retain = |path: &IOPath| {
-            // Retain paths that have the expected depth.
-            if path.len() == depth {
-                return true;
-            }
-            // Also retain shorter paths that start from the root.
-            match path.get(0) {
-                Some(item) if roots.contains(item.interface()) => true,
-                _ => false
-            }
-        };
-        self.dictionary.bool_by_path.retain(|path, _, _| retain(path));
-        self.dictionary.interface_name_by_path.retain(|path, _, _| retain(path));
-        self.dictionary.string_enum_by_path.retain(|path, _, _| retain(path));
+        // Finally, introduce the only 0-length paths.
+        let path = IOPath::new();
+        for root in roots {
+            self.dictionary.interface_name_by_path.add_if_absent(path.borrow(), root);
+        }
     }
 
     pub fn done(self) -> Dictionary<Instances> {

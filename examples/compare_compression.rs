@@ -105,7 +105,7 @@ fn main() {
     let _ = binjs::generic::es6::Library::new(&mut builder);
     let spec_options = binjs::meta::spec::SpecOptions {
         null: &builder.node_name(""),
-        root: &builder.node_name("Script"),
+        root: &builder.node_name("Program"),
     };
     let spec = builder.into_spec(spec_options);
 

@@ -22,7 +22,7 @@ fn main() {
         .expect("Could not read source");
 
     let mut builder = Importer::import(&source).expect("Could not parse source");
-    let fake_root = builder.node_name("Script");
+    let fake_root = builder.node_name("Program");
     let null = builder.node_name("");
     builder.add_interface(&null).unwrap();
     let spec = builder.into_spec(SpecOptions {
