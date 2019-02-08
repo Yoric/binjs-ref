@@ -285,6 +285,7 @@ impl Encoder {
         vec: &mut Vec<Index>,
         out: &mut Vec<u8>,
     ) -> std::io::Result<Bytes> {
+        use bitpacking::BitPacker;
         debug!(target: "write", "Encoder::flush_indices {}, {} instances", name, vec.len());
         if vec.len() == 0 {
             // Nothing to write.
@@ -308,11 +309,41 @@ impl Encoder {
 
         // Write (and possibly dump) data.
         // In the current implementation, we just ignore any information other than the index.
-        for item in vec {
-            let index = item.raw();
-            lazy_stream.write_varnum(index as u32)?;
+        let mut source = vec![0; if vec.len() % 128 == 0 { vec.len() } else { (vec.len() / 128 + 1) * 128 } ];
+        for (i, index) in vec.iter().enumerate() {
+            source[i] = index.raw() as u32;
         }
 
+        // Detects if `SSE3` is available on the current computed
+        // and uses the best available implementation accordingly.
+        let bitpacker = bitpacking::BitPacker4x::new();
+
+
+        // The compressed array will take exactly `num_bits * BitPacker4x::BLOCK_LEN / 8`.
+        // But it is ok to have an output with a different len as long as it is larger
+        // than this.
+        let mut compressed = vec![0u8; source.len() * 10];
+        let mut chunks = source.chunks_exact(128);
+        for chunk in &mut chunks {
+            // Computes the number of bits used for each integers in the blocks.
+            // my_data is assumed to have a len of 128 for `BitPacker4x`.
+            let num_bits: u8 = bitpacker.num_bits(&chunk);
+
+            // Compress returns the len.
+            let compressed_len = bitpacker.compress(chunk, &mut compressed[..], num_bits);
+            assert_eq!((num_bits as usize) *  bitpacking::BitPacker4x::BLOCK_LEN / 8, compressed_len);
+            lazy_stream.write_all(&compressed[0..compressed_len])?;
+        }
+        if chunks.remainder().len() > 0 {
+            let mut chunk = [0; 128];
+            chunk.copy_from_slice(chunks.remainder());
+            let num_bits: u8 = bitpacker.num_bits(&chunk);
+
+            // Compress returns the len.
+            let compressed_len = bitpacker.compress(&chunk, &mut compressed[..], num_bits);
+            assert_eq!((num_bits as usize) *  bitpacking::BitPacker4x::BLOCK_LEN / 8, compressed_len);
+            lazy_stream.write_all(&compressed[0..compressed_len])?;
+        }
         Self::flush_stream(name, lazy_stream, out)
     }
 

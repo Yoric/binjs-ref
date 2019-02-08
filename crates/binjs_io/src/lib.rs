@@ -1,4 +1,5 @@
 extern crate bincode; // Used to store dictionaries. This is a temporary format.
+extern crate bitpacking;
 extern crate binjs_meta;
 extern crate binjs_shared;
 
