@@ -308,11 +308,17 @@ impl Encoder {
 
         // Write (and possibly dump) data.
         // In the current implementation, we just ignore any information other than the index.
-        for item in vec {
-            let index = item.raw();
-            lazy_stream.write_varnum(index as u32)?;
-        }
 
+        // Note: This is an approximation of bwt, as we'd need to avoid any embedded 0.
+        let mut buf = vec![];
+        for index in vec {
+            buf.write_varnum(index.raw() as u32).unwrap();
+        }
+        buf.push(0);
+
+        let suffix_array = bio::data_structures::suffix_array::suffix_array(&buf);
+        let bwt = bio::data_structures::bwt::bwt(&buf, &suffix_array);
+        lazy_stream.write_all(&bwt)?;
         Self::flush_stream(name, lazy_stream, out)
     }
 
