@@ -525,7 +525,7 @@ impl TokenWriter for Encoder {
         emit_string_symbol_to_streams!(
             self,
             property_keys,
-            property_keys,
+            identifier_names, // Weave identifier names and property keys together.
             property_keys_len,
             &value.cloned(),
             "property_key_at"
