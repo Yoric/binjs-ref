@@ -3,7 +3,9 @@
 mod lazy_stream;
 
 use self::lazy_stream::*;
+use super::collect::*;
 use super::dictionary::{Fetch, LinearTable, TableRef};
+use super::probabilities::{InstancesToProbabilities, SymbolInfo};
 use super::rw::*;
 use bytes::lengthwriter::LengthWriter;
 use bytes::varnum::WriteVarNum;
@@ -21,6 +23,7 @@ use std::io::Write;
 #[allow(unused_imports)] // We keep enabling/disabling this.
 use itertools::Itertools;
 use range_encoding::opus;
+use range_encoding::CumulativeDistributionFrequency;
 
 /// An arbitrary initialization size for buffers.
 const INITIAL_BUFFER_SIZE_BYTES: usize = 32768;
@@ -82,6 +85,8 @@ pub struct Encoder {
     /// All floats. `None` for `null`.
     floats: LinearTable<Option<F64>>,
 
+    user_extensible_probabilities: UserExtensibleDictionary<SymbolInfo>,
+
     // --- Statistics.
     /// Measure the number of bytes written.
     content_opus_lengths: PerUserExtensibleKind<opus::Writer<LengthWriter>>,
@@ -98,7 +103,7 @@ impl Encoder {
     ///
     /// Note that cloning `options` is pretty cheap, as it is mostly a bunch
     /// of `Rc<>`.
-    pub fn new(path: Option<&std::path::Path>, options: ::entropy::Options) -> Self {
+    pub fn new(path: Option<&std::path::Path>, options: ::entropy::Options, user_extensible_probabilities: UserExtensibleDictionary<Instances>) -> Self {
         let split_streams = options.split_streams;
 
         // We need to clone the instances of `LinearTable` as using them modifies
@@ -149,6 +154,7 @@ impl Encoder {
             property_keys,
             list_lengths,
             floats,
+            user_extensible_probabilities: user_extensible_probabilities.instances_to_probabilities("Encoder::new"),
         }
     }
 }
@@ -160,6 +166,35 @@ impl Encoder {
 /// Usage:
 /// `emit_symbol_to_main_stream!(self, name_of_the_probability_table, "Description, used for debugging",  path_in_the_ast,  value_to_encode)`
 macro_rules! emit_symbol_to_main_stream {
+    ( $me: ident, $table: expr, $description: expr, $path: expr, $value: expr) => {
+        {
+            use std::borrow::Borrow;
+            let path = $path.borrow();
+
+            // 1. Locate the `SymbolInfo` information for this value given the
+            // path information.
+            let symbol =
+                $table
+                .stats_by_node_value(path, &$value)
+                .ok_or_else(|| {
+                    debug!(target: "entropy", "Couldn't find value {:?} at {:?} ({})",
+                        $value, path, $description);
+                    TokenWriterError::NotInDictionary(format!("{}: {:?} at {:?}", $description, $value, path))
+                })?;
+
+            // 2. This gives us an index (`symbol.index`) and a probability distribution
+            // (`symbol.distribution`). Use them to write the probability at bit-level.
+            let distribution = symbol.distribution
+                .as_ref()
+                .borrow();
+            $me.writer.symbol(symbol.index.into(), &distribution)
+                .map_err(TokenWriterError::WriteError)?;
+
+            // FIXME: Update table of statistics.
+
+            Ok(())
+        }
+    };
     ( $me: ident, $table: ident, $table_of_statistics: ident, $description: expr, $path: expr, $value: expr ) => {
         {
             use std::borrow::Borrow;
@@ -243,29 +278,53 @@ macro_rules! emit_simple_symbol_to_streams {
 /// Usage:
 /// `emit_string_symbol_to_streams!(self, name_of_the_indexed_table, name_of_the_string_prelude_stream, name_of_the_string_length_prelude_stream, value_to_encode, "Description, used for debugging")`
 macro_rules! emit_string_symbol_to_streams {
-    ( $me: ident, $table: ident, $out: ident, $len: ident, $value: expr, $description: expr ) => {
-        if let Fetch::Miss(_) = emit_symbol_to_content_stream!($me, $table, $out, $value, $description) {
-            // The value does not appear either in the static dictionary or in the prelude dictionary.
-            // Add it to the latter.
-            match $value {
-                Some(string) => {
-                    // Write the binary representation of the length of string to the
-                    // prelude stream `foo_len`, the binary representation of the string itself
-                    // to the prelude stream `foo`.
-                    let bytes = string.as_str()
-                        .as_bytes();
-                    $me.prelude_streams.$len.write_maybe_varnum(Some(bytes.len() as u32))
-                        .map_err(TokenWriterError::WriteError)?;
-                    $me.prelude_streams.$out.write_all(bytes)
-                        .map_err(TokenWriterError::WriteError)?;
-                }
-                None => {
-                    // If the string is `None`, just use the `null` varnum as length.
-                    $me.prelude_streams.$len.write_maybe_varnum(None)
-                        .map_err(TokenWriterError::WriteError)?;
+    ( $me: ident, $table: ident, $out: ident, $len: ident, $value: expr, $description: expr, $path: expr ) => {
+        use std::borrow::Borrow;
+        use std::cell::Ref;
+        let path = $path.borrow();
+        if let Info::NewTable = $me.user_extensible_probabilities.next_info() {
+            // This is the first time we encounter this table.
+            // We need to write its definition.
+            let frequencies = $me.user_extensible_probabilities.$table().frequencies_at(path).unwrap();
+            let frequencies: Ref<range_encoding::CumulativeDistributionFrequency> = frequencies.as_ref().borrow();
+
+            // Store the number of entries in the table.
+            $me.prelude_streams.probabilities_len.write_varnum(frequencies.len() as u32)
+                .map_err(TokenWriterError::WriteError)?;
+
+            for index in 0..frequencies.len() {
+                // Store the number of instances.
+                $me.prelude_streams.probabilities.write_varnum(frequencies.at_index(index).unwrap().width())
+                    .map_err(TokenWriterError::WriteError)?;
+
+                // Store the actual symbol definition.
+                // FIXME: We could make this lookup much more efficient.
+                let value = $me.user_extensible_probabilities.$table().value_by_symbol_index(path, index.into()).unwrap();
+                if let Fetch::Miss(_) = emit_symbol_to_content_stream!($me, $table, $out, value, $description) {
+                    // The value does not appear either in the static dictionary or in the prelude dictionary.
+                    // Add it to the latter.
+                    match value {
+                        Some(string) => {
+                            // Write the binary representation of the length of string to the
+                            // prelude stream `foo_len`, the binary representation of the string itself
+                            // to the prelude stream `foo`.
+                            let bytes = string.as_str()
+                                .as_bytes();
+                            $me.prelude_streams.$len.write_maybe_varnum(Some(bytes.len() as u32))
+                                .map_err(TokenWriterError::WriteError)?;
+                            $me.prelude_streams.$out.write_all(bytes)
+                                .map_err(TokenWriterError::WriteError)?;
+                        }
+                        None => {
+                            // If the string is `None`, just use the `null` varnum as length.
+                            $me.prelude_streams.$len.write_maybe_varnum(None)
+                                .map_err(TokenWriterError::WriteError)?;
+                        }
+                    }
                 }
             }
         }
+        emit_symbol_to_main_stream!($me, $me.user_extensible_probabilities.$table(), "string_at (probabilities)", path, $value)?;
     }
 }
 
@@ -547,7 +606,7 @@ impl TokenWriter for Encoder {
     fn string_at(
         &mut self,
         value: Option<&SharedString>,
-        _path: &Path,
+        path: &Path,
     ) -> Result<(), TokenWriterError> {
         emit_string_symbol_to_streams!(
             self,
@@ -555,7 +614,8 @@ impl TokenWriter for Encoder {
             string_literals,
             string_literals_len,
             &value.cloned(),
-            "string_at"
+            "string_at",
+            path
         );
         Ok(())
     }
@@ -563,7 +623,7 @@ impl TokenWriter for Encoder {
     fn identifier_name_at(
         &mut self,
         value: Option<&IdentifierName>,
-        _path: &Path,
+        path: &Path,
     ) -> Result<(), TokenWriterError> {
         emit_string_symbol_to_streams!(
             self,
@@ -571,7 +631,8 @@ impl TokenWriter for Encoder {
             identifier_names,
             identifier_names_len,
             &value.cloned(),
-            "identifier_name_at"
+            "identifier_name_at",
+            path
         );
         Ok(())
     }
@@ -579,7 +640,7 @@ impl TokenWriter for Encoder {
     fn property_key_at(
         &mut self,
         value: Option<&PropertyKey>,
-        _path: &Path,
+        path: &Path,
     ) -> Result<(), TokenWriterError> {
         emit_string_symbol_to_streams!(
             self,
@@ -587,7 +648,8 @@ impl TokenWriter for Encoder {
             property_keys,
             property_keys_len,
             &value.cloned(),
-            "property_key_at"
+            "property_key_at",
+            path
         );
         Ok(())
     }

@@ -54,6 +54,12 @@ struct DictionaryIndex(usize);
 )]
 struct BackReference(usize);
 
+#[derive(Clone, Debug)]
+pub struct AddResult {
+    pub new_context: bool,
+    pub new_value: bool,
+}
+
 mod context_information {
     use super::Instances;
     use entropy::probabilities::{SymbolIndex, SymbolInfo};
@@ -142,11 +148,14 @@ mod context_information {
         NodeValue: Eq + Hash,
     {
         /// Register a value as being used in this context.
-        pub fn add(&mut self, node_value: NodeValue) {
-            self.stats_by_node_value
+        ///
+        /// Return the number of instances.
+        pub fn add(&mut self, node_value: NodeValue) -> Instances {
+            *self
+                .stats_by_node_value
                 .entry(node_value)
                 .and_modify(|instances| *instances += 1.into())
-                .or_insert(1.into());
+                .or_insert(1.into())
         }
 
         /// Register a value as being used in this context.
@@ -313,12 +322,17 @@ where
     NodeValue: Eq + Hash + Clone,
 {
     /// Register a value as being used in this context.
-    pub fn add(&mut self, context: Context, value: NodeValue) {
+    pub fn add(&mut self, context: Context, value: NodeValue) -> AddResult {
         let stats_by_node_value = self
             .by_context
             .entry(context)
             .or_insert_with(|| ContextInformation::new());
-        stats_by_node_value.add(value)
+        let new_context = stats_by_node_value.len() == 0;
+        let new_value = Into::<usize>::into(stats_by_node_value.add(value)) == 1;
+        AddResult {
+            new_context,
+            new_value,
+        }
     }
 
     /// Register a value as being used in this context.
@@ -586,6 +600,14 @@ where
         self.context_predict.iter()
     }
 
+    /// Return a tail of a path with the depth adapted to this predictor, as an IOPath.
+    pub fn path_tail(&self, path: &[IOPathItem]) -> IOPath {
+        let tail = Self::tail_of(path, self.depth);
+        let mut result = IOPath::new();
+        result.extend_from_slice(tail);
+        result
+    }
+
     /// Return a tail of a path with the depth adapted to this predictor.
     fn tail<'a>(&self, path: &'a [IOPathItem]) -> &'a [IOPathItem] {
         Self::tail_of(path, self.depth)
@@ -613,11 +635,11 @@ where
     NodeValue: Eq + Hash + Clone,
 {
     /// Register a value as being used at this path.
-    pub fn add(&mut self, path: &[IOPathItem], value: NodeValue) {
+    pub fn add(&mut self, path: &[IOPathItem], value: NodeValue) -> AddResult {
         let tail = self.tail(path);
         let mut as_path = IOPath::new();
         as_path.extend_from_slice(tail);
-        self.context_predict.add(as_path, value);
+        self.context_predict.add(as_path, value)
     }
 
     pub fn add_fallback(&mut self, other: &Self) {

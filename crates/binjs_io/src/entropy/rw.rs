@@ -86,6 +86,9 @@ pub struct PreludeStreams<T> {
 
     /// Instances of unsigned longs.
     pub unsigned_longs: T,
+
+    pub probabilities: T,
+    pub probabilities_len: T,
 }
 impl<T> PreludeStreams<T> {
     /// Create a new PreludeStreams.
@@ -105,6 +108,8 @@ impl<T> PreludeStreams<T> {
             list_lengths: f("list_lengths"),
             floats: f("floats"),
             unsigned_longs: f("unsigned_longs"),
+            probabilities: f("probabilities"),
+            probabilities_len: f("probabilities_len"),
         }
     }
 
@@ -122,6 +127,8 @@ impl<T> PreludeStreams<T> {
             ("list_lengths", self.list_lengths),
             ("floats", self.floats),
             ("unsigned_longs", self.unsigned_longs),
+            ("probabilities", self.probabilities),
+            ("probabilities_len", self.probabilities_len),
         ]
         .into_iter()
     }
@@ -147,6 +154,8 @@ impl<T> PreludeStreams<T> {
             b"list_lengths" => Some(&mut self.list_lengths),
             b"floats" => Some(&mut self.floats),
             b"unsigned_longs" => Some(&mut self.unsigned_longs),
+            b"probabilities" => Some(&mut self.probabilities),
+            b"probabilities_len" => Some(&mut self.probabilities_len),
             _ => None,
         }
     }
