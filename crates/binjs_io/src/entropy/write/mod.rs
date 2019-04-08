@@ -82,6 +82,8 @@ pub struct Encoder {
     /// All floats. `None` for `null`.
     floats: LinearTable<Option<F64>>,
 
+    string_literals_probabilities: LinearTable<()>,
+
     // --- Statistics.
     /// Measure the number of bytes written.
     content_opus_lengths: PerUserExtensibleKind<opus::Writer<LengthWriter>>,
@@ -149,6 +151,7 @@ impl Encoder {
             property_keys,
             list_lengths,
             floats,
+            string_literals_probabilities: LinearTable::with_capacity(1024),
         }
     }
 }

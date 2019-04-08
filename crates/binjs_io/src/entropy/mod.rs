@@ -10,6 +10,8 @@ pub mod format;
 
 mod baseline;
 
+pub mod collect;
+
 pub mod dictionary;
 
 /// Reading a compressed stream.
