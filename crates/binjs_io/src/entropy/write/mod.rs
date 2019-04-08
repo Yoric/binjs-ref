@@ -3,7 +3,9 @@
 mod lazy_stream;
 
 use self::lazy_stream::*;
+use super::collect::*;
 use super::dictionary::{Fetch, LinearTable, TableRef};
+use super::probabilities::{InstancesToProbabilities, SymbolInfo};
 use super::rw::*;
 use bytes::lengthwriter::LengthWriter;
 use bytes::varnum::WriteVarNum;
@@ -82,7 +84,7 @@ pub struct Encoder {
     /// All floats. `None` for `null`.
     floats: LinearTable<Option<F64>>,
 
-    string_literals_probabilities: LinearTable<()>,
+    user_extensible_probabilities: UserExtensibleDictionary<SymbolInfo>,
 
     // --- Statistics.
     /// Measure the number of bytes written.
@@ -100,7 +102,7 @@ impl Encoder {
     ///
     /// Note that cloning `options` is pretty cheap, as it is mostly a bunch
     /// of `Rc<>`.
-    pub fn new(path: Option<&std::path::Path>, options: ::entropy::Options) -> Self {
+    pub fn new(path: Option<&std::path::Path>, options: ::entropy::Options, user_extensible_probabilities: UserExtensibleDictionary<Instances>) -> Self {
         let split_streams = options.split_streams;
 
         // We need to clone the instances of `LinearTable` as using them modifies
@@ -151,7 +153,7 @@ impl Encoder {
             property_keys,
             list_lengths,
             floats,
-            string_literals_probabilities: LinearTable::with_capacity(1024),
+            user_extensible_probabilities: user_extensible_probabilities.instances_to_probabilities("Encoder::new"),
         }
     }
 }
@@ -451,6 +453,8 @@ impl TokenWriter for Encoder {
             )*
         } };
         for_field_in_user_extensible!(write_indices_with_window_len);
+
+        data.extend(SECTION_PROBABILITIES);
 
         // Write main stream of entropy-compressed data.
         data.write_all(SECTION_MAIN)

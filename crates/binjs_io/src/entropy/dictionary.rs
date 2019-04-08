@@ -832,6 +832,16 @@ impl<T> DictionaryFamily<T> {
             .map(|dictionary| dictionary.len())
             .sum()
     }
+
+    pub fn depth(&self) -> usize {
+        let dictionary = self.dictionaries
+            .values()
+            .next()
+            .unwrap();
+        let depth = dictionary.depth();
+        debug_assert!(self.dictionaries.values().position(|dict| dict.depth() != depth).is_none());
+        depth
+    }
 }
 
 impl DictionaryFamily<Instances> {

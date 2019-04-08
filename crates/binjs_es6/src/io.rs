@@ -435,9 +435,13 @@ impl Encoder {
                 serializer.done()
             }
             binjs_io::Format::Entropy { ref options } => {
-                // FIXME: Extract strings + frequency.
-                // FIXME: Use info.
-                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone());
+                // Pass: Extract frequency information on user-extensible strings.
+                let depth = options.dictionaries.depth();
+                let collector = binjs_io::entropy::collector::UserExtensibleDictionary::new(depth);
+                let mut serializer = Serializer::new(&mut collector);
+
+                // Pass: Use dictionaries to actually write tree.
+                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone(), collector.into_statistics());
                 let mut serializer = Serializer::new(writer);
                 serializer.serialize(ast, &mut io_path)?;
                 serializer.done()
