@@ -7,7 +7,6 @@ extern crate rand;
 extern crate separator;
 
 use binjs::io::entropy::dictionary::{DictionaryBuilder, Options as DictionaryOptions};
-use binjs::io::entropy::write::Encoder;
 use binjs::io::entropy::Options;
 use binjs::io::{Path as IOPath, Serialization, TokenSerializer};
 use binjs::source::{Shift, SourceParser};
@@ -258,14 +257,12 @@ fn main() {
             Some(ref path) => Some(path.as_ref()),
             None => None,
         };
-
-        let mut encoder = Encoder::new(destination_path, options.clone());
-
-        let mut serializer = binjs::specialized::es6::io::Serializer::new(encoder);
-        serializer
-            .serialize(&ast, &mut IOPath::new())
-            .expect("Could not generate dictionary");
-        let data = serializer.done().expect("Could not finalize dictionary");
+        let mut format = binjs::io::Format::Entropy {
+            options: options.clone()
+        };
+        let mut encoder = binjs::specialized::es6::io::Encoder::new();
+        let data = encoder.encode(destination_path, &mut format, &ast)
+            .expect("Could not compress to binast");
 
         let binjs_size = data.len() as u64;
         println!("...binjs size: {}", binjs_size.separated_string());

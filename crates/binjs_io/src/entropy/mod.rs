@@ -60,6 +60,8 @@ const_with_str! {
     const DEFAULT_WINDOW_LEN_STRING_LITERALS: usize = 0;
     const DEFAULT_WINDOW_LEN_LIST_LENGTHS: usize = 0;
 
+    const DEFAULT_USER_EXTENSIBLE_DEPTH: usize = 2;
+
     mod arg_as_str;
 }
 
@@ -91,6 +93,8 @@ pub struct Options {
     /// If `true`, when compressing a file, also write streams to separate files,
     /// for analysis purposes.
     split_streams: bool,
+
+    user_extensible_depth: usize,
 }
 impl Options {
     /// Create a fresh `Options` to encode/decode in a given grammar spec with
@@ -122,6 +126,7 @@ impl Options {
             content_instances: Rc::new(RefCell::new(PerUserExtensibleKind::default())),
             probability_stats: Rc::new(RefCell::new(PerStaticKind::default())),
             split_streams: false,
+            user_extensible_depth: DEFAULT_USER_EXTENSIBLE_DEPTH,
             content_window_len: PerUserExtensibleKind {
                 floats: DEFAULT_WINDOW_LEN_FLOATS,
                 unsigned_longs: DEFAULT_WINDOW_LEN_UNSIGNED_LONGS,
@@ -134,7 +139,7 @@ impl Options {
     }
 
     pub fn user_extensible_depth(&self) -> usize {
-        self.dictionaries.depth()
+        self.user_extensible_depth
     }
 
     /// Return the statistics as (number of instances, number of bytes).
@@ -272,6 +277,13 @@ impl ::FormatProvider for FormatProvider {
                 .validator(validate_usize)
                 .default_value(arg_as_str::DEFAULT_WINDOW_LEN_LIST_LENGTHS)
             )
+            .arg(Arg::with_name("depth-uxv")
+                .long("depth-uxv")
+                .help("The context depth to use to predict user-extensible values")
+                .takes_value(true)
+                .validator(validate_usize)
+                .default_value(arg_as_str::DEFAULT_USER_EXTENSIBLE_DEPTH)
+            )
     }
 
     fn handle_subcommand(
@@ -314,6 +326,7 @@ impl ::FormatProvider for FormatProvider {
             options: Options {
                 content_lengths: Rc::new(RefCell::new(PerUserExtensibleKind::default())),
                 content_instances: Rc::new(RefCell::new(PerUserExtensibleKind::default())),
+                user_extensible_depth: convert_usize("depth-uxv")?,
                 split_streams,
                 content_window_len,
                 ..Options::new(spec, dictionaries)
