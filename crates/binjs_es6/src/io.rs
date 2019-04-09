@@ -404,6 +404,7 @@ impl Encoder {
         Serializer<TokenWriterTreeAdapter<binjs_io::xml::Encoder>>: Serialization<AST>,
         Serializer<binjs_io::binjs_json::write::TreeTokenWriter>: Serialization<AST>,
         Serializer<binjs_io::entropy::write::Encoder>: Serialization<AST>,
+        for<'a> Serializer<&'a mut binjs_io::entropy::collect::UserExtensibleDictionary<binjs_io::statistics::Instances>>: Serialization<AST>,
     {
         let mut io_path = IOPath::new();
         match *format {
@@ -436,12 +437,16 @@ impl Encoder {
             }
             binjs_io::Format::Entropy { ref options } => {
                 // Pass: Extract frequency information on user-extensible strings.
-                let depth = options.dictionaries.depth();
-                let collector = binjs_io::entropy::collector::UserExtensibleDictionary::new(depth);
-                let mut serializer = Serializer::new(&mut collector);
+                let depth = options.user_extensible_depth();
+                let mut collector = binjs_io::entropy::collect::UserExtensibleDictionary::new(depth);
+                {
+                    let mut serializer = Serializer::new(&mut collector);
+                    serializer.serialize(ast, &mut io_path)?;
+                    serializer.done()?;
+                }
 
                 // Pass: Use dictionaries to actually write tree.
-                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone(), collector.into_statistics());
+                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone(), collector);
                 let mut serializer = Serializer::new(writer);
                 serializer.serialize(ast, &mut io_path)?;
                 serializer.done()

@@ -133,6 +133,10 @@ impl Options {
         }
     }
 
+    pub fn user_extensible_depth(&self) -> usize {
+        self.dictionaries.depth()
+    }
+
     /// Return the statistics as (number of instances, number of bytes).
     pub fn statistics_for_write(&self) -> impl std::fmt::Display {
         let per_user_extensible_kind = {

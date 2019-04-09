@@ -23,6 +23,7 @@ use std::io::Write;
 #[allow(unused_imports)] // We keep enabling/disabling this.
 use itertools::Itertools;
 use range_encoding::opus;
+use range_encoding::CumulativeDistributionFrequency;
 
 /// An arbitrary initialization size for buffers.
 const INITIAL_BUFFER_SIZE_BYTES: usize = 32768;
@@ -165,6 +166,35 @@ impl Encoder {
 /// Usage:
 /// `emit_symbol_to_main_stream!(self, name_of_the_probability_table, "Description, used for debugging",  path_in_the_ast,  value_to_encode)`
 macro_rules! emit_symbol_to_main_stream {
+    ( $me: ident, $table: expr, $description: expr, $path: expr, $value: expr) => {
+        {
+            use std::borrow::Borrow;
+            let path = $path.borrow();
+
+            // 1. Locate the `SymbolInfo` information for this value given the
+            // path information.
+            let symbol =
+                $table
+                .stats_by_node_value(path, &$value)
+                .ok_or_else(|| {
+                    debug!(target: "entropy", "Couldn't find value {:?} at {:?} ({})",
+                        $value, path, $description);
+                    TokenWriterError::NotInDictionary(format!("{}: {:?} at {:?}", $description, $value, path))
+                })?;
+
+            // 2. This gives us an index (`symbol.index`) and a probability distribution
+            // (`symbol.distribution`). Use them to write the probability at bit-level.
+            let distribution = symbol.distribution
+                .as_ref()
+                .borrow();
+            $me.writer.symbol(symbol.index.into(), &distribution)
+                .map_err(TokenWriterError::WriteError)?;
+
+            // FIXME: Update table of statistics.
+
+            Ok(())
+        }
+    };
     ( $me: ident, $table: ident, $table_of_statistics: ident, $description: expr, $path: expr, $value: expr ) => {
         {
             use std::borrow::Borrow;
@@ -454,8 +484,6 @@ impl TokenWriter for Encoder {
         } };
         for_field_in_user_extensible!(write_indices_with_window_len);
 
-        data.extend(SECTION_PROBABILITIES);
-
         // Write main stream of entropy-compressed data.
         data.write_all(SECTION_MAIN)
             .map_err(TokenWriterError::WriteError)?;
@@ -554,16 +582,39 @@ impl TokenWriter for Encoder {
     fn string_at(
         &mut self,
         value: Option<&SharedString>,
-        _path: &Path,
+        path: &Path,
     ) -> Result<(), TokenWriterError> {
-        emit_string_symbol_to_streams!(
-            self,
-            string_literals,
-            string_literals,
-            string_literals_len,
-            &value.cloned(),
-            "string_at"
-        );
+        if let Info::NewTable = self.user_extensible_probabilities.next_info() {
+            use std::borrow::Borrow;
+            use std::cell::Ref;
+            // This is the first time we encounter this table.
+            // We need to write its definition.
+            let frequencies = self.user_extensible_probabilities.string_literals().frequencies_at(path.borrow()).unwrap();
+            let frequencies: Ref<range_encoding::CumulativeDistributionFrequency> = frequencies.as_ref().borrow();
+
+            // Store the number of entries in the table.
+            self.prelude_streams.probabilities_len.write_varnum(frequencies.len() as u32)
+                .map_err(TokenWriterError::WriteError)?;
+
+            for index in 0..frequencies.len() {
+                // Store the number of instances.
+                self.prelude_streams.probabilities.write_varnum(frequencies.at_index(index).unwrap().width())
+                    .map_err(TokenWriterError::WriteError)?;
+
+                // Store the actual symbol definition.
+                // FIXME: We could make this lookup much more efficient.
+                let value = self.user_extensible_probabilities.string_literals().value_by_symbol_index(path.borrow(), index.into()).unwrap();
+                emit_string_symbol_to_streams!(
+                    self,
+                    string_literals,
+                    string_literals,
+                    string_literals_len,
+                    &value,
+                    "string_at (definitions)"
+                );
+            }
+        }
+        emit_symbol_to_main_stream!(self, self.user_extensible_probabilities.string_literals(), "string_at (probabilities)", path, value.cloned())?;
         Ok(())
     }
 
