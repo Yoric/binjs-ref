@@ -142,8 +142,10 @@ impl Options {
         }
     }
 
-    pub fn user_extensible_depth(&self) -> usize {
-        self.user_extensible_depth
+    pub fn dictionary_options(&self) -> dictionary::Options {
+        dictionary::Options::default()
+            .with_depth(self.user_extensible_depth)
+            .with_width(1 /* FIXME: Placeholder - we should remove all this window stuff */)
     }
 
     /// Return the statistics as (number of instances, number of bytes).

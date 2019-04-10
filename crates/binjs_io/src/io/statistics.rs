@@ -45,7 +45,7 @@ macro_rules! for_field_in_user_extensible {
             (string_literals, "string_literals", b"string_literals"),
             (list_lengths, "list_lengths", b"list_lengths"),
             (string_enums, "string_enums", b"string_enums"),
-            (interface_names, "interace_names", b"interface_names")
+            (interface_names, "interface_names", b"interface_names")
         )
     };
 }

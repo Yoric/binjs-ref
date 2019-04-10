@@ -109,6 +109,9 @@ impl Encoder {
     pub fn new(path: Option<&std::path::Path>, options: ::entropy::Options, prelude_dictionary: DictionaryFamily<Instances>) -> Self {
         let split_streams = options.split_streams;
 
+        let mut prelude_dictionary = prelude_dictionary.instances_to_probabilities("Encoder::new");
+        prelude_dictionary.enter_existing(&SharedString::from_str("")).unwrap();
+
         // We need to clone the instances of `LinearTable` as using them modifies
         // their content.
         let unsigned_longs = options.dictionaries.current().unsigned_longs().clone();
@@ -161,7 +164,7 @@ impl Encoder {
             floats,
             interface_names,
             string_enums,
-            prelude_dictionary: prelude_dictionary.instances_to_probabilities("Encoder::new"),
+            prelude_dictionary,
             paths_encountered: 0,
         }
     }
