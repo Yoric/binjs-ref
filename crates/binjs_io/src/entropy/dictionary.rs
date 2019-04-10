@@ -72,9 +72,20 @@ macro_rules! update_in_context {
     ( $me: ident, $table: ident, $description: expr, $path:expr, $value: expr ) => {{
         use std::borrow::Borrow;
 
-        let path = $path.borrow();
-        let mut table = $me.dictionaries.current_mut().$table.borrow_mut();
-        table.add(path, $value);
+        let addition = {
+            let path = $path.borrow();
+            let mut table = $me.dictionaries.current_mut().$table.borrow_mut();
+            table.add(path, $value)
+        };
+
+        let introduction = if addition.new_context {
+            Introduction::NewTable
+        } else if addition.new_value {
+            Introduction::NewValueInExistingTable
+        } else {
+            Introduction::NothingNew
+        };
+        $me.dictionaries.introductions.push(introduction);
 
         Ok(())
     }};
@@ -321,10 +332,13 @@ pub struct Dictionary<T> {
     bool_by_path: Rc<RefCell<PathPredict<Option<bool>, T>>>,
 
     /// All string enumerations, predicted by path.
-    string_enum_by_path: Rc<RefCell<PathPredict<SharedString, T>>>,
+    string_enum_by_path: Rc<RefCell<PathPredict<Option<SharedString>, T>>>,
 
     /// All interface names, predicted by path.
-    interface_name_by_path: Rc<RefCell<PathPredict<InterfaceName, T>>>,
+    interface_name_by_path: Rc<RefCell<PathPredict<Option<InterfaceName>, T>>>,
+
+    interface_names: Rc<RefCell<LinearTable<Option<InterfaceName>>>>,
+    string_enums: Rc<RefCell<LinearTable<Option<SharedString>>>>,
 
     // --- Extensible sets of symbols, predicted by path.
     // Used for experiments with entropy coding, but so far, not very
@@ -417,6 +431,8 @@ impl<T> Dictionary<T> {
             list_lengths: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
             floats: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
             unsigned_longs: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
+            interface_names: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
+            string_enums: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
         }
     }
 
@@ -495,6 +511,14 @@ impl<T> Dictionary<T> {
         self.floats.as_ref().borrow()
     }
 
+    pub fn interface_names(&self) -> Ref<LinearTable<Option<InterfaceName>>> {
+        self.interface_names.as_ref().borrow()
+    }
+
+    pub fn string_enums(&self) -> Ref<LinearTable<Option<SharedString>>> {
+        self.string_enums.as_ref().borrow()
+    }
+
     /// Return the depth of the current dictionary.
     pub fn depth(&self) -> usize {
         assert_eq!(
@@ -530,6 +554,8 @@ impl<T> Dictionary<T> {
             list_lengths: _,
             floats: _,
             unsigned_longs: _,
+            interface_names: _,
+            string_enums: _,
         } = *self;
 
         bool_by_path.borrow().len()
@@ -700,6 +726,8 @@ impl InstancesToProbabilities for Dictionary<Instances> {
             identifier_names: self.identifier_names.clone(),
             property_keys: self.property_keys.clone(),
             unsigned_longs: self.unsigned_longs.clone(),
+            string_enums: self.string_enums.clone(),
+            interface_names: self.interface_names.clone(),
         }
     }
 }
@@ -804,6 +832,8 @@ where
 ///   all probabilities are equal.
 #[derive(Clone, Serialize, Deserialize)]
 pub struct DictionaryFamily<T> {
+    introductions: Vec<Introduction>,
+
     dictionaries: HashMap<SharedString, Dictionary<T>>,
 
     /// The stack of dictionaries.
@@ -813,6 +843,10 @@ pub struct DictionaryFamily<T> {
     dictionary_stack: Vec<(SharedString, Dictionary<T>)>,
 }
 impl<T> DictionaryFamily<T> {
+    pub fn introductions(&self) -> &[Introduction] {
+        &self.introductions
+    }
+
     /// Exit the current dictionary, returning to the parent dictionary.
     ///
     /// # Failure
@@ -855,6 +889,7 @@ impl DictionaryFamily<Instances> {
         DictionaryFamily {
             dictionaries: HashMap::new(),
             dictionary_stack: vec![],
+            introductions: vec![],
         }
     }
 
@@ -928,8 +963,16 @@ impl InstancesToProbabilities for DictionaryFamily<Instances> {
                 .map(|(name, dict)| (name.clone(), dict.instances_to_probabilities(description)))
                 .collect(),
             dictionary_stack: vec![],
+            introductions: self.introductions.clone(),
         }
     }
+}
+
+#[derive(Clone, Debug, Copy, Serialize, Deserialize)]
+pub enum Introduction {
+    NothingNew,
+    NewValueInExistingTable,
+    NewTable,
 }
 
 /// A structure used to build a dictionary based on a sample of files.
@@ -1121,16 +1164,11 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
         Ok([])
     }
 
+    // --- Fixed sets of values
+
     fn bool_at(&mut self, value: Option<bool>, path: &IOPath) -> Result<(), TokenWriterError> {
-        (*self).bool_at(value, path)
-    }
-
-    fn float_at(&mut self, value: Option<f64>, path: &IOPath) -> Result<(), TokenWriterError> {
-        (*self).float_at(value, path)
-    }
-
-    fn unsigned_long_at(&mut self, value: u32, path: &IOPath) -> Result<(), TokenWriterError> {
-        (*self).unsigned_long_at(value, path)
+        update_in_context!(self, bool_by_path, "bool_by_path", path, value)?;
+        Ok(())
     }
 
     fn string_enum_at(
@@ -1138,81 +1176,35 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
         value: &SharedString,
         path: &IOPath,
     ) -> Result<(), TokenWriterError> {
-        (*self).string_enum_at(value, path)
-    }
-
-    fn string_at(
-        &mut self,
-        value: Option<&SharedString>,
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        (*self).string_at(value, path)
-    }
-
-    fn property_key_at(
-        &mut self,
-        value: Option<&PropertyKey>,
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        (*self).property_key_at(value, path)
-    }
-
-    fn identifier_name_at(
-        &mut self,
-        value: Option<&IdentifierName>,
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        (*self).identifier_name_at(value, path)
-    }
-
-    fn enter_list_at(&mut self, len: usize, path: &IOPath) -> Result<(), TokenWriterError> {
-        (*self).enter_list_at(len, path)
+        update_in_context!(
+            self,
+            string_enum_by_path,
+            "string_enum_by_path",
+            path,
+            value.clone()
+        )?;
+        Ok(())
     }
 
     fn enter_tagged_tuple_at(
         &mut self,
-        node: &Node,
+        _node: &Node,
         tag: &InterfaceName,
-        children: &[&FieldName],
+        _children: &[&FieldName],
         path: &IOPath,
     ) -> Result<(), TokenWriterError> {
-        (*self).enter_tagged_tuple_at(node, tag, children, path)
-    }
-
-    fn offset_at(&mut self, path: &IOPath) -> Result<(), TokenWriterError> {
-        (*self).offset_at(path)
-    }
-
-    fn enter_scoped_dictionary_at(
-        &mut self,
-        name: &SharedString,
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        (*self).enter_scoped_dictionary_at(name, path)
-    }
-
-    fn exit_scoped_dictionary_at(
-        &mut self,
-        name: &SharedString,
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        (*self).exit_scoped_dictionary_at(name, path)
-    }
-}
-
-impl TokenWriter for DictionaryBuilder {
-    type Data = [u8; 0]; // Placeholder
-
-    fn done(mut self) -> Result<Self::Data, TokenWriterError> {
-        self.done_with_file();
-        debug!(target: "entropy", "Built a dictionary family with len: {}", self.dictionaries.len());
-        Ok([])
-    }
-
-    fn bool_at(&mut self, value: Option<bool>, path: &IOPath) -> Result<(), TokenWriterError> {
-        update_in_context!(self, bool_by_path, "bool_by_path", path, value)?;
+        update_in_context!(
+            self,
+            interface_name_by_path,
+            "interface_name_by_path",
+            path,
+            tag.clone()
+        )?;
+        increment_instance_count!(self, interface_name_instances, tag.clone());
         Ok(())
     }
+
+    // --- User extensible values
 
     fn float_at(&mut self, value: Option<f64>, path: &IOPath) -> Result<(), TokenWriterError> {
         let value = value.map(|x| x.into());
@@ -1230,21 +1222,6 @@ impl TokenWriter for DictionaryBuilder {
             value
         )?;
         increment_instance_count!(self, unsigned_long_instances, value);
-        Ok(())
-    }
-
-    fn string_enum_at(
-        &mut self,
-        value: &SharedString,
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        update_in_context!(
-            self,
-            string_enum_by_path,
-            "string_enum_by_path",
-            path,
-            value.clone()
-        )?;
         Ok(())
     }
 
@@ -1311,23 +1288,6 @@ impl TokenWriter for DictionaryBuilder {
         Ok(())
     }
 
-    fn enter_tagged_tuple_at(
-        &mut self,
-        _node: &Node,
-        tag: &InterfaceName,
-        _children: &[&FieldName],
-        path: &IOPath,
-    ) -> Result<(), TokenWriterError> {
-        update_in_context!(
-            self,
-            interface_name_by_path,
-            "interface_name_by_path",
-            path,
-            tag.clone()
-        )?;
-        increment_instance_count!(self, interface_name_instances, tag.clone());
-        Ok(())
-    }
 
     fn offset_at(&mut self, _path: &IOPath) -> Result<(), TokenWriterError> {
         Ok(())

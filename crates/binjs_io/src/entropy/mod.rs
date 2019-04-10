@@ -10,7 +10,7 @@ pub mod format;
 
 mod baseline;
 
-pub mod collect;
+// pub mod collect;
 
 pub mod dictionary;
 

@@ -438,7 +438,7 @@ impl Encoder {
             binjs_io::Format::Entropy { ref options } => {
                 // Pass: Extract frequency information on user-extensible strings.
                 let depth = options.user_extensible_depth();
-                let mut collector = binjs_io::entropy::collect::UserExtensibleDictionary::new(depth);
+                let mut collector = binjs_io::entropy::dictionary::DictionaryBuilder::new(depth);
                 {
                     let mut serializer = Serializer::new(&mut collector);
                     serializer.serialize(ast, &mut io_path)?;
