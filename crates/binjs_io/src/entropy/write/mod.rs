@@ -347,7 +347,6 @@ macro_rules! emit_string_symbol_to_streams {
             emit_table_to_streams!($me, $probability_table, $linear_table, $out, $out_len, $description, path);
             let probability_table = $me.prelude_dictionary.current().$probability_table();
             emit_symbol_to_main_stream!($me, probability_table, "string_at (probabilities)", path, $value)?;
-            Ok(())
         }
     }
 }
@@ -588,7 +587,8 @@ impl TokenWriter for Encoder {
             Some(value.clone()),
             "string_enum_at",
             path
-        )
+        );
+        Ok(())
     }
 
     fn enter_tagged_tuple_at(
@@ -607,7 +607,8 @@ impl TokenWriter for Encoder {
             Some(tag.clone()),
             "tagged_tuple_at",
             path
-        )
+        );
+        Ok(())
     }
 
     // --- User-extensible values
