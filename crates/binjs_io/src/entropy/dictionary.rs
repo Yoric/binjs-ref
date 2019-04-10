@@ -443,11 +443,11 @@ impl<T> Dictionary<T> {
         self.bool_by_path.as_ref().borrow()
     }
 
-    pub fn string_enum_by_path(&self) -> Ref<PathPredict<SharedString, T>> {
+    pub fn string_enum_by_path(&self) -> Ref<PathPredict<Option<SharedString>, T>> {
         self.string_enum_by_path.as_ref().borrow()
     }
 
-    pub fn interface_name_by_path(&self) -> Ref<PathPredict<InterfaceName, T>> {
+    pub fn interface_name_by_path(&self) -> Ref<PathPredict<Option<InterfaceName>, T>> {
         self.interface_name_by_path.as_ref().borrow()
     }
 
@@ -576,11 +576,11 @@ impl Dictionary<Instances> {
         self.bool_by_path.as_ref().borrow_mut()
     }
 
-    pub fn string_enum_by_path_mut(&mut self) -> RefMut<PathPredict<SharedString, Instances>> {
+    pub fn string_enum_by_path_mut(&mut self) -> RefMut<PathPredict<Option<SharedString>, Instances>> {
         self.string_enum_by_path.as_ref().borrow_mut()
     }
 
-    pub fn interface_name_by_path_mut(&mut self) -> RefMut<PathPredict<InterfaceName, Instances>> {
+    pub fn interface_name_by_path_mut(&mut self) -> RefMut<PathPredict<Option<InterfaceName>, Instances>> {
         self.interface_name_by_path.as_ref().borrow_mut()
     }
 
@@ -1181,7 +1181,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             string_enum_by_path,
             "string_enum_by_path",
             path,
-            value.clone()
+            Some(value.clone())
         )?;
         Ok(())
     }
@@ -1198,7 +1198,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             interface_name_by_path,
             "interface_name_by_path",
             path,
-            tag.clone()
+            Some(tag.clone())
         )?;
         increment_instance_count!(self, interface_name_instances, tag.clone());
         Ok(())

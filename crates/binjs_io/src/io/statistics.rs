@@ -43,7 +43,9 @@ macro_rules! for_field_in_user_extensible {
             (property_keys, "property_keys", b"property_keys"),
             (identifier_names, "identifier_names", b"identifier_names"),
             (string_literals, "string_literals", b"string_literals"),
-            (list_lengths, "list_lengths", b"list_lengths")
+            (list_lengths, "list_lengths", b"list_lengths"),
+            (string_enums, "string_enums", b"string_enums"),
+            (interface_names, "interace_names", b"interface_names")
         )
     };
 }
@@ -63,6 +65,8 @@ pub struct PerUserExtensibleKind<T> {
     pub identifier_names: T,
     pub string_literals: T,
     pub list_lengths: T,
+    pub string_enums: T,
+    pub interface_names: T,
 }
 impl<T> PerUserExtensibleKind<T> {
     /// Initialize a new `PerUserExtensibleKind`.

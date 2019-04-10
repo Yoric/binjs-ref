@@ -59,6 +59,8 @@ const_with_str! {
     const DEFAULT_WINDOW_LEN_IDENTIFIER_NAMES: usize = 8;
     const DEFAULT_WINDOW_LEN_STRING_LITERALS: usize = 0;
     const DEFAULT_WINDOW_LEN_LIST_LENGTHS: usize = 0;
+    const DEFAULT_WINDOW_LEN_STRING_ENUMS: usize = 0;
+    const DEFAULT_WINDOW_LEN_INTERFACE_NAMES: usize = 0;
 
     const DEFAULT_USER_EXTENSIBLE_DEPTH: usize = 2;
 
@@ -134,6 +136,8 @@ impl Options {
                 identifier_names: DEFAULT_WINDOW_LEN_IDENTIFIER_NAMES,
                 string_literals: DEFAULT_WINDOW_LEN_STRING_LITERALS,
                 list_lengths: DEFAULT_WINDOW_LEN_LIST_LENGTHS,
+                interface_names: DEFAULT_WINDOW_LEN_INTERFACE_NAMES,
+                string_enums: DEFAULT_WINDOW_LEN_STRING_ENUMS,
             },
         }
     }
@@ -168,6 +172,14 @@ impl Options {
                 list_lengths: BytesAndInstances::new(
                     borrow_lengths.list_lengths,
                     borrow_instances.list_lengths,
+                ),
+                interface_names: BytesAndInstances::new(
+                    borrow_lengths.interface_names,
+                    borrow_instances.interface_names,
+                ),
+                string_enums: BytesAndInstances::new(
+                    borrow_lengths.string_enums,
+                    borrow_instances.string_enums,
                 ),
             }
         };
@@ -320,6 +332,8 @@ impl ::FormatProvider for FormatProvider {
             identifier_names: convert_usize("window-len-identifier-names")?,
             string_literals: convert_usize("window-len-string-literals")?,
             list_lengths: convert_usize("window-len-list-lengths")?,
+            interface_names: DEFAULT_WINDOW_LEN_INTERFACE_NAMES, // FIXME: Command-line
+            string_enums: DEFAULT_WINDOW_LEN_STRING_ENUMS, // FIXME: Command-line
         };
 
         Ok(::Format::Entropy {

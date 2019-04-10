@@ -118,11 +118,11 @@ impl<'a> BaselineDictionaryBuilder<'a> {
 
                         self.dictionary
                             .interface_name_by_path_mut()
-                            .add_if_absent(path.borrow(), interface_name.clone());
+                            .add_if_absent(path.borrow(), Some(interface_name.clone()));
                         if or_null {
                             self.dictionary
                                 .interface_name_by_path_mut()
-                                .add_if_absent(path.borrow(), self.null_name.clone());
+                                .add_if_absent(path.borrow(), Some(self.null_name.clone()));
                         }
                     }
                     NamedType::Typedef(ref def) => {
@@ -134,7 +134,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
                                 SharedString::from_rc_string(Rc::new(value.clone()));
                             self.dictionary
                                 .string_enum_by_path_mut()
-                                .add_if_absent(path.borrow(), shared_string);
+                                .add_if_absent(path.borrow(), Some(shared_string));
                         }
                         if or_null {
                             panic!()
@@ -200,7 +200,7 @@ impl<'a> BaselineDictionaryBuilder<'a> {
         for root in roots {
             self.dictionary
                 .interface_name_by_path_mut()
-                .add_if_absent(empty_path.borrow(), root);
+                .add_if_absent(empty_path.borrow(), Some(root));
         }
     }
 

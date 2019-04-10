@@ -342,7 +342,7 @@ macro_rules! main_stream {
             .ok_or_else(|| {
                 TokenReaderError::NotInDictionary(format!("{} [{}]", stringify!($ident), index))
             })?;
-        Ok(value.clone())
+        Ok(value.clone().unwrap())
     }};
 }
 
