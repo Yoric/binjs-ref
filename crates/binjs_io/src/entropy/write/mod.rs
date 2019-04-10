@@ -347,6 +347,7 @@ macro_rules! emit_string_symbol_to_streams {
             emit_table_to_streams!($me, $probability_table, $linear_table, $out, $out_len, $description, path);
             let probability_table = $me.prelude_dictionary.current().$probability_table();
             emit_symbol_to_main_stream!($me, probability_table, "string_at (probabilities)", path, $value)?;
+            Ok(())
         }
     }
 }
