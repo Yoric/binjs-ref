@@ -372,6 +372,7 @@ impl TokenReader for Decoder {
 
     fn string_enum_at(&mut self, path: &Path) -> Result<SharedString, TokenReaderError> {
         main_stream!(self, string_enum_by_path, "string_enum_by_path", path)
+            .map(Option::unwrap)
     }
 
     fn enter_tagged_tuple_at(
@@ -379,7 +380,7 @@ impl TokenReader for Decoder {
         path: &Path,
     ) -> Result<(InterfaceName, Option<std::rc::Rc<Box<[FieldName]>>>), TokenReaderError> {
         let name = main_stream!(self, interface_name_by_path, "interface_name_by_path", path)?;
-        Ok((name, None))
+        Ok((name.unwrap(), None))
     }
 
     // ---- Extensible sets
