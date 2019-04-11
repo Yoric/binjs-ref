@@ -299,30 +299,40 @@ macro_rules! emit_table_to_streams {
                     // Store the actual symbol definition.
                     // FIXME: We could make this lookup much more efficient.
                     let value = probability_table.value_by_symbol_index(path, index.into()).unwrap();
-                    if let Fetch::Miss(_) = emit_symbol_to_content_stream!($me, $linear_table, $out, value, $description) {
-                        // The table value does not appear either in the static dictionary or in the prelude dictionary.
-                        // Add it to the latter.
-                        match value {
-                            Some(string) => {
-                                // Write the binary representation of the length of string to the
-                                // prelude stream `foo_len`, the binary representation of the string itself
-                                // to the prelude stream `foo`.
-                                let bytes = string.as_str()
-                                    .as_bytes();
-                                $me.prelude_streams.$out_len.write_maybe_varnum(Some(bytes.len() as u32))
-                                    .map_err(TokenWriterError::WriteError)?;
-                                $me.prelude_streams.$out.write_all(bytes)
-                                    .map_err(TokenWriterError::WriteError)?;
-                            }
-                            None => {
-                                // If the string is `None`, just use the `null` varnum as length.
-                                $me.prelude_streams.$out_len.write_maybe_varnum(None)
-                                    .map_err(TokenWriterError::WriteError)?;
-                            }
-                        }
+                    emit_string_symbol_to_streams!($me, $linear_table, $out, $out_len, value, $description)?;
+                }
+            }
+        }
+    }
+}
+
+macro_rules! emit_string_symbol_to_streams {
+    ( $me: ident, $linear_table: ident, $out: ident, $out_len: ident, $value: expr, $description: expr ) => {
+        {
+            let value = $value;
+            if let Fetch::Miss(_) = emit_symbol_to_content_stream!($me, $linear_table, $out, value, $description) {
+                // The table value does not appear either in the static dictionary or in the prelude dictionary.
+                // Add it to the latter.
+                match value {
+                    Some(string) => {
+                        // Write the binary representation of the length of string to the
+                        // prelude stream `foo_len`, the binary representation of the string itself
+                        // to the prelude stream `foo`.
+                        let bytes = string.as_str()
+                            .as_bytes();
+                        $me.prelude_streams.$out_len.write_maybe_varnum(Some(bytes.len() as u32))
+                            .map_err(TokenWriterError::WriteError)?;
+                        $me.prelude_streams.$out.write_all(bytes)
+                            .map_err(TokenWriterError::WriteError)?;
+                    }
+                    None => {
+                        // If the string is `None`, just use the `null` varnum as length.
+                        $me.prelude_streams.$out_len.write_maybe_varnum(None)
+                            .map_err(TokenWriterError::WriteError)?;
                     }
                 }
             }
+            Ok(())
         }
     }
 }
@@ -341,7 +351,7 @@ macro_rules! emit_table_to_streams {
 ///
 /// Usage:
 /// `emit_string_symbol_to_streams!(self, name_of_the_indexed_table, name_of_the_string_prelude_stream, name_of_the_string_length_prelude_stream, value_to_encode, "Description, used for debugging")`
-macro_rules! emit_string_symbol_to_streams {
+macro_rules! emit_string_symbol_to_streams_with_probabilities {
     ( $me: ident, $probability_table: ident, $linear_table: ident, $out: ident, $out_len: ident, $value: expr, $description: expr, $path: expr ) => {
         {
             use std::borrow::Borrow;
@@ -581,7 +591,7 @@ impl TokenWriter for Encoder {
         value: &SharedString,
         path: &Path,
     ) -> Result<(), TokenWriterError> {
-        emit_string_symbol_to_streams!(
+        emit_string_symbol_to_streams_with_probabilities!(
             self,
             string_enum_by_path,
             string_enums,
@@ -601,7 +611,7 @@ impl TokenWriter for Encoder {
         _children: &[&FieldName],
         path: &Path,
     ) -> Result<(), TokenWriterError> {
-        emit_string_symbol_to_streams!(
+        emit_string_symbol_to_streams_with_probabilities!(
             self,
             interface_name_by_path,
             interface_names,
@@ -644,55 +654,46 @@ impl TokenWriter for Encoder {
     fn string_at(
         &mut self,
         value: Option<&SharedString>,
-        path: &Path,
+        _path: &Path,
     ) -> Result<(), TokenWriterError> {
         emit_string_symbol_to_streams!(
             self,
-            string_literal_by_path,
             string_literals,
             string_literals,
             string_literals_len,
             &value.cloned(),
-            "string_at",
-            path
-        );
-        Ok(())
+            "string_at"
+        )
     }
 
     fn identifier_name_at(
         &mut self,
         value: Option<&IdentifierName>,
-        path: &Path,
+        _path: &Path,
     ) -> Result<(), TokenWriterError> {
         emit_string_symbol_to_streams!(
             self,
-            identifier_name_by_path,
             identifier_names,
             identifier_names,
             identifier_names_len,
             &value.cloned(),
-            "identifier_name_at",
-            path
-        );
-        Ok(())
+            "identifier_name_at"
+        )
     }
 
     fn property_key_at(
         &mut self,
         value: Option<&PropertyKey>,
-        path: &Path,
+        _path: &Path,
     ) -> Result<(), TokenWriterError> {
         emit_string_symbol_to_streams!(
             self,
-            property_key_by_path,
             property_keys,
             property_keys,
             property_keys_len,
             &value.cloned(),
-            "property_key_at",
-            path
-        );
-        Ok(())
+            "property_key_at"
+        )
     }
 
     fn enter_list_at(&mut self, len: usize, _path: &Path) -> Result<(), TokenWriterError> {
