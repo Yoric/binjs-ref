@@ -117,6 +117,7 @@ impl Encoder {
         let unsigned_longs = options.dictionaries.current().unsigned_longs().clone();
         let string_literals = options.dictionaries.current().string_literals().clone();
         let identifier_names = options.dictionaries.current().identifier_names().clone();
+        debug!(target: "linear_tables", "Initializing identifier_names with {} entries from dictionary '{}'", identifier_names.len(), options.dictionaries.name());
         let property_keys = options.dictionaries.current().property_keys().clone();
         let list_lengths = options.dictionaries.current().list_lengths().clone();
         let floats = options.dictionaries.current().floats().clone();

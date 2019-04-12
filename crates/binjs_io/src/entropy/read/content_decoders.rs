@@ -73,7 +73,7 @@ where
 }
 impl<T> Iterator for DictionaryStreamDecoder<T>
 where
-    T: Hash + Eq + Clone + std::fmt::Debug + Ord,
+    T: Hash + Eq + Clone + std::fmt::Debug + Ord + crate::entropy::util::ShowMe,
 {
     type Item = Result<T, TokenReaderError>;
     fn next(&mut self) -> Option<Self::Item> {

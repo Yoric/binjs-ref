@@ -209,9 +209,10 @@ where
         self.values.len()
     }
 }
+
 impl<T> LinearTable<T>
 where
-    T: Eq + std::hash::Hash + Clone + std::fmt::Debug + Ord,
+    T: Eq + std::hash::Hash + Clone + std::fmt::Debug + Ord + crate::entropy::util::ShowMe,
 {
     /// Create a new LinearTable from a list of instances.
     ///
@@ -220,16 +221,24 @@ where
         value_to_instances: HashMap<T, FilesContaining>,
         threshold: FilesContaining,
     ) -> Self {
-        debug!(target: "dictionary", "Creating a LinearTable with a threshold of {}", Into::<usize>::into(threshold));
+        debug!(target: "linear_table", "Creating a LinearTable with a threshold of {}", Into::<usize>::into(threshold));
         let value_to_instances = value_to_instances.into_iter().sorted(); // We sort to enforce traversal order.
         let mut values = Vec::with_capacity(INDEXED_TABLE_INITIAL_CAPACITY);
         let mut refs_by_value = HashMap::with_capacity(INDEXED_TABLE_INITIAL_CAPACITY);
         for (value, instances) in value_to_instances {
-            debug!(target: "dictionary", "Should we add {:?} to the LinearTable ({} instances)?", value, instances);
+            if T::show() {
+                debug!(target: "linear_table", "Should we add {:?} to the LinearTable ({} instances)?", value, instances);
+            }
             if instances <= threshold {
                 // Too few instances, skipping.
-                debug!(target: "dictionary", "Too few instances: {} <= {} for {:?}", instances, threshold, value);
+                if T::show() {
+                    debug!(target: "linear_table", "Too few instances: {} <= {} for {:?}", instances, threshold, value);
+                }
                 continue;
+            } else {
+                if T::show() {
+                    debug!(target: "linear_table", "Keeping {:?}, with {} instances", value, instances);
+                }
             }
             let len = TableRef::Shared(values.len());
             values.push(value.clone());
@@ -242,7 +251,7 @@ where
             refs_by_value,
             shared_len,
         };
-        debug!(target: "dictionary", "Dictionary: LinearTable contains {:?}", result);
+        debug!(target: "linear_table", "Dictionary: LinearTable contains {:?}", result);
         result
     }
 
@@ -265,13 +274,21 @@ where
     /// value, etc.
     pub fn fetch_index(&mut self, value: &T) -> Fetch<TableRef> {
         use std::collections::hash_map::Entry::*;
-        debug!(target: "dictionary", "Dictionary: 'I'm looking for {:?} in {:?}", value, self);
+        let len = self.values.len();
         let index = self.values.len() - self.shared_len;
         let result = match self.refs_by_value.entry(value.clone()) {
-            Occupied(slot) => return Fetch::Hit(*slot.get()),
+            Occupied(slot) => {
+                if T::show() {
+                    debug!(target: "linear_table", "LinearTable: Found {:?} at {:?}" , value, slot.get());
+                }
+                return Fetch::Hit(*slot.get());
+            }
             Vacant(slot) => {
                 let result = TableRef::Prelude(index);
                 slot.insert(result.clone());
+                if T::show() {
+                    debug!(target: "linear_table", "LinearTable: Coulnd't find {:?} among {} values, assigning {}" , value, len, index);
+                }
                 result
             }
         };
@@ -637,6 +654,9 @@ impl Dictionary<Instances> {
     /// values that grammatically correct but have not been witnessed during
     /// sampling.
     pub fn with_grammar_fallback(&self, fallback: Dictionary<Instances>) -> Self {
+        debug!(target: "with_grammar_fallback", "Applying dictionar.with_grammar_fallback");
+        debug!(target: "with_grammar_fallback", "I have {} entries for interface_names", self.interface_names.borrow().len());
+
         let result = self.clone();
         let original_len = result.len();
         result
@@ -655,6 +675,7 @@ impl Dictionary<Instances> {
         debug!(target: "dictionary", "Added fallback to dictionary {} states => {} states",
             original_len,
             result.len());
+        debug!(target: "dictionary", "I now have {} entries for interface_names", self.interface_names.borrow().len());
 
         result
     }
@@ -747,13 +768,13 @@ pub struct UserExtensibleData<T> {
     pub property_key_instances: HashMap<Option<PropertyKey>, T>,
 
     /// Instances of InterfaceName
-    pub interface_name_instances: HashMap<InterfaceName, T>,
+    pub interface_name_instances: HashMap<Option<InterfaceName>, T>,
 
     /// Instances of string literals.
     pub string_literal_instances: HashMap<Option<SharedString>, T>,
 
     /// Instances of string enums.
-    pub string_enum_instances: HashMap<SharedString, T>,
+    pub string_enum_instances: HashMap<Option<SharedString>, T>,
 
     /// Instances of list lengths.
     pub list_length_instances: HashMap<Option<u32>, T>,
@@ -876,6 +897,19 @@ impl<T> DictionaryFamily<T> {
         debug_assert!(self.dictionaries.values().position(|dict| dict.depth() != depth).is_none());
         depth
     }
+
+    /// Access the current dictionary, immutably.
+    pub fn current(&self) -> &Dictionary<T> {
+        &self
+            .dictionary_stack
+            .last()
+            .expect("Cannot call `DictionaryFamily::current`, as there's no current dictionary.")
+            .1
+    }
+
+    pub fn name(&self) -> &SharedString {
+        &self.dictionary_stack.last().expect("Cannot call `DictionaryFamily::name` as there's no current dictionary").0
+    }
 }
 
 impl DictionaryFamily<Instances> {
@@ -941,15 +975,6 @@ impl DictionaryFamily<SymbolInfo> {
             .push((name.clone(), dictionary.clone()));
         Ok(())
     }
-
-    /// Access the current dictionary, immutably.
-    pub fn current(&self) -> &Dictionary<SymbolInfo> {
-        &self
-            .dictionary_stack
-            .last()
-            .expect("Cannot call `DictionaryFamily::current`, as there's no current dictionary.")
-            .1
-    }
 }
 
 impl InstancesToProbabilities for DictionaryFamily<Instances> {
@@ -975,6 +1000,37 @@ pub enum Introduction {
     NewTable,
 }
 
+/*
+pub struct StringCollector {
+    /// Number of instances of each string in the current file.
+    instances_of_user_extensible_data_in_current_file: UserExtensibleData<InstancesInFile>,
+
+    /// Number of files in which each string appears.
+    files_containing_user_extensible_data: UserExtensibleData<FilesContaining>,
+
+    options: Options,
+}
+impl StringCollector {
+    pub fn new(options: Options) -> Self {
+        StringCollector {
+            instances_of_user_extensible_data_in_current_file: UserExtensibleData::default(),
+            files_containing_user_extensible_data: UserExtensibleData::default(),
+        }
+    }
+}
+
+pub struct ProbabilityTableCollector {
+    /// The family of dictionaries being constructed.
+    dictionaries: DictionaryFamily<Instances>,
+
+    options: Options,
+}
+impl ProbabilityTableCollector {
+    pub fn new(options: Options) -> Self {
+
+    }
+}
+*/
 /// A structure used to build a dictionary based on a sample of files.
 pub struct DictionaryBuilder {
     /// The family of dictionaries being constructed.
@@ -1042,6 +1098,16 @@ impl DictionaryBuilder {
                 self.files_containing_user_extensible_data
                     .string_literal_instances,
                 threshold,
+            )));
+            dictionary.interface_names =  Rc::new(RefCell::new(LinearTable::new(
+                self.files_containing_user_extensible_data
+                    .interface_name_instances,
+                0.into(), // FIXME: HACK
+            )));
+            dictionary.string_enums =  Rc::new(RefCell::new(LinearTable::new(
+                self.files_containing_user_extensible_data
+                    .string_enum_instances,
+                0.into(), // FIXME: HACK
             )));
         }
         self.dictionaries
@@ -1200,7 +1266,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             path,
             Some(tag.clone())
         )?;
-        increment_instance_count!(self, interface_name_instances, tag.clone());
+        increment_instance_count!(self, interface_name_instances, Some(tag.clone()));
         Ok(())
     }
 

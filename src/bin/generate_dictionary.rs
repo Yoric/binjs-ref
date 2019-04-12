@@ -5,6 +5,8 @@ extern crate binjs;
 extern crate bincode;
 extern crate clap;
 extern crate env_logger;
+#[macro_use]
+extern crate log;
 
 use binjs::io::entropy::dictionary::{DictionaryBuilder, Options as DictionaryOptions};
 use binjs::io::{Path as IOPath, Serialization, TokenSerializer};
@@ -246,6 +248,8 @@ fn main_aux() {
     let file_dictionary =
         File::create(dest_dictionary).unwrap_or_else(|e| panic!("Could not create file: {:?}", e));
     let dictionary = builder.done(threshold.into());
+    debug!(target: "generate_dictionary", "Current dictionary is '{}'", dictionary.name());
+    debug!(target: "generate_dictionary", "Created dictionary with {} interface names", dictionary.current().interface_names().len());
     bincode::serialize_into(file_dictionary, &dictionary)
         .expect("Could not serialize entropy dictionary");
 }

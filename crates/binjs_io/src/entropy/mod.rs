@@ -312,6 +312,7 @@ impl ::FormatProvider for FormatProvider {
         let dictionaries = match matches.value_of("dictionary") {
             None => DictionaryFamily::new(),
             Some(path) => {
+                debug!(target: "entropy", "Loading dictionary from {:?}", path);
                 // Load a dictionary from disk.
                 let source = std::fs::File::open(&path).expect("Could not open dictionary");
                 let surface_dictionary: DictionaryFamily<Instances> =

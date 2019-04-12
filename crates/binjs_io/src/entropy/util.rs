@@ -1,5 +1,7 @@
 //! Miscellaneous utilities used for entropy (de)coding.
 
+use binjs_shared::*;
+
 use std::io::{Cursor, Read};
 
 /// Utility: an extension of `Read` with a method `expect` that may be
@@ -49,3 +51,23 @@ impl ReadStr for Cursor<Vec<u8>> {
         Ok(result)
     }
 }
+
+pub trait ShowMe {
+    fn show() -> bool {
+        false
+    }
+}
+
+impl ShowMe for Option<InterfaceName> {
+    fn show() -> bool {
+        true
+    }
+}
+
+impl ShowMe for Option<SharedString> {}
+impl ShowMe for Option<IdentifierName> {}
+impl ShowMe for Option<PropertyKey> {}
+impl ShowMe for Option<u32> {}
+impl ShowMe for u32 {}
+impl ShowMe for Option<f64> {}
+impl ShowMe for Option<F64> {}
