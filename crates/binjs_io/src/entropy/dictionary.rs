@@ -74,7 +74,7 @@ macro_rules! update_in_context {
 
         let addition = {
             let path = $path.borrow();
-            let mut table = $me.dictionaries.current_mut().$table.borrow_mut();
+            let mut table = $me.probabilities.current_mut().$table.borrow_mut();
             table.add(path, $value)
         };
 
@@ -85,23 +85,7 @@ macro_rules! update_in_context {
         } else {
             Introduction::NothingNew
         };
-        $me.dictionaries.introductions.push(introduction);
-
-        Ok(())
-    }};
-}
-
-/// Add a single symbol to the table of probabilities for a prediction window
-/// (see `predict::WindowPredict` for details).
-///
-/// Note that this macro could not be implemented as a simple method, as we need to adapt it to different field names.
-///
-/// Usage:
-/// `update_in_window!(self, name_of_the_probability_table, value_to_encode)`
-macro_rules! update_in_window {
-    ( $me: ident, $table:ident, $value: expr ) => {{
-        let mut table = $me.dictionaries.current_mut().$table.borrow_mut();
-        table.add($value);
+        $me.probabilities.introductions.push(introduction);
 
         Ok(())
     }};
@@ -354,8 +338,6 @@ pub struct Dictionary<T> {
     /// All interface names, predicted by path.
     interface_name_by_path: Rc<RefCell<PathPredict<Option<InterfaceName>, T>>>,
 
-    interface_names: Rc<RefCell<LinearTable<Option<InterfaceName>>>>,
-    string_enums: Rc<RefCell<LinearTable<Option<SharedString>>>>,
 
     // --- Extensible sets of symbols, predicted by path.
     // Used for experiments with entropy coding, but so far, not very
@@ -379,53 +361,12 @@ pub struct Dictionary<T> {
 
     /// All list lengths, predicted by path.
     list_length_by_path: Rc<RefCell<PathPredict<Option<u32>, T>>>,
-
-    // --- Extensible sets of symbols, predicted by window.
-    // Used for experiments for extensibility of entropy coding, but so far,
-    // not very good at compression, and might cause serious alignment issues.
-    // There are good chances that this section will disappear in future versions.
-    // ---
-    /// All property keys, predicted by window.
-    property_key_by_window: Rc<RefCell<WindowPredict<Option<PropertyKey>, T>>>,
-
-    /// All identifier names, predicted by window.
-    identifier_name_by_window: Rc<RefCell<WindowPredict<Option<IdentifierName>, T>>>,
-
-    /// All string literals, predicted by window.
-    string_literal_by_window: Rc<RefCell<WindowPredict<Option<SharedString>, T>>>,
-
-    // --- Extensible sets of symbols, as indexed tables.
-    // Used to represent instances of extensible sets of symbols as indices in
-    // a table. Pretty good for extensibility, experiments pending on
-    // compression-level and performance.
-    // ---
-    /// All unsigned longs.
-    unsigned_longs: Rc<RefCell<LinearTable<u32>>>,
-
-    /// All string literals. `None` for `null`.
-    string_literals: Rc<RefCell<LinearTable<Option<SharedString>>>>,
-
-    /// All identifier names. `None` for `null`.
-    identifier_names: Rc<RefCell<LinearTable<Option<IdentifierName>>>>,
-
-    /// All property keys. `None` for `null`.
-    property_keys: Rc<RefCell<LinearTable<Option<PropertyKey>>>>,
-
-    /// All list lenghts. `None` for `null`.
-    list_lengths: Rc<RefCell<LinearTable<Option<u32>>>>,
-
-    /// All floats. `None` for `null`.
-    floats: Rc<RefCell<LinearTable<Option<F64>>>>,
-    // Missing:
-    // - offsets (cannot be predicted?)
-    // - directives?
 }
 impl<T> Dictionary<T> {
     /// Create a new dictionary using paths of `depth` depth
     /// and windows of `width` width.
     pub fn new(Options { depth, width }: Options) -> Self {
         Dictionary {
-            // By path.
             bool_by_path: Rc::new(RefCell::new(PathPredict::new(depth))),
             float_by_path: Rc::new(RefCell::new(PathPredict::new(depth))),
             unsigned_long_by_path: Rc::new(RefCell::new(PathPredict::new(depth))),
@@ -435,21 +376,6 @@ impl<T> Dictionary<T> {
             string_literal_by_path: Rc::new(RefCell::new(PathPredict::new(depth))),
             list_length_by_path: Rc::new(RefCell::new(PathPredict::new(depth))),
             interface_name_by_path: Rc::new(RefCell::new(PathPredict::new(depth))),
-
-            // By window.
-            property_key_by_window: Rc::new(RefCell::new(WindowPredict::new(width))),
-            identifier_name_by_window: Rc::new(RefCell::new(WindowPredict::new(width))),
-            string_literal_by_window: Rc::new(RefCell::new(WindowPredict::new(width))),
-
-            // Linear tables.
-            string_literals: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            identifier_names: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            property_keys: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            list_lengths: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            floats: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            unsigned_longs: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            interface_names: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
-            string_enums: Rc::new(RefCell::new(LinearTable::with_capacity(0))),
         }
     }
 
@@ -492,50 +418,6 @@ impl<T> Dictionary<T> {
         self.list_length_by_path.as_ref().borrow()
     }
 
-    pub fn property_key_by_window(&self) -> Ref<WindowPredict<Option<PropertyKey>, T>> {
-        self.property_key_by_window.as_ref().borrow()
-    }
-
-    pub fn identifier_name_by_window(&self) -> Ref<WindowPredict<Option<IdentifierName>, T>> {
-        self.identifier_name_by_window.as_ref().borrow()
-    }
-
-    pub fn string_literal_by_window(&self) -> Ref<WindowPredict<Option<SharedString>, T>> {
-        self.string_literal_by_window.as_ref().borrow()
-    }
-
-    pub fn unsigned_longs(&self) -> Ref<LinearTable<u32>> {
-        self.unsigned_longs.as_ref().borrow()
-    }
-
-    pub fn string_literals(&self) -> Ref<LinearTable<Option<SharedString>>> {
-        self.string_literals.as_ref().borrow()
-    }
-
-    pub fn identifier_names(&self) -> Ref<LinearTable<Option<IdentifierName>>> {
-        self.identifier_names.as_ref().borrow()
-    }
-
-    pub fn property_keys(&self) -> Ref<LinearTable<Option<PropertyKey>>> {
-        self.property_keys.as_ref().borrow()
-    }
-
-    pub fn list_lengths(&self) -> Ref<LinearTable<Option<u32>>> {
-        self.list_lengths.as_ref().borrow()
-    }
-
-    pub fn floats(&self) -> Ref<LinearTable<Option<F64>>> {
-        self.floats.as_ref().borrow()
-    }
-
-    pub fn interface_names(&self) -> Ref<LinearTable<Option<InterfaceName>>> {
-        self.interface_names.as_ref().borrow()
-    }
-
-    pub fn string_enums(&self) -> Ref<LinearTable<Option<SharedString>>> {
-        self.string_enums.as_ref().borrow()
-    }
-
     /// Return the depth of the current dictionary.
     pub fn depth(&self) -> usize {
         assert_eq!(
@@ -562,17 +444,6 @@ impl<T> Dictionary<T> {
             ref string_literal_by_path,
             ref list_length_by_path,
             ref interface_name_by_path,
-            property_key_by_window: _,
-            string_literal_by_window: _,
-            identifier_name_by_window: _,
-            string_literals: _,
-            identifier_names: _,
-            property_keys: _,
-            list_lengths: _,
-            floats: _,
-            unsigned_longs: _,
-            interface_names: _,
-            string_enums: _,
         } = *self;
 
         bool_by_path.borrow().len()
@@ -631,32 +502,12 @@ impl Dictionary<Instances> {
         self.list_length_by_path.as_ref().borrow_mut()
     }
 
-    pub fn property_key_by_window_mut(
-        &mut self,
-    ) -> RefMut<WindowPredict<Option<PropertyKey>, Instances>> {
-        self.property_key_by_window.as_ref().borrow_mut()
-    }
-
-    pub fn identifier_name_by_window_mut(
-        &mut self,
-    ) -> RefMut<WindowPredict<Option<IdentifierName>, Instances>> {
-        self.identifier_name_by_window.as_ref().borrow_mut()
-    }
-
-    pub fn string_literal_by_window_mut(
-        &mut self,
-    ) -> RefMut<WindowPredict<Option<SharedString>, Instances>> {
-        self.string_literal_by_window.as_ref().borrow_mut()
-    }
 
     /// Combine a dictionary obtained by sampling (`self`) and a baseline dictionary
     /// (obtained by `entropy::baseline`) to produce a dictionary able to handle
     /// values that grammatically correct but have not been witnessed during
     /// sampling.
     pub fn with_grammar_fallback(&self, fallback: Dictionary<Instances>) -> Self {
-        debug!(target: "with_grammar_fallback", "Applying dictionar.with_grammar_fallback");
-        debug!(target: "with_grammar_fallback", "I have {} entries for interface_names", self.interface_names.borrow().len());
-
         let result = self.clone();
         let original_len = result.len();
         result
@@ -675,7 +526,6 @@ impl Dictionary<Instances> {
         debug!(target: "dictionary", "Added fallback to dictionary {} states => {} states",
             original_len,
             result.len());
-        debug!(target: "dictionary", "I now have {} entries for interface_names", self.interface_names.borrow().len());
 
         result
     }
@@ -725,30 +575,6 @@ impl InstancesToProbabilities for Dictionary<Instances> {
                 self.list_length_by_path()
                     .instances_to_probabilities("list_length_by_path"),
             )),
-
-            // By window.
-            property_key_by_window: Rc::new(RefCell::new(
-                self.property_key_by_window()
-                    .instances_to_probabilities("property_key_by_window"),
-            )),
-            identifier_name_by_window: Rc::new(RefCell::new(
-                self.identifier_name_by_window()
-                    .instances_to_probabilities("identifier_name_by_window"),
-            )),
-            string_literal_by_window: Rc::new(RefCell::new(
-                self.string_literal_by_window()
-                    .instances_to_probabilities("string_literal_by_window"),
-            )),
-
-            // Linear tables. No probabilities here.
-            string_literals: self.string_literals.clone(),
-            floats: self.floats.clone(),
-            list_lengths: self.list_lengths.clone(),
-            identifier_names: self.identifier_names.clone(),
-            property_keys: self.property_keys.clone(),
-            unsigned_longs: self.unsigned_longs.clone(),
-            string_enums: self.string_enums.clone(),
-            interface_names: self.interface_names.clone(),
         }
     }
 }
@@ -760,52 +586,84 @@ impl InstancesToProbabilities for Dictionary<Instances> {
 /// of instances of a given string in a file, or the number of files
 /// that contain a given string.
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
-pub struct UserExtensibleData<T> {
+pub struct UserExtensibleMaps<T> {
     /// Instances of IdentifierName.
-    pub identifier_name_instances: HashMap<Option<IdentifierName>, T>,
+    pub identifier_names: HashMap<Option<IdentifierName>, T>,
 
     /// Instances of PropertyKey
-    pub property_key_instances: HashMap<Option<PropertyKey>, T>,
+    pub property_keys: HashMap<Option<PropertyKey>, T>,
 
     /// Instances of InterfaceName
-    pub interface_name_instances: HashMap<Option<InterfaceName>, T>,
+    pub interface_names: HashMap<Option<InterfaceName>, T>,
 
     /// Instances of string literals.
-    pub string_literal_instances: HashMap<Option<SharedString>, T>,
+    pub string_literals: HashMap<Option<SharedString>, T>,
 
     /// Instances of string enums.
-    pub string_enum_instances: HashMap<Option<SharedString>, T>,
+    pub string_enums: HashMap<Option<SharedString>, T>,
 
     /// Instances of list lengths.
-    pub list_length_instances: HashMap<Option<u32>, T>,
+    pub list_lengths: HashMap<Option<u32>, T>,
 
     /// Instances of floating-point numbers.
-    pub float_instances: HashMap<Option<F64>, T>,
+    pub floats: HashMap<Option<F64>, T>,
 
     /// Instances of unsigned longs.
-    pub unsigned_long_instances: HashMap<u32, T>,
+    pub unsigned_longs: HashMap<u32, T>,
 }
-impl<T> UserExtensibleData<T> {
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct UserExtensibleTables {
+    /// Instances of IdentifierName.
+    pub identifier_names: LinearTable<Option<IdentifierName>>,
+
+    /// Instances of PropertyKey
+    pub property_keys: LinearTable<Option<PropertyKey>>,
+
+    /// Instances of InterfaceName
+    pub interface_names: LinearTable<Option<InterfaceName>>,
+
+    /// Instances of string literals.
+    pub string_literals: LinearTable<Option<SharedString>>,
+
+    /// Instances of string enums.
+    pub string_enums: LinearTable<Option<SharedString>>,
+
+    /// Instances of list lengths.
+    pub list_lengths: LinearTable<Option<u32>>,
+
+    /// Instances of floating-point numbers.
+    pub floats: LinearTable<Option<F64>>,
+
+    /// Instances of unsigned longs.
+    pub unsigned_longs: LinearTable<u32>,
+}
+
+macro_rules! for_field_in_user_extensible_data {
+    ( $cb: ident ) => {
+        $cb!(
+          (identifier_names, "identifier_names", b"identifier_names"),
+          (property_keys, "property_keys", b"property_keys"),
+          (interface_names, "interface_names", b"interface_names"),
+          (string_literals, "string_literals", b"string_literals"),
+          (string_enums, "string_enums", b"string_enums"),
+          (list_lengths, "list_lengths", b"list_lengths"),
+          (floats, "floats", b"floats"),
+          (unsigned_longs, "unsigned_longs", b"unsigned_longs")
+        )
+    };
+}
+
+impl<T> UserExtensibleMaps<T> {
     pub fn len(&self) -> usize {
-        // Make sure that we don't forget a field.
-        let UserExtensibleData {
-            ref identifier_name_instances,
-            ref property_key_instances,
-            ref interface_name_instances,
-            ref string_literal_instances,
-            ref string_enum_instances,
-            ref list_length_instances,
-            ref float_instances,
-            ref unsigned_long_instances,
-        } = *self;
-        identifier_name_instances.len()
-            + property_key_instances.len()
-            + string_literal_instances.len()
-            + string_enum_instances.len()
-            + interface_name_instances.len()
-            + list_length_instances.len()
-            + float_instances.len()
-            + unsigned_long_instances.len()
+        let mut len = 0;
+        macro_rules! with_field { ($(($ident: ident, $name: expr, $bname: expr )),*) => {
+            $(
+                len += self.$ident.len();
+            )*
+        } };
+        for_field_in_user_extensible_data!(with_field);
+        len
     }
 }
 
@@ -855,13 +713,13 @@ where
 pub struct DictionaryFamily<T> {
     introductions: Vec<Introduction>,
 
-    dictionaries: HashMap<SharedString, Dictionary<T>>,
+    probabilities: HashMap<SharedString, Dictionary<T>>,
 
     /// The stack of dictionaries.
     ///
     /// Note that we clone dictionaries on top of the stack. This assumes that dictionary
     /// cloning is cheap enough that this is a reasonable thing to do.
-    dictionary_stack: Vec<(SharedString, Dictionary<T>)>,
+    probabilities_stack: Vec<(SharedString, Dictionary<T>)>,
 }
 impl<T> DictionaryFamily<T> {
     pub fn introductions(&self) -> &[Introduction] {
@@ -875,40 +733,32 @@ impl<T> DictionaryFamily<T> {
     /// Fails if `name` is not the name of the current dictionary. Used for assertion
     /// purposes.
     pub fn exit(&mut self, name: &SharedString) {
-        assert!(self.dictionary_stack.len() > 1);
-        let leaving = self.dictionary_stack.pop().unwrap();
+        assert!(self.probabilities_stack.len() > 1);
+        let leaving = self.probabilities_stack.pop().unwrap();
         assert_eq!(&leaving.0, name);
     }
 
-    /// Return the sum of lengths of all dictionaries in this family.
-    pub fn len(&self) -> usize {
-        self.dictionaries
-            .values()
-            .map(|dictionary| dictionary.len())
-            .sum()
-    }
-
     pub fn depth(&self) -> usize {
-        let dictionary = self.dictionaries
+        let dictionary = self.probabilities
             .values()
             .next()
             .unwrap();
         let depth = dictionary.depth();
-        debug_assert!(self.dictionaries.values().position(|dict| dict.depth() != depth).is_none());
+        debug_assert!(self.probabilities.values().position(|dict| dict.depth() != depth).is_none());
         depth
     }
 
     /// Access the current dictionary, immutably.
     pub fn current(&self) -> &Dictionary<T> {
         &self
-            .dictionary_stack
+            .probabilities_stack
             .last()
             .expect("Cannot call `DictionaryFamily::current`, as there's no current dictionary.")
             .1
     }
 
     pub fn name(&self) -> &SharedString {
-        &self.dictionary_stack.last().expect("Cannot call `DictionaryFamily::name` as there's no current dictionary").0
+        &self.probabilities_stack.last().expect("Cannot call `DictionaryFamily::name` as there's no current dictionary").0
     }
 }
 
@@ -921,8 +771,8 @@ impl DictionaryFamily<Instances> {
     /// dictionary.
     pub fn new() -> Self {
         DictionaryFamily {
-            dictionaries: HashMap::new(),
-            dictionary_stack: vec![],
+            probabilities: HashMap::new(),
+            probabilities_stack: vec![],
             introductions: vec![],
         }
     }
@@ -931,17 +781,17 @@ impl DictionaryFamily<Instances> {
     /// Create the dictionary if no such dictionary exists.
     pub fn enter_or_create(&mut self, name: &SharedString, options: Options) {
         let dictionary = self
-            .dictionaries
+            .probabilities
             .entry(name.clone())
             .or_insert_with(|| Dictionary::new(options));
-        self.dictionary_stack
+        self.probabilities_stack
             .push((name.clone(), dictionary.clone()));
     }
 
     /// Access the current dictionary, mutably.
     pub fn current_mut(&mut self) -> &mut Dictionary<Instances> {
         &mut self
-            .dictionary_stack
+            .probabilities_stack
             .last_mut()
             .expect("Cannot call `DictionaryFamily::current`, as there's no current dictionary.")
             .1
@@ -949,7 +799,7 @@ impl DictionaryFamily<Instances> {
 
     /// Iterate mutably through all dictionaries in this family.
     pub fn values_mut(&mut self) -> impl Iterator<Item = &mut Dictionary<Instances>> {
-        self.dictionaries.values_mut()
+        self.probabilities.values_mut()
     }
 
     /// Manually insert a dictionary in the family.
@@ -957,12 +807,12 @@ impl DictionaryFamily<Instances> {
     /// Returns `true` if there was already a baseline dictionary, `false` otherwise.
     pub fn insert_baseline(&mut self, dictionary: Dictionary<Instances>) -> bool {
         // If there is no main dictionary, add one.
-        self.dictionaries
+        self.probabilities
             .entry(SharedString::from_str(""))
             .or_insert_with(|| dictionary.clone());
 
         // Insert a dictionary for special key `*`.
-        self.dictionaries
+        self.probabilities
             .insert(SharedString::from_str("*"), dictionary)
             .is_some()
     }
@@ -970,8 +820,8 @@ impl DictionaryFamily<Instances> {
 
 impl DictionaryFamily<SymbolInfo> {
     pub fn enter_existing(&mut self, name: &SharedString) -> Result<(), ()> {
-        let dictionary = self.dictionaries.get(name).ok_or(())?;
-        self.dictionary_stack
+        let dictionary = self.probabilities.get(name).ok_or(())?;
+        self.probabilities_stack
             .push((name.clone(), dictionary.clone()));
         Ok(())
     }
@@ -980,14 +830,14 @@ impl DictionaryFamily<SymbolInfo> {
 impl InstancesToProbabilities for DictionaryFamily<Instances> {
     type AsProbabilities = DictionaryFamily<SymbolInfo>;
     fn instances_to_probabilities(&self, description: &str) -> DictionaryFamily<SymbolInfo> {
-        assert!(self.dictionary_stack.len() == 1 || self.dictionary_stack.len() == 0); // We only want the toplevel dictionary.
+        assert!(self.probabilities_stack.len() == 1 || self.probabilities_stack.len() == 0); // We only want the toplevel dictionary.
         DictionaryFamily {
-            dictionaries: self
-                .dictionaries
+            probabilities: self
+                .probabilities
                 .iter()
                 .map(|(name, dict)| (name.clone(), dict.instances_to_probabilities(description)))
                 .collect(),
-            dictionary_stack: vec![],
+            probabilities_stack: vec![],
             introductions: self.introductions.clone(),
         }
     }
@@ -1000,233 +850,131 @@ pub enum Introduction {
     NewTable,
 }
 
-/*
-pub struct StringCollector {
+pub struct ValueCollector {
     /// Number of instances of each string in the current file.
-    instances_of_user_extensible_data_in_current_file: UserExtensibleData<InstancesInFile>,
+    instances_of_user_extensible_data_in_current_file: UserExtensibleMaps<InstancesInFile>,
 
     /// Number of files in which each string appears.
-    files_containing_user_extensible_data: UserExtensibleData<FilesContaining>,
+    files_containing_user_extensible_data: UserExtensibleMaps<FilesContaining>,
 
     options: Options,
 }
-impl StringCollector {
+impl ValueCollector {
     pub fn new(options: Options) -> Self {
-        StringCollector {
-            instances_of_user_extensible_data_in_current_file: UserExtensibleData::default(),
-            files_containing_user_extensible_data: UserExtensibleData::default(),
+        ValueCollector {
+            instances_of_user_extensible_data_in_current_file: UserExtensibleMaps::default(),
+            files_containing_user_extensible_data: UserExtensibleMaps::default(),
+            options
         }
+    }
+
+    pub fn files_containing(&self) -> &UserExtensibleMaps<FilesContaining> {
+        &self.files_containing_user_extensible_data
+    }
+
+    pub fn into_tables(self, threshold: FilesContaining) -> UserExtensibleTables {
+        macro_rules! with_field { ($(($ident: ident, $name: expr, $bname: expr )),*) => {
+            UserExtensibleTables {
+                $(
+                    $ident: LinearTable::new(self.files_containing_user_extensible_data.$ident, threshold),
+                )*
+            }
+        }};
+        for_field_in_user_extensible_data!(with_field)
     }
 }
 
+impl<'a> TokenWriter for &'a mut ValueCollector {
+    type Data = [u8; 0]; // We're not interested in data.
+    fn done(self) -> Result<Self::Data, TokenWriterError> {
+        // We're done with the file. Transfer data from `instances_of_user_extensible_data_in_current_file`
+        // into `files_containing_user_extensible_data`, which is what we're interested in.
+        macro_rules! with_field { ($(($ident: ident, $name: expr, $bname: expr )),*) => {
+            $(
+                for (value, _) in self.instances_of_user_extensible_data_in_current_file.$ident.drain() {
+                    *self.files_containing_user_extensible_data.$ident.entry(value)
+                        .or_insert(FilesContaining(0)) += FilesContaining(1);
+                }
+            )*
+        } };
+        for_field_in_user_extensible_data!(with_field);
+
+        Ok([])
+    }
+
+    fn enter_tagged_tuple_at(
+        &mut self,
+        _node: &Node,
+        tag: &InterfaceName,
+        _children: &[&FieldName],
+        _path: &IOPath,
+    ) -> Result<(), TokenWriterError> {
+        increment_instance_count!(self, interface_names, Some(tag.clone()));
+        Ok(())
+    }
+
+    fn string_at(&mut self, value: Option<&SharedString>, _path: &IOPath) -> Result<(), TokenWriterError>
+    {
+        increment_instance_count!(self, string_literals, value.cloned());
+        Ok(())
+    }
+
+    fn string_enum_at(&mut self, value: &SharedString, _path: &IOPath) -> Result<(), TokenWriterError>
+    {
+        increment_instance_count!(self, string_enums, Some(value.clone()));
+        Ok(())
+    }
+
+    fn float_at(&mut self, value: Option<f64>, _path: &IOPath) -> Result<(), TokenWriterError>
+    {
+        let value = value.map(|x| x.into());
+        increment_instance_count!(self, floats, value);
+        Ok(())
+    }
+
+    fn unsigned_long_at(&mut self, value: u32, _path: &IOPath) -> Result<(), TokenWriterError>
+    {
+        increment_instance_count!(self, unsigned_longs, value);
+        Ok(())
+    }
+
+    fn bool_at(&mut self, value: Option<bool>, _path: &IOPath) -> Result<(), TokenWriterError>
+    {
+        // We don't count bools.
+        Ok(())
+    }
+
+    fn offset_at(&mut self, _path: &IOPath) -> Result<(), TokenWriterError>
+    {
+        // We don't count offsets.
+        Ok(())
+    }
+
+    fn enter_list_at(&mut self, len: usize, _path: &IOPath) -> Result<(), TokenWriterError> {
+        increment_instance_count!(self, list_lengths, Some(len as u32));
+        Ok(())
+    }
+}
 pub struct ProbabilityTableCollector {
-    /// The family of dictionaries being constructed.
-    dictionaries: DictionaryFamily<Instances>,
+    /// The family of probabilities being constructed.
+    probabilities: DictionaryFamily<Instances>,
 
     options: Options,
 }
 impl ProbabilityTableCollector {
     pub fn new(options: Options) -> Self {
-
-    }
-}
-*/
-/// A structure used to build a dictionary based on a sample of files.
-pub struct DictionaryBuilder {
-    /// The family of dictionaries being constructed.
-    dictionaries: DictionaryFamily<Instances>,
-
-    /// Number of instances of each string in the current file.
-    instances_of_user_extensible_data_in_current_file: UserExtensibleData<InstancesInFile>,
-
-    /// Number of files in which each string appears.
-    files_containing_user_extensible_data: UserExtensibleData<FilesContaining>,
-
-    /// Options used to create new dictionaries.
-    options: Options,
-}
-
-impl DictionaryBuilder {
-    /// Create a new dictionary builder using paths of `depth` depth
-    /// and windows of `width` width.
-    ///
-    /// Use `DictionaryBuilder::done` to convert it into a `Dictionary`.
-    pub fn new(options: Options) -> Self {
-        let mut family = DictionaryFamily::new();
-        family.enter_or_create(&SharedString::from_str(""), options.clone());
-        DictionaryBuilder {
-            dictionaries: family,
+        let mut probabilities = DictionaryFamily::new();
+        probabilities.enter_or_create(&SharedString::from_str(""), options.clone());
+        ProbabilityTableCollector {
+            probabilities,
             options,
-            instances_of_user_extensible_data_in_current_file: UserExtensibleData::default(),
-            files_containing_user_extensible_data: UserExtensibleData::default(),
         }
-    }
-
-    /// Return a dictionary containing all the paths collected and all
-    /// the user-extensible content that appear in more than one file.
-    pub fn done(mut self, threshold: FilesContaining) -> DictionaryFamily<Instances> {
-        {
-            let dictionary = self.dictionaries.current_mut();
-
-            // Generate indexed tables for user-extensible values.
-            // These tables are shared across all the dictionaries of the family.
-            dictionary.identifier_names = Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .identifier_name_instances,
-                threshold,
-            )));
-            dictionary.property_keys = Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .property_key_instances,
-                threshold,
-            )));
-            dictionary.list_lengths = Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .list_length_instances,
-                threshold,
-            )));
-            dictionary.floats = Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data.float_instances,
-                threshold,
-            )));
-            dictionary.unsigned_longs = Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .unsigned_long_instances,
-                threshold,
-            )));
-            dictionary.string_literals = Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .string_literal_instances,
-                threshold,
-            )));
-            dictionary.interface_names =  Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .interface_name_instances,
-                0.into(), // FIXME: HACK
-            )));
-            dictionary.string_enums =  Rc::new(RefCell::new(LinearTable::new(
-                self.files_containing_user_extensible_data
-                    .string_enum_instances,
-                0.into(), // FIXME: HACK
-            )));
-        }
-        self.dictionaries
-    }
-
-    pub fn len(&self) -> usize {
-        self.dictionaries.len()
-    }
-
-    /// Access statistics on the number of files containing specific user-extensible values.
-    pub fn files_containing(&self) -> &UserExtensibleData<FilesContaining> {
-        &self.files_containing_user_extensible_data
-    }
-
-    /// Access statistics on the number of instances of a specific user-extensible value.
-    pub fn instances_in_file(&self) -> &UserExtensibleData<InstancesInFile> {
-        &self.instances_of_user_extensible_data_in_current_file
-    }
-
-    /// Take all strings of a given nature present in a file (as stored
-    /// in `self.instances_of_user_extensible_data_in_current_file`) and mark them as
-    /// appearing in one more file (as stored in `self.files_containing_user_extensible_data`).
-    ///
-    /// The caller is responsible for making sure that `source` is a
-    /// `self.instances_of_user_extensible_data_in_current_file.XXX` and `destination`
-    /// is the corresponding `self.files_containing_user_extensible_data.XXX`.
-    ///
-    /// Note: This is a function rather than a method because making it a method
-    /// would require us to borrow mutably `source` *and* while calling into `self`.
-    /// Not very borrow-checker-compatible.
-    fn transfer_instances<V>(
-        source: &mut HashMap<V, InstancesInFile>,
-        destination: &mut HashMap<V, FilesContaining>,
-    ) where
-        V: std::hash::Hash + Eq + Clone + std::fmt::Debug,
-    {
-        for (k, _) in source.drain() {
-            // Increase the number of files in `destination` that contain `k` by 1,
-            // ignoring the number of instances of `k` in `source`.
-            destination
-                .entry(k)
-                .and_modify(|instances| *instances += FilesContaining(1))
-                .or_insert(FilesContaining(1));
-        }
-    }
-
-    fn done_with_file(&mut self) {
-        // Count the number of files in which user-extensible instances appear.
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .identifier_name_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .identifier_name_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .property_key_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .property_key_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .interface_name_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .interface_name_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .string_literal_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .string_literal_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .string_enum_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .string_enum_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .list_length_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .list_length_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .float_instances,
-            &mut self.files_containing_user_extensible_data.float_instances,
-        );
-        Self::transfer_instances(
-            &mut self
-                .instances_of_user_extensible_data_in_current_file
-                .unsigned_long_instances,
-            &mut self
-                .files_containing_user_extensible_data
-                .unsigned_long_instances,
-        );
     }
 }
-
-impl<'a> TokenWriter for &'a mut DictionaryBuilder {
+impl<'a> TokenWriter for &'a mut ProbabilityTableCollector {
     type Data = [u8; 0]; // Placeholder
 
     fn done(self) -> Result<Self::Data, TokenWriterError> {
-        self.done_with_file();
-        debug!(target: "entropy", "Built a dictionary family with len: {}", self.dictionaries.len());
         Ok([])
     }
 
@@ -1248,8 +996,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "string_enum_by_path",
             path,
             Some(value.clone())
-        )?;
-        Ok(())
+        )
     }
 
     fn enter_tagged_tuple_at(
@@ -1265,18 +1012,14 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "interface_name_by_path",
             path,
             Some(tag.clone())
-        )?;
-        increment_instance_count!(self, interface_name_instances, Some(tag.clone()));
-        Ok(())
+        )
     }
 
     // --- User extensible values
 
     fn float_at(&mut self, value: Option<f64>, path: &IOPath) -> Result<(), TokenWriterError> {
         let value = value.map(|x| x.into());
-        update_in_context!(self, float_by_path, "float_by_path", path, value)?;
-        increment_instance_count!(self, float_instances, value);
-        Ok(())
+        update_in_context!(self, float_by_path, "float_by_path", path, value)
     }
 
     fn unsigned_long_at(&mut self, value: u32, path: &IOPath) -> Result<(), TokenWriterError> {
@@ -1286,9 +1029,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "unsigned_long_by_path",
             path,
             value
-        )?;
-        increment_instance_count!(self, unsigned_long_instances, value);
-        Ok(())
+        )
     }
 
     fn string_at(
@@ -1302,10 +1043,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "string_literal_by_path",
             path,
             value.cloned()
-        )?;
-        update_in_window!(self, string_literal_by_window, value.cloned())?;
-        increment_instance_count!(self, string_literal_instances, value.cloned());
-        Ok(())
+        )
     }
 
     fn property_key_at(
@@ -1319,10 +1057,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "property_key_by_path",
             path,
             value.cloned()
-        )?;
-        update_in_window!(self, property_key_by_window, value.cloned())?;
-        increment_instance_count!(self, property_key_instances, value.cloned());
-        Ok(())
+        )
     }
 
     fn identifier_name_at(
@@ -1336,10 +1071,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "identifier_name_by_path",
             path,
             value.cloned()
-        )?;
-        update_in_window!(self, identifier_name_by_window, value.cloned())?;
-        increment_instance_count!(self, identifier_name_instances, value.cloned());
-        Ok(())
+        )
     }
 
     fn enter_list_at(&mut self, len: usize, path: &IOPath) -> Result<(), TokenWriterError> {
@@ -1349,9 +1081,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
             "list_length_by_path",
             path,
             Some(len as u32)
-        )?;
-        increment_instance_count!(self, list_length_instances, Some(len as u32));
-        Ok(())
+        )
     }
 
 
@@ -1364,7 +1094,7 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
         name: &SharedString,
         _path: &IOPath,
     ) -> Result<(), TokenWriterError> {
-        self.dictionaries
+        self.probabilities
             .enter_or_create(name, self.options.clone());
         Ok(())
     }
@@ -1374,7 +1104,22 @@ impl<'a> TokenWriter for &'a mut DictionaryBuilder {
         name: &SharedString,
         _path: &IOPath,
     ) -> Result<(), TokenWriterError> {
-        self.dictionaries.exit(name);
+        self.probabilities.exit(name);
         Ok(())
     }
+}
+
+/// A structure used to build a dictionary based on a sample of files.
+pub struct DictionaryBuilder {
+    /// The family of dictionaries being constructed.
+    dictionaries: DictionaryFamily<Instances>,
+
+    /// Number of instances of each string in the current file.
+    instances_of_user_extensible_data_in_current_file: UserExtensibleMaps<InstancesInFile>,
+
+    /// Number of files in which each string appears.
+    files_containing_user_extensible_data: UserExtensibleMaps<FilesContaining>,
+
+    /// Options used to create new dictionaries.
+    options: Options,
 }
