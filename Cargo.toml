@@ -62,7 +62,7 @@ path = "src/bin/convert_from_json.rs"
 # of probabilities for all ASTs, write this distribution to
 # disk. The distribution may then be reused by binjs_encode
 # using the entropy format to encode further files.
-name = "binjs_generate_prediction_tables"
+name = "binjs_generate_dictionary"
 path = "src/bin/generate_dictionary.rs"
 
 [[bench]]

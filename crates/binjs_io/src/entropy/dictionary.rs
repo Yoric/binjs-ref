@@ -338,7 +338,6 @@ pub struct Dictionary<T> {
     /// All interface names, predicted by path.
     interface_name_by_path: Rc<RefCell<PathPredict<Option<InterfaceName>, T>>>,
 
-
     // --- Extensible sets of symbols, predicted by path.
     // Used for experiments with entropy coding, but so far, not very
     // good with extensibility. There are good chances that this section
@@ -464,11 +463,15 @@ impl Dictionary<Instances> {
         self.bool_by_path.as_ref().borrow_mut()
     }
 
-    pub fn string_enum_by_path_mut(&mut self) -> RefMut<PathPredict<Option<SharedString>, Instances>> {
+    pub fn string_enum_by_path_mut(
+        &mut self,
+    ) -> RefMut<PathPredict<Option<SharedString>, Instances>> {
         self.string_enum_by_path.as_ref().borrow_mut()
     }
 
-    pub fn interface_name_by_path_mut(&mut self) -> RefMut<PathPredict<Option<InterfaceName>, Instances>> {
+    pub fn interface_name_by_path_mut(
+        &mut self,
+    ) -> RefMut<PathPredict<Option<InterfaceName>, Instances>> {
         self.interface_name_by_path.as_ref().borrow_mut()
     }
 
@@ -501,7 +504,6 @@ impl Dictionary<Instances> {
     pub fn list_length_by_path_mut(&mut self) -> RefMut<PathPredict<Option<u32>, Instances>> {
         self.list_length_by_path.as_ref().borrow_mut()
     }
-
 
     /// Combine a dictionary obtained by sampling (`self`) and a baseline dictionary
     /// (obtained by `entropy::baseline`) to produce a dictionary able to handle
@@ -642,14 +644,14 @@ pub struct UserExtensibleTables {
 macro_rules! for_field_in_user_extensible_data {
     ( $cb: ident ) => {
         $cb!(
-          (identifier_names, "identifier_names", b"identifier_names"),
-          (property_keys, "property_keys", b"property_keys"),
-          (interface_names, "interface_names", b"interface_names"),
-          (string_literals, "string_literals", b"string_literals"),
-          (string_enums, "string_enums", b"string_enums"),
-          (list_lengths, "list_lengths", b"list_lengths"),
-          (floats, "floats", b"floats"),
-          (unsigned_longs, "unsigned_longs", b"unsigned_longs")
+            (identifier_names, "identifier_names", b"identifier_names"),
+            (property_keys, "property_keys", b"property_keys"),
+            (interface_names, "interface_names", b"interface_names"),
+            (string_literals, "string_literals", b"string_literals"),
+            (string_enums, "string_enums", b"string_enums"),
+            (list_lengths, "list_lengths", b"list_lengths"),
+            (floats, "floats", b"floats"),
+            (unsigned_longs, "unsigned_longs", b"unsigned_longs")
         )
     };
 }
@@ -664,6 +666,22 @@ impl<T> UserExtensibleMaps<T> {
         } };
         for_field_in_user_extensible_data!(with_field);
         len
+    }
+}
+
+impl UserExtensibleTables {
+    pub fn new() -> Self {
+        Self::with_capacity(1024 /*FIXME: Arbitrary number*/)
+    }
+    pub fn with_capacity(len: usize) -> Self {
+        macro_rules! with_field { ($(($ident: ident, $name: expr, $bname: expr )),*) => {
+            UserExtensibleTables {
+                $(
+                    $ident: LinearTable::with_capacity(len),
+                )*
+            }
+        } }
+        for_field_in_user_extensible_data!(with_field)
     }
 }
 
@@ -739,12 +757,13 @@ impl<T> DictionaryFamily<T> {
     }
 
     pub fn depth(&self) -> usize {
-        let dictionary = self.probabilities
-            .values()
-            .next()
-            .unwrap();
+        let dictionary = self.probabilities.values().next().unwrap();
         let depth = dictionary.depth();
-        debug_assert!(self.probabilities.values().position(|dict| dict.depth() != depth).is_none());
+        debug_assert!(self
+            .probabilities
+            .values()
+            .position(|dict| dict.depth() != depth)
+            .is_none());
         depth
     }
 
@@ -758,7 +777,11 @@ impl<T> DictionaryFamily<T> {
     }
 
     pub fn name(&self) -> &SharedString {
-        &self.probabilities_stack.last().expect("Cannot call `DictionaryFamily::name` as there's no current dictionary").0
+        &self
+            .probabilities_stack
+            .last()
+            .expect("Cannot call `DictionaryFamily::name` as there's no current dictionary")
+            .0
     }
 }
 
@@ -864,7 +887,7 @@ impl ValueCollector {
         ValueCollector {
             instances_of_user_extensible_data_in_current_file: UserExtensibleMaps::default(),
             files_containing_user_extensible_data: UserExtensibleMaps::default(),
-            options
+            options,
         }
     }
 
@@ -913,39 +936,41 @@ impl<'a> TokenWriter for &'a mut ValueCollector {
         Ok(())
     }
 
-    fn string_at(&mut self, value: Option<&SharedString>, _path: &IOPath) -> Result<(), TokenWriterError>
-    {
+    fn string_at(
+        &mut self,
+        value: Option<&SharedString>,
+        _path: &IOPath,
+    ) -> Result<(), TokenWriterError> {
         increment_instance_count!(self, string_literals, value.cloned());
         Ok(())
     }
 
-    fn string_enum_at(&mut self, value: &SharedString, _path: &IOPath) -> Result<(), TokenWriterError>
-    {
+    fn string_enum_at(
+        &mut self,
+        value: &SharedString,
+        _path: &IOPath,
+    ) -> Result<(), TokenWriterError> {
         increment_instance_count!(self, string_enums, Some(value.clone()));
         Ok(())
     }
 
-    fn float_at(&mut self, value: Option<f64>, _path: &IOPath) -> Result<(), TokenWriterError>
-    {
+    fn float_at(&mut self, value: Option<f64>, _path: &IOPath) -> Result<(), TokenWriterError> {
         let value = value.map(|x| x.into());
         increment_instance_count!(self, floats, value);
         Ok(())
     }
 
-    fn unsigned_long_at(&mut self, value: u32, _path: &IOPath) -> Result<(), TokenWriterError>
-    {
+    fn unsigned_long_at(&mut self, value: u32, _path: &IOPath) -> Result<(), TokenWriterError> {
         increment_instance_count!(self, unsigned_longs, value);
         Ok(())
     }
 
-    fn bool_at(&mut self, value: Option<bool>, _path: &IOPath) -> Result<(), TokenWriterError>
-    {
+    fn bool_at(&mut self, value: Option<bool>, _path: &IOPath) -> Result<(), TokenWriterError> {
         // We don't count bools.
         Ok(())
     }
 
-    fn offset_at(&mut self, _path: &IOPath) -> Result<(), TokenWriterError>
-    {
+    fn offset_at(&mut self, _path: &IOPath) -> Result<(), TokenWriterError> {
         // We don't count offsets.
         Ok(())
     }
@@ -969,6 +994,10 @@ impl ProbabilityTableCollector {
             probabilities,
             options,
         }
+    }
+
+    pub fn into_dictionary_family(self) -> DictionaryFamily<Instances> {
+        self.probabilities
     }
 }
 impl<'a> TokenWriter for &'a mut ProbabilityTableCollector {
@@ -1084,7 +1113,6 @@ impl<'a> TokenWriter for &'a mut ProbabilityTableCollector {
         )
     }
 
-
     fn offset_at(&mut self, _path: &IOPath) -> Result<(), TokenWriterError> {
         Ok(())
     }
@@ -1107,19 +1135,4 @@ impl<'a> TokenWriter for &'a mut ProbabilityTableCollector {
         self.probabilities.exit(name);
         Ok(())
     }
-}
-
-/// A structure used to build a dictionary based on a sample of files.
-pub struct DictionaryBuilder {
-    /// The family of dictionaries being constructed.
-    dictionaries: DictionaryFamily<Instances>,
-
-    /// Number of instances of each string in the current file.
-    instances_of_user_extensible_data_in_current_file: UserExtensibleMaps<InstancesInFile>,
-
-    /// Number of files in which each string appears.
-    files_containing_user_extensible_data: UserExtensibleMaps<FilesContaining>,
-
-    /// Options used to create new dictionaries.
-    options: Options,
 }

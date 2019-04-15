@@ -3,7 +3,9 @@
 mod lazy_stream;
 
 use self::lazy_stream::*;
-use super::dictionary::{DictionaryFamily, Fetch, Introduction, LinearTable, TableRef};
+use super::dictionary::{
+    DictionaryFamily, Fetch, Introduction, LinearTable, TableRef, UserExtensibleTables,
+};
 use super::probabilities::{InstancesToProbabilities, SymbolInfo};
 use super::rw::*;
 use bytes::lengthwriter::LengthWriter;
@@ -65,30 +67,9 @@ pub struct Encoder {
     /// Parts of the header that we compress with Brotli.
     prelude_streams: PreludeStreams<LazyStream>,
 
-    // --- Extensible sets of symbols, as indexed tables.
-    // We copy these tables to the Encoder as they are modified
-    // as we encode the file.
-    /// All unsigned longs.
-    unsigned_longs: LinearTable<u32>,
+    values: UserExtensibleTables,
 
-    /// All string literals. `None` for `null`.
-    string_literals: LinearTable<Option<SharedString>>,
-
-    /// All identifier names. `None` for `null`.
-    identifier_names: LinearTable<Option<IdentifierName>>,
-
-    /// All property keys. `None` for `null`.
-    property_keys: LinearTable<Option<PropertyKey>>,
-
-    /// All list lenghts. `None` for `null`.
-    list_lengths: LinearTable<Option<u32>>,
-
-    /// All floats. `None` for `null`.
-    floats: LinearTable<Option<F64>>,
-
-    string_enums: LinearTable<Option<SharedString>>,
-    interface_names: LinearTable<Option<InterfaceName>>,
-    prelude_dictionary: DictionaryFamily<SymbolInfo>,
+    prelude_probabilities: DictionaryFamily<SymbolInfo>,
 
     // --- Statistics.
     /// Measure the number of bytes written.
@@ -106,23 +87,20 @@ impl Encoder {
     ///
     /// Note that cloning `options` is pretty cheap, as it is mostly a bunch
     /// of `Rc<>`.
-    pub fn new(path: Option<&std::path::Path>, options: ::entropy::Options, prelude_dictionary: DictionaryFamily<Instances>) -> Self {
+    pub fn new(
+        path: Option<&std::path::Path>,
+        options: ::entropy::Options,
+        prelude_probabilities: DictionaryFamily<Instances>,
+    ) -> Self {
         let split_streams = options.split_streams;
 
-        let mut prelude_dictionary = prelude_dictionary.instances_to_probabilities("Encoder::new");
-        prelude_dictionary.enter_existing(&SharedString::from_str("")).unwrap();
+        let mut prelude_probabilities =
+            prelude_probabilities.instances_to_probabilities("Encoder::new");
+        prelude_probabilities
+            .enter_existing(&SharedString::from_str(""))
+            .unwrap();
 
-        // We need to clone the instances of `LinearTable` as using them modifies
-        // their content.
-        let unsigned_longs = options.dictionaries.current().unsigned_longs().clone();
-        let string_literals = options.dictionaries.current().string_literals().clone();
-        let identifier_names = options.dictionaries.current().identifier_names().clone();
-        debug!(target: "linear_tables", "Initializing identifier_names with {} entries from dictionary '{}'", identifier_names.len(), options.dictionaries.name());
-        let property_keys = options.dictionaries.current().property_keys().clone();
-        let list_lengths = options.dictionaries.current().list_lengths().clone();
-        let floats = options.dictionaries.current().floats().clone();
-        let interface_names = options.dictionaries.current().interface_names().clone();
-        let string_enums = options.dictionaries.current().string_enums().clone();
+        let values = options.known_values.clone();
         Encoder {
             writer: opus::Writer::new(Vec::with_capacity(INITIAL_BUFFER_SIZE_BYTES)),
             dump_path: if split_streams {
@@ -157,15 +135,8 @@ impl Encoder {
             }),
             content_instances: PerUserExtensibleKind::with(|_| 0.into()),
             path: path.map(std::path::Path::to_path_buf),
-            unsigned_longs,
-            string_literals,
-            identifier_names,
-            property_keys,
-            list_lengths,
-            floats,
-            interface_names,
-            string_enums,
-            prelude_dictionary,
+            values,
+            prelude_probabilities,
             paths_encountered: 0,
         }
     }
@@ -216,7 +187,7 @@ macro_rules! emit_symbol_to_main_stream {
             // 1. Locate the `SymbolInfo` information for this value given the
             // path information.
             let table = $me.options
-                .dictionaries
+                .probabilities
                 .current()
                 .$probability_table();
             let symbol =
@@ -276,35 +247,47 @@ macro_rules! emit_simple_symbol_to_streams {
 }
 
 macro_rules! emit_table_to_streams {
-    ( $me: ident, $probability_table: ident, $linear_table: ident, $out: ident, $out_len: ident, $description: expr, $path: expr ) => {
-        {
-            let path = $path;
-            if let Introduction::NewTable = $me.next_introduction() {
-                // This is the first time we encounter this table.
-                // We need to write its definition.
-                let probability_table = $me.prelude_dictionary.current().$probability_table();
-                let frequencies = probability_table.frequencies_at(path).unwrap();
-                let frequencies: Ref<range_encoding::CumulativeDistributionFrequency> = frequencies.as_ref().borrow();
+    ( $me: ident, $probability_table: ident, $linear_table: ident, $out: ident, $out_len: ident, $description: expr, $path: expr ) => {{
+        let path = $path;
+        if let Introduction::NewTable = $me.next_introduction() {
+            // This is the first time we encounter this table.
+            // We need to write its definition.
+            let probability_table = $me.prelude_probabilities.current().$probability_table();
+            let frequencies = probability_table.frequencies_at(path).unwrap();
+            let frequencies: Ref<range_encoding::CumulativeDistributionFrequency> =
+                frequencies.as_ref().borrow();
 
-                // Store the number of entries in the table.
-                $me.prelude_streams.probabilities_len.write_varnum(frequencies.len() as u32)
+            // Store the number of entries in the table.
+            $me.prelude_streams
+                .probabilities_len
+                .write_varnum(frequencies.len() as u32)
+                .map_err(TokenWriterError::WriteError)?;
+
+            // FIXME: We could optimize for the case of `frequencies.len() == 1`.
+            // FIXME: We could renormalize to minimize the size of probabilities varnums.
+            for index in 0..frequencies.len() {
+                // Store the number of instances.
+                $me.prelude_streams
+                    .probabilities
+                    .write_varnum(frequencies.at_index(index).unwrap().width())
                     .map_err(TokenWriterError::WriteError)?;
 
-                // FIXME: We could optimize for the case of `frequencies.len() == 1`.
-                // FIXME: We could renormalize to minimize the size of probabilities varnums.
-                for index in 0..frequencies.len() {
-                    // Store the number of instances.
-                    $me.prelude_streams.probabilities.write_varnum(frequencies.at_index(index).unwrap().width())
-                        .map_err(TokenWriterError::WriteError)?;
-
-                    // Store the actual symbol definition.
-                    // FIXME: We could make this lookup much more efficient.
-                    let value = probability_table.value_by_symbol_index(path, index.into()).unwrap();
-                    emit_string_symbol_to_streams!($me, $linear_table, $out, $out_len, value, $description)?;
-                }
+                // Store the actual symbol definition.
+                // FIXME: We could make this lookup much more efficient.
+                let value = probability_table
+                    .value_by_symbol_index(path, index.into())
+                    .unwrap();
+                emit_string_symbol_to_streams!(
+                    $me,
+                    $linear_table,
+                    $out,
+                    $out_len,
+                    value,
+                    $description
+                )?;
             }
         }
-    }
+    }};
 }
 
 macro_rules! emit_string_symbol_to_streams {
@@ -353,16 +336,28 @@ macro_rules! emit_string_symbol_to_streams {
 /// Usage:
 /// `emit_string_symbol_to_streams!(self, name_of_the_indexed_table, name_of_the_string_prelude_stream, name_of_the_string_length_prelude_stream, value_to_encode, "Description, used for debugging")`
 macro_rules! emit_string_symbol_to_streams_with_probabilities {
-    ( $me: ident, $probability_table: ident, $linear_table: ident, $out: ident, $out_len: ident, $value: expr, $description: expr, $path: expr ) => {
-        {
-            use std::borrow::Borrow;
-            use std::cell::Ref;
-            let path = $path.borrow();
-            emit_table_to_streams!($me, $probability_table, $linear_table, $out, $out_len, $description, path);
-            let probability_table = $me.prelude_dictionary.current().$probability_table();
-            emit_symbol_to_main_stream!($me, probability_table, "string_at (probabilities)", path, $value)?;
-        }
-    }
+    ( $me: ident, $probability_table: ident, $linear_table: ident, $out: ident, $out_len: ident, $value: expr, $description: expr, $path: expr ) => {{
+        use std::borrow::Borrow;
+        use std::cell::Ref;
+        let path = $path.borrow();
+        emit_table_to_streams!(
+            $me,
+            $probability_table,
+            $linear_table,
+            $out,
+            $out_len,
+            $description,
+            path
+        );
+        let probability_table = $me.prelude_probabilities.current().$probability_table();
+        emit_symbol_to_main_stream!(
+            $me,
+            probability_table,
+            "string_at (probabilities)",
+            path,
+            $value
+        )?;
+    }};
 }
 
 /// Implementation shared by `emit_simple_symbol_to_streams` and `emit_string_symbol_to_streams`.
@@ -383,6 +378,7 @@ macro_rules! emit_symbol_to_content_stream {
 
             // 1. Fetch the index in the dictionary.
             let fetch = $me
+                .values
                 .$linear_table
                 .fetch_index(value);
 
@@ -503,7 +499,7 @@ impl Encoder {
     }
 
     fn next_introduction(&mut self) -> Introduction {
-        let result = self.prelude_dictionary.introductions()[self.paths_encountered];
+        let result = self.prelude_probabilities.introductions()[self.paths_encountered];
         self.paths_encountered += 1;
         result
     }
@@ -540,7 +536,7 @@ impl TokenWriter for Encoder {
             $(
                 let indices = &self.content_streams.$ident;
                 let window_len = self.options.content_window_len.$ident;
-                let len = Self::flush_indices(path_for_flush, $name, indices, window_len, &self.$ident, &mut data)
+                let len = Self::flush_indices(path_for_flush, $name, indices, window_len, &self.values.$ident, &mut data)
                     .map_err(TokenWriterError::WriteError)?;
                 self
                     .options
@@ -715,7 +711,7 @@ impl TokenWriter for Encoder {
         _path: &Path,
     ) -> Result<(), TokenWriterError> {
         self.options
-            .dictionaries
+            .probabilities
             .enter_existing(name)
             .map_err(|_| TokenWriterError::DictionarySwitchingError(name.clone()))?;
         Ok(())
@@ -726,7 +722,7 @@ impl TokenWriter for Encoder {
         name: &SharedString,
         _path: &Path,
     ) -> Result<(), TokenWriterError> {
-        self.options.dictionaries.exit(name);
+        self.options.probabilities.exit(name);
         Ok(())
     }
 

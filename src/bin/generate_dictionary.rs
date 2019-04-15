@@ -8,7 +8,7 @@ extern crate env_logger;
 #[macro_use]
 extern crate log;
 
-use binjs::io::entropy::dictionary::{DictionaryBuilder, Options as DictionaryOptions};
+use binjs::io::entropy::dictionary::{Options as DictionaryOptions, ValueCollector};
 use binjs::io::{Path as IOPath, Serialization, TokenSerializer};
 use binjs::source::{Shift, SourceParser};
 use binjs::specialized::es6::Enrich;
@@ -36,7 +36,7 @@ macro_rules! progress {
 
 fn handle_path<'a>(
     options: &mut Options<'a>,
-    shared_builder: &mut DictionaryBuilder,
+    shared_builder: &mut ValueCollector,
     shared_number_of_files: &mut usize,
     source_path: &Path,
     sub_dir: &Path,
@@ -76,7 +76,7 @@ fn handle_path<'a>(
 
 fn handle_path_or_text<'a>(
     options: &mut Options<'a>,
-    dictionary_builder: &mut DictionaryBuilder,
+    dictionary_builder: &mut ValueCollector,
     shared_number_of_files: &mut usize,
     source: &Path,
 ) {
@@ -154,14 +154,6 @@ fn main_aux() {
                     .map(|_| ())
                     .map_err(|e| format!("Invalid number {}", e)))
                 .help("Maximal path length to store in the dictionary."),
-            Arg::with_name("window-width")
-                .long("window-width")
-                .takes_value(true)
-                .default_value("32")
-                .validator(|s| s.parse::<u32>()
-                    .map(|_| ())
-                    .map_err(|e| format!("Invalid number {}", e)))
-                .help("String window width."),
             Arg::with_name("threshold")
                 .long("threshold")
                 .takes_value(true)
@@ -188,8 +180,6 @@ fn main_aux() {
 
     let depth = str::parse(matches.value_of("depth").unwrap()).expect("Invalid number");
 
-    let width = str::parse(matches.value_of("window-width").unwrap()).expect("Invalid number");
-
     let threshold: usize =
         str::parse(matches.value_of("threshold").unwrap()).expect("Invalid number");
 
@@ -197,10 +187,9 @@ fn main_aux() {
 
     // Setup.
     let parser = Shift::try_new().expect("Could not launch Shift");
-    let mut builder = DictionaryBuilder::new(
+    let mut builder = ValueCollector::new(
         DictionaryOptions::default()
-            .with_depth(depth)
-            .with_width(width),
+            .with_depth(depth),
     );
     let mut number_of_files = 0;
 
@@ -247,9 +236,7 @@ fn main_aux() {
     progress!(quiet, "Writing probabilities to {:?}", dest_dictionary);
     let file_dictionary =
         File::create(dest_dictionary).unwrap_or_else(|e| panic!("Could not create file: {:?}", e));
-    let dictionary = builder.done(threshold.into());
-    debug!(target: "generate_dictionary", "Current dictionary is '{}'", dictionary.name());
-    debug!(target: "generate_dictionary", "Created dictionary with {} interface names", dictionary.current().interface_names().len());
+    let dictionary = builder.into_tables(threshold.into());
     bincode::serialize_into(file_dictionary, &dictionary)
-        .expect("Could not serialize entropy dictionary");
+        .expect("Could not serialize known values dictionary");
 }

@@ -36,6 +36,8 @@ pub struct Decoder {
     stream_identifier_names: DictionaryStreamDecoder<Option<IdentifierName>>,
     stream_string_literals: DictionaryStreamDecoder<Option<SharedString>>,
     stream_list_lengths: DictionaryStreamDecoder<Option<u32>>,
+    stream_interface_names: DictionaryStreamDecoder<Option<InterfaceName>>,
+    stream_string_enums: DictionaryStreamDecoder<Option<SharedString>>,
 }
 
 impl FileStructurePrinter for Decoder {}
@@ -118,6 +120,27 @@ impl Decoder {
             result
         };
 
+        let prelude_string_enums = {
+            let mut result = Vec::new();
+            for value in
+                StringDecoder::try_new(prelude_data.string_enums, prelude_data.string_enums_len)?
+            {
+                result.push(value?.map(SharedString::from_string));
+            }
+            result
+        };
+
+        let prelude_interface_names = {
+            let mut result = Vec::new();
+            for value in StringDecoder::try_new(
+                prelude_data.interface_names,
+                prelude_data.interface_names_len,
+            )? {
+                result.push(value?.map(InterfaceName::from_string));
+            }
+            result
+        };
+
         let prelude_floats = {
             let mut result = Vec::new();
             if let Some(data) = prelude_data.floats {
@@ -180,13 +203,12 @@ impl Decoder {
         input = Self::check_upcoming_section(decoder, &SECTION_MAIN_WITHOUT_BRACKETS)?;
 
         // 5. Decode byte-compressed streams (could be made lazy/backgrounded)
-        // FIXME: copying all these probability tables is a waste of time,
+        // FIXME: copying all these known values is a waste of time,
         // it wouldn't be too hard to keep a single copy in memory
         let stream_floats = DictionaryStreamDecoder::try_new(
             options
-                .dictionaries
-                .current()
-                .floats()
+                .known_values
+                .floats
                 .with_prelude(&prelude_floats)
                 .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
             SharedString::from_str("floats"),
@@ -194,9 +216,8 @@ impl Decoder {
         )?;
         let stream_unsigned_longs = DictionaryStreamDecoder::try_new(
             options
-                .dictionaries
-                .current()
-                .unsigned_longs()
+                .known_values
+                .unsigned_longs
                 .with_prelude(&prelude_unsigned_longs)
                 .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
             SharedString::from_str("unsigned_longs"),
@@ -204,9 +225,8 @@ impl Decoder {
         )?;
         let stream_property_keys = DictionaryStreamDecoder::try_new(
             options
-                .dictionaries
-                .current()
-                .property_keys()
+                .known_values
+                .property_keys
                 .with_prelude(&prelude_property_keys)
                 .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
             SharedString::from_str("property_keys"),
@@ -214,9 +234,8 @@ impl Decoder {
         )?;
         let stream_identifier_names = DictionaryStreamDecoder::try_new(
             options
-                .dictionaries
-                .current()
-                .identifier_names()
+                .known_values
+                .identifier_names
                 .with_prelude(&prelude_identifier_names)
                 .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
             SharedString::from_str("identifier_names"),
@@ -224,9 +243,8 @@ impl Decoder {
         )?;
         let stream_string_literals = DictionaryStreamDecoder::try_new(
             options
-                .dictionaries
-                .current()
-                .string_literals()
+                .known_values
+                .string_literals
                 .with_prelude(&prelude_string_literals)
                 .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
             SharedString::from_str("string_literals"),
@@ -234,13 +252,30 @@ impl Decoder {
         )?;
         let stream_list_lengths = DictionaryStreamDecoder::try_new(
             options
-                .dictionaries
-                .current()
-                .list_lengths()
+                .known_values
+                .list_lengths
                 .with_prelude(&prelude_list_lengths)
                 .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
             SharedString::from_str("list_lengths"),
             content_data.list_lengths,
+        )?;
+        let stream_interface_names = DictionaryStreamDecoder::try_new(
+            options
+                .known_values
+                .interface_names
+                .with_prelude(&prelude_interface_names)
+                .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
+            SharedString::from_str("interface_names"),
+            content_data.interface_names,
+        )?;
+        let stream_string_enums = DictionaryStreamDecoder::try_new(
+            options
+                .known_values
+                .string_enums
+                .with_prelude(&prelude_string_enums)
+                .map_err(|v| TokenReaderError::DuplicateInDictionary(format!("{:?}", v)))?,
+            SharedString::from_str("string_enums"),
+            content_data.string_enums,
         )?;
 
         // 6. Ready to read and decode main stream.
@@ -264,6 +299,8 @@ impl Decoder {
             stream_string_literals,
             stream_unsigned_longs,
             stream_main,
+            stream_interface_names,
+            stream_string_enums,
         };
         Ok(result)
     }
@@ -320,7 +357,7 @@ macro_rules! main_stream {
         use std::ops::DerefMut;
         let path = $path.borrow();
 
-        let table = $me.options.dictionaries.current().$table();
+        let table = $me.options.probabilities.current().$table();
         let index = {
             // 1. Get the frequency information for this path.
             let frequencies = table.frequencies_at(path).ok_or_else(|| {
@@ -371,8 +408,7 @@ impl TokenReader for Decoder {
     }
 
     fn string_enum_at(&mut self, path: &Path) -> Result<SharedString, TokenReaderError> {
-        main_stream!(self, string_enum_by_path, "string_enum_by_path", path)
-            .map(Option::unwrap)
+        main_stream!(self, string_enum_by_path, "string_enum_by_path", path).map(Option::unwrap)
     }
 
     fn enter_tagged_tuple_at(
@@ -424,7 +460,7 @@ impl TokenReader for Decoder {
         _path: &Path,
     ) -> Result<(), TokenReaderError> {
         self.options
-            .dictionaries
+            .probabilities
             .enter_existing(name)
             .map_err(|_| TokenReaderError::DictionarySwitchingError(name.clone()))?;
         Ok(())
@@ -435,7 +471,7 @@ impl TokenReader for Decoder {
         name: &SharedString,
         _path: &Path,
     ) -> Result<(), TokenReaderError> {
-        self.options.dictionaries.exit(name);
+        self.options.probabilities.exit(name);
         Ok(())
     }
 

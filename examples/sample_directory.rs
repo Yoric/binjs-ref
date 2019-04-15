@@ -258,10 +258,11 @@ fn main() {
             None => None,
         };
         let mut format = binjs::io::Format::Entropy {
-            options: options.clone()
+            options: options.clone(),
         };
         let mut encoder = binjs::specialized::es6::io::Encoder::new();
-        let data = encoder.encode(destination_path, &mut format, &ast)
+        let data = encoder
+            .encode(destination_path, &mut format, &ast)
             .expect("Could not compress to binast");
 
         let binjs_size = data.len() as u64;

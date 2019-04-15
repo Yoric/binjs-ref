@@ -404,7 +404,8 @@ impl Encoder {
         Serializer<TokenWriterTreeAdapter<binjs_io::xml::Encoder>>: Serialization<AST>,
         Serializer<binjs_io::binjs_json::write::TreeTokenWriter>: Serialization<AST>,
         Serializer<binjs_io::entropy::write::Encoder>: Serialization<AST>,
-        for<'a> Serializer<&'a mut binjs_io::entropy::dictionary::DictionaryBuilder>: binjs_io::Serialization<AST>,
+        for<'a> Serializer<&'a mut binjs_io::entropy::dictionary::ProbabilityTableCollector>:
+            binjs_io::Serialization<AST>,
     {
         let mut io_path = IOPath::new();
         match *format {
@@ -437,15 +438,22 @@ impl Encoder {
             }
             binjs_io::Format::Entropy { ref options } => {
                 // Pass: Extract frequency information on user-extensible strings.
-                let mut collector = binjs_io::entropy::dictionary::DictionaryBuilder::new(options.dictionary_options());
+                let mut collector = binjs_io::entropy::dictionary::ProbabilityTableCollector::new(
+                    options.dictionary_options(),
+                );
                 {
                     let mut serializer = Serializer::new(&mut collector);
                     serializer.serialize(ast, &mut io_path)?;
                     serializer.done()?;
                 }
+                let prelude_probabilities = collector.into_dictionary_family();
 
                 // Pass: Use dictionaries to actually write tree.
-                let writer = binjs_io::entropy::write::Encoder::new(path, (*options).clone(), collector.done(0.into() /* FIXME: placeholder */));
+                let writer = binjs_io::entropy::write::Encoder::new(
+                    path,
+                    (*options).clone(),
+                    prelude_probabilities,
+                );
                 let mut serializer = Serializer::new(writer);
                 serializer.serialize(ast, &mut io_path)?;
                 serializer.done()

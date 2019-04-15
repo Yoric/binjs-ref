@@ -93,27 +93,38 @@ pub struct PreludeStreams<T> {
     pub probabilities_len: T,
 }
 
-
 /// A macro used to generate code that will operate on all fields of a `PerUserExtensibleKind`.
 #[macro_export]
 macro_rules! for_field_in_prelude_streams {
     ( $cb: ident ) => {
         $cb!(
-			(identifier_names, "identifier_names", b"identifier_names"),
-			(identifier_names_len, "identifier_names_len", b"identifier_names_len"),
-			(property_keys, "property_keys", b"property_keys"),
-			(property_keys_len, "property_keys_len", b"property_keys_len"),
-			(string_literals, "string_literals", b"string_literals"),
-			(string_literals_len, "string_literals_len", b"string_literals_len"),
-			(interface_names, "interface_names", b"interface_names"),
-			(interface_names_len, "interface_names_len", b"interface_names_len"),
-			(string_enums, "string_enums", b"string_enums"),
-			(string_enums_len, "string_enums_len", b"string_enums_len"),
-			(list_lengths, "list_lengths", b"list_lengths"),
-			(floats, "floats", b"floats"),
-			(unsigned_longs, "unsigned_longs", b"unsigned_longs"),
-			(probabilities, "probabilities", b"probabilities"),
-			(probabilities_len, "probabilities_len", b"probabilities_len")
+            (identifier_names, "identifier_names", b"identifier_names"),
+            (
+                identifier_names_len,
+                "identifier_names_len",
+                b"identifier_names_len"
+            ),
+            (property_keys, "property_keys", b"property_keys"),
+            (property_keys_len, "property_keys_len", b"property_keys_len"),
+            (string_literals, "string_literals", b"string_literals"),
+            (
+                string_literals_len,
+                "string_literals_len",
+                b"string_literals_len"
+            ),
+            (interface_names, "interface_names", b"interface_names"),
+            (
+                interface_names_len,
+                "interface_names_len",
+                b"interface_names_len"
+            ),
+            (string_enums, "string_enums", b"string_enums"),
+            (string_enums_len, "string_enums_len", b"string_enums_len"),
+            (list_lengths, "list_lengths", b"list_lengths"),
+            (floats, "floats", b"floats"),
+            (unsigned_longs, "unsigned_longs", b"unsigned_longs"),
+            (probabilities, "probabilities", b"probabilities"),
+            (probabilities_len, "probabilities_len", b"probabilities_len")
         )
     };
 }
