@@ -324,7 +324,7 @@ impl ::FormatProvider for FormatProvider {
         let probabilities = match matches.value_of("cdf") {
             None => DictionaryFamily::new(),
             Some(path) => {
-                debug!(target: "entropy", "Loading cdf from {:?}", path);
+                debug!(target: "entropy_mod", "Loading cdf from {:?}", path);
                 // Load a dictionary from disk.
                 let source = std::fs::File::open(&path).expect("Could not open cdf");
                 let surface_dictionary: DictionaryFamily<Instances> =
@@ -333,13 +333,15 @@ impl ::FormatProvider for FormatProvider {
             }
         };
 
-        let known_values = match matches.value_of("known_values") {
+        let known_values = match matches.value_of("values") {
             None => UserExtensibleTables::new(),
             Some(path) => {
-                debug!(target: "entropy", "Loading known values from {:?}", path);
+                debug!(target: "entropy_mod", "Loading known values from {:?}", path);
                 // Load a dictionary from disk.
                 let source = std::fs::File::open(&path).expect("Could not open known valuess");
-                bincode::deserialize_from(source).expect("Could not decode known values")
+                let result: UserExtensibleTables = bincode::deserialize_from(source).expect("Could not decode known values");
+                debug!(target: "entropy_mod", "Loaded {} known values", result.len());
+                result
             }
         };
 

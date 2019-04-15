@@ -683,6 +683,16 @@ impl UserExtensibleTables {
         } }
         for_field_in_user_extensible_data!(with_field)
     }
+    pub fn len(&self) -> usize {
+        let mut len = 0;
+        macro_rules! with_field { ($(($ident: ident, $name: expr, $bname: expr )),*) => {
+            $(
+                len += self.$ident.len();
+            )*
+        } };
+        for_field_in_user_extensible_data!(with_field);
+        len
+    }
 }
 
 impl<K> InstancesToProbabilities for HashMap<K, FilesContaining>

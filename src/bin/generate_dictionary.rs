@@ -237,6 +237,7 @@ fn main_aux() {
     let file_dictionary =
         File::create(dest_dictionary).unwrap_or_else(|e| panic!("Could not create file: {:?}", e));
     let dictionary = builder.into_tables(threshold.into());
+    debug!(target: "generate_dictionary", "Generated a dictionary with {} entries", dictionary.len());
     bincode::serialize_into(file_dictionary, &dictionary)
         .expect("Could not serialize known values dictionary");
 }
