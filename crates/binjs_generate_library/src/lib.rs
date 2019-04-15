@@ -1385,14 +1385,46 @@ impl<'a> Walker<'a> for ViewMut{rust_name}<'a> where Self: 'a {{
             let interfaces_enum = format!(
                 "
 /// All the interfaces.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]\npub enum ASTNode {{
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum ASTNode {{
 {interfaces}
-}}\n\n\n",
+}}
+impl ASTNode {{
+    pub fn all() -> &'static [ASTNode] {{
+        &[
+{nodes}
+        ]
+    }}
+    pub fn as_interface_name(&self) -> InterfaceName {{
+        match *self {{
+{as_interface_name}
+        }}
+    }}
+}}
+
+\n\n\n",
                 interfaces = names
                     .iter()
                     .map(|name| format!(
                         "    /// {name}
     {rust_name}",
+                        name = name,
+                        rust_name = name.to_class_cases()
+                    ))
+                    .format(",\n"),
+                nodes = names
+                    .iter()
+                    .sorted()
+                    .into_iter()
+                    .map(|name| format!(
+                        "        ASTNode::{rust_name}",
+                            rust_name = name.to_class_cases()
+                    ))
+                    .format(",\n"),
+                as_interface_name = names
+                    .iter()
+                    .map(|name| format!(
+                        "            ASTNode::{rust_name} => InterfaceName::from_str(\"{name}\")",
                         name = name,
                         rust_name = name.to_class_cases()
                     ))

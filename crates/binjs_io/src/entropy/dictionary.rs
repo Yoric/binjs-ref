@@ -641,6 +641,7 @@ pub struct UserExtensibleTables {
     pub unsigned_longs: LinearTable<u32>,
 }
 
+#[macro_export]
 macro_rules! for_field_in_user_extensible_data {
     ( $cb: ident ) => {
         $cb!(
@@ -942,7 +943,8 @@ impl<'a> TokenWriter for &'a mut ValueCollector {
         _children: &[&FieldName],
         _path: &IOPath,
     ) -> Result<(), TokenWriterError> {
-        increment_instance_count!(self, interface_names, Some(tag.clone()));
+        // By design, we do NOT record interface names. They're hardcoded in the binary.
+        // increment_instance_count!(self, interface_names, Some(tag.clone()));
         Ok(())
     }
 
@@ -964,6 +966,17 @@ impl<'a> TokenWriter for &'a mut ValueCollector {
         Ok(())
     }
 
+
+    fn property_key_at(
+        &mut self,
+        value: Option<&PropertyKey>,
+        path: &IOPath,
+    ) -> Result<(), TokenWriterError> {
+        increment_instance_count!(self, property_keys, value.cloned());
+        Ok(())
+    }
+
+
     fn float_at(&mut self, value: Option<f64>, _path: &IOPath) -> Result<(), TokenWriterError> {
         let value = value.map(|x| x.into());
         increment_instance_count!(self, floats, value);
@@ -975,7 +988,7 @@ impl<'a> TokenWriter for &'a mut ValueCollector {
         Ok(())
     }
 
-    fn bool_at(&mut self, value: Option<bool>, _path: &IOPath) -> Result<(), TokenWriterError> {
+    fn bool_at(&mut self, _value: Option<bool>, _path: &IOPath) -> Result<(), TokenWriterError> {
         // We don't count bools.
         Ok(())
     }

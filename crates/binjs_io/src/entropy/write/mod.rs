@@ -91,6 +91,7 @@ impl Encoder {
         path: Option<&std::path::Path>,
         options: ::entropy::Options,
         prelude_probabilities: DictionaryFamily<Instances>,
+        interface_names: &[InterfaceName],
     ) -> Self {
         let split_streams = options.split_streams;
 
@@ -100,7 +101,10 @@ impl Encoder {
             .enter_existing(&SharedString::from_str(""))
             .unwrap();
 
-        let values = options.known_values.clone();
+        let mut values = options.known_values.clone();
+        // Inject hardcoded interface names.
+        assert_eq!(values.interface_names.len(), 0);
+        values.interface_names = LinearTable::new(interface_names.iter().map(|value| (Some(value.clone()), 1.into())).collect(), 0.into());
         Encoder {
             writer: opus::Writer::new(Vec::with_capacity(INITIAL_BUFFER_SIZE_BYTES)),
             dump_path: if split_streams {

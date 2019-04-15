@@ -238,6 +238,14 @@ fn main_aux() {
         File::create(dest_dictionary).unwrap_or_else(|e| panic!("Could not create file: {:?}", e));
     let dictionary = builder.into_tables(threshold.into());
     debug!(target: "generate_dictionary", "Generated a dictionary with {} entries", dictionary.len());
+    debug!(target: "generate_dictionary", "  identifier_names: {}", dictionary.identifier_names.len());
+    debug!(target: "generate_dictionary", "  property_keys: {}", dictionary.property_keys.len());
+    debug!(target: "generate_dictionary", "  interface_names: {}", dictionary.interface_names.len());
+    debug!(target: "generate_dictionary", "  string_literals: {}", dictionary.string_literals.len());
+    debug!(target: "generate_dictionary", "  string_enums: {}", dictionary.string_enums.len());
+    debug!(target: "generate_dictionary", "  list_lengths: {}", dictionary.list_lengths.len());
+    debug!(target: "generate_dictionary", "  floats: {}", dictionary.floats.len());
+    debug!(target: "generate_dictionary", "  unsigned_longs: {}", dictionary.unsigned_longs.len());
     bincode::serialize_into(file_dictionary, &dictionary)
         .expect("Could not serialize known values dictionary");
 }

@@ -448,11 +448,17 @@ impl Encoder {
                 }
                 let prelude_probabilities = collector.into_dictionary_family();
 
+                let interface_names: Vec<_> = crate::ast::ASTNode::all()
+                    .iter()
+                    .map(|node| node.as_interface_name())
+                    .collect();
+
                 // Pass: Use dictionaries to actually write tree.
                 let writer = binjs_io::entropy::write::Encoder::new(
                     path,
                     (*options).clone(),
                     prelude_probabilities,
+                    &interface_names,
                 );
                 let mut serializer = Serializer::new(writer);
                 serializer.serialize(ast, &mut io_path)?;
