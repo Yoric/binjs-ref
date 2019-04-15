@@ -6,7 +6,7 @@ extern crate clap;
 extern crate rand;
 extern crate separator;
 
-use binjs::io::entropy::dictionary::{DictionaryBuilder, Options as DictionaryOptions};
+use binjs::io::entropy::dictionary::{DictionaryFamily, Options as DictionaryOptions, ValueCollector};
 use binjs::io::entropy::Options;
 use binjs::io::{Path as IOPath, Serialization, TokenSerializer};
 use binjs::source::{Shift, SourceParser};
@@ -164,7 +164,7 @@ fn main() {
 
     println!("** Building dictionary from {} files", dictionary.len());
     let mut dictionary_builder =
-        DictionaryBuilder::new(DictionaryOptions::default().with_depth(depth).with_width(1));
+        ValueCollector::new(DictionaryOptions::default().with_depth(depth));
 
     let dictionary_len = dictionary.len();
     for (index, entry) in dictionary.into_iter().enumerate() {
@@ -197,9 +197,9 @@ fn main() {
         serializer.done().expect("Could not finalize dictionary");
     }
 
-    let dictionary = dictionary_builder.done(dict_threshold.into());
+    let known_values = dictionary_builder.into_tables(dict_threshold.into());
 
-    let mut options = Options::new(&spec, dictionary);
+    let mut options = Options::new(&spec, DictionaryFamily::new(), known_values);
     options.with_split_streams(dump_path.is_some());
 
     println!("** Testing on {} files", control.len());
