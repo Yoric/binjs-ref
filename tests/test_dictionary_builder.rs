@@ -137,7 +137,7 @@ test!(test_entropy_roundtrip, {
 
     // Also create an empty dictionary family.
     let empty_dictionary = {
-        let mut builder = DictionaryBuilder::new(
+        let builder = DictionaryBuilder::new(
             DictionaryOptions::default()
                 .with_depth(DEPTH)
                 .with_width(WIDTH),

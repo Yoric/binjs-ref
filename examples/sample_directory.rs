@@ -259,7 +259,7 @@ fn main() {
             None => None,
         };
 
-        let mut encoder = Encoder::new(destination_path, options.clone());
+        let encoder = Encoder::new(destination_path, options.clone());
 
         let mut serializer = binjs::specialized::es6::io::Serializer::new(encoder);
         serializer

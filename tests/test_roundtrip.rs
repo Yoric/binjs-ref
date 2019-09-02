@@ -159,17 +159,16 @@ fn main() {
             // Parse and preprocess file.
 
             eprint!("\n{:?}.", entry);
-            let mut ast = parser
+            let ast = parser
                 .parse_file(entry.clone())
                 .expect("Could not parse source");
-
             {
                 progress();
                 debug!(target: "test_roundtrip", "Starting simple round trip for {:?}", entry);
 
                 // Roundtrip `simple`
                 debug!(target: "test_roundtrip", "Encoding");
-                let mut writer = binjs::io::TokenWriterTreeAdapter::new(
+                let writer = binjs::io::TokenWriterTreeAdapter::new(
                     binjs::io::simple::TreeTokenWriter::new(),
                 );
                 let mut serializer = binjs::specialized::es6::io::Serializer::new(writer);

@@ -115,7 +115,7 @@ impl TokenWriter for PathTraceWriter {
     }
     fn enter_tagged_tuple_at(
         &mut self,
-        _node: &Node,
+        _node: &dyn Node,
         tag: &InterfaceName,
         children: &[&FieldName],
         path: &IOPath,
